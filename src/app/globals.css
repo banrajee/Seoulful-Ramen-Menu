@@ -1776,8 +1776,8 @@ select:disabled {
 
 .refined-hero-grid {
   display: grid;
-  grid-template-columns: minmax(700px, 1fr) minmax(250px, 0.34fr);
-  gap: 46px;
+  grid-template-columns: minmax(700px, 1fr) minmax(340px, 0.42fr);
+  gap: 18px;
   align-items: center;
   text-align: left;
 }
@@ -1790,7 +1790,6 @@ select:disabled {
   display: block;
   width: min(900px, 100%);
   height: auto;
-  mix-blend-mode: multiply;
   filter: contrast(1.03) saturate(1.02);
 }
 
@@ -1832,15 +1831,15 @@ select:disabled {
 }
 
 .refined-brand-block {
-  justify-self: end;
+  justify-self: start;
   padding-top: 6px;
+  transform: translateX(-22px);
 }
 
 .refined-brand-block img {
   display: block;
-  width: min(300px, 100%);
+  width: min(380px, 100%);
   height: auto;
-  mix-blend-mode: multiply;
   filter: contrast(1.04) saturate(1.02);
 }
 
