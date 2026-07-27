@@ -20,6 +20,7 @@ const emptyDraft: MenuItemDraft = {
   price: 189,
   category_id: "classic",
   image_url: "",
+  spice_level: 3,
   status: "available",
   sort_order: 99
 };
@@ -344,6 +345,18 @@ function DashboardBody({
             value={draft.image_url ?? ""}
             onChange={(event) => setDraft({ ...draft, image_url: event.target.value })}
             placeholder="Optional public image URL"
+          />
+        </label>
+
+        <label>
+          Spice level
+          <input
+            min="0"
+            max="5"
+            type="number"
+            value={draft.spice_level ?? 1}
+            onChange={(event) => setDraft({ ...draft, spice_level: Number(event.target.value) })}
+            required
           />
         </label>
 

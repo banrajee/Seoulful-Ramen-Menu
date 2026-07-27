@@ -15,6 +15,7 @@ create table if not exists public.menu_items (
   price numeric(10, 2) not null check (price >= 0),
   category_id text not null references public.categories(id) on delete cascade,
   image_url text,
+  spice_level integer not null default 1 check (spice_level between 0 and 5),
   status text not null default 'available' check (status in ('available', 'out_of_stock', 'hidden')),
   sort_order integer not null default 0,
   created_at timestamptz not null default now(),
@@ -27,6 +28,9 @@ create table if not exists public.shop_settings (
   show_out_of_stock boolean not null default true,
   updated_at timestamptz not null default now()
 );
+
+alter table public.menu_items
+add column if not exists spice_level integer not null default 1 check (spice_level between 0 and 5);
 
 create or replace function public.set_updated_at()
 returns trigger

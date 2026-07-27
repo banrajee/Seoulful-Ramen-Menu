@@ -50,6 +50,7 @@ export async function saveItem(item: MenuItem | MenuItemDraft) {
     price: Number(item.price),
     category_id: item.category_id,
     image_url: item.image_url || null,
+    spice_level: Math.min(5, Math.max(0, Number(item.spice_level ?? 1))),
     status: item.status,
     sort_order: Number(item.sort_order)
   };

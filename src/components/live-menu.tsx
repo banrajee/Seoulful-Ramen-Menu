@@ -4,7 +4,7 @@ import { EyeOff } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { fetchMenuData, subscribeToMenuChanges } from "@/lib/menu-service";
 import { sampleMenu } from "@/lib/sample-data";
-import type { Category, MenuData, MenuItem } from "@/lib/types";
+import type { MenuData, MenuItem } from "@/lib/types";
 
 function money(value: number) {
   return new Intl.NumberFormat("en-IN", {
@@ -14,12 +14,43 @@ function money(value: number) {
   }).format(value);
 }
 
-function visibleItemsForCategory(items: MenuItem[], category: Category, showOutOfStock: boolean) {
-  return items
-    .filter((item) => item.category_id === category.id)
+function fallbackSpiceLevel(item: MenuItem) {
+  const text = `${item.name} ${item.description}`.toLowerCase();
+
+  if (text.includes("3x") || text.includes("volcano") || text.includes("extra hot")) return 5;
+  if (text.includes("habanero") || text.includes("hot chicken") || text.includes("spicy stir")) return 4;
+  if (text.includes("spicy") || text.includes("shin")) return 3;
+  if (text.includes("mild") || text.includes("cheese") || text.includes("carbonara")) return 2;
+  return 1;
+}
+
+function spiceLevel(item: MenuItem) {
+  return Math.min(5, Math.max(0, Number(item.spice_level ?? fallbackSpiceLevel(item))));
+}
+
+function packClass(item: MenuItem) {
+  const text = `${item.name} ${item.category_id}`.toLowerCase();
+
+  if (text.includes("cheese") || text.includes("carbonara")) return "pack-yellow";
+  if (text.includes("kimchi") || text.includes("rose")) return "pack-red";
+  if (text.includes("veggie") || text.includes("kokomen")) return "pack-green";
+  if (text.includes("jjajang") || text.includes("black")) return "pack-black";
+  if (text.includes("seafood") || text.includes("lobster")) return "pack-blue";
+  return "pack-orange";
+}
+
+function visibleRamenItems(menuData: MenuData) {
+  const categoryOrder = new Map(menuData.categories.map((category) => [category.id, category.sort_order]));
+
+  return menuData.items
+    .filter((item) => item.category_id !== "addons" && item.category_id !== "yopokki")
     .filter((item) => item.status !== "hidden")
-    .filter((item) => showOutOfStock || item.status !== "out_of_stock")
-    .sort((a, b) => a.sort_order - b.sort_order);
+    .filter((item) => menuData.settings.show_out_of_stock || item.status !== "out_of_stock")
+    .sort((a, b) => {
+      const categoryDelta = (categoryOrder.get(a.category_id) ?? 99) - (categoryOrder.get(b.category_id) ?? 99);
+      if (categoryDelta !== 0) return categoryDelta;
+      return a.sort_order - b.sort_order;
+    });
 }
 
 export function LiveMenu() {
@@ -35,90 +66,64 @@ export function LiveMenu() {
     return subscribeToMenuChanges(refreshMenu);
   }, []);
 
-  const categoriesWithItems = useMemo(() => {
-    return menuData.categories
-      .slice()
-      .sort((a, b) => a.sort_order - b.sort_order)
-      .map((category) => ({
-        category,
-        items: visibleItemsForCategory(menuData.items, category, menuData.settings.show_out_of_stock)
-      }))
-      .filter((group) => group.items.length > 0);
-  }, [menuData]);
-
-  const ramenCategories = categoriesWithItems.filter(
-    ({ category }) => category.id !== "addons" && category.id !== "yopokki"
-  );
-  const addOns = categoriesWithItems.find(({ category }) => category.id === "addons");
-
-  function addonClass(item: MenuItem) {
-    const name = item.name.toLowerCase();
-    if (name.includes("raw")) return "raw-egg";
-    if (name.includes("boiled")) return "boiled-egg";
-    if (name.includes("corn")) return "corn";
-    if (name.includes("cheese")) return "cheese";
-    return "chicken";
-  }
+  const ramenItems = useMemo(() => visibleRamenItems(menuData), [menuData]);
 
   return (
-    <main className="menu-page corrected-menu-page">
-      <section className="menu-shell corrected-menu-shell" aria-label="Seoulful Ramen digital menu">
-        <div className="hero-grid corrected-hero-grid">
+    <main className="menu-page refined-menu-page">
+      <section className="menu-shell refined-menu-shell" aria-label="Seoulful Ramen digital menu">
+        <div className="hero-grid refined-hero-grid">
           <div className="hero-copy">
             <p className="kicker">Come and cook your own</p>
             <h1>Ramen</h1>
             <p className="subtitle">Self-Cook Korean Ramen Experience</p>
           </div>
 
-          <div className="bowl-stage corrected-bowl-stage" aria-hidden="true">
+          <div className="bowl-stage refined-bowl-stage" aria-hidden="true">
             <img src="/seoulful-bowl-logo.png" alt="" />
           </div>
 
-          <div className="brand-block">
-            <p className="script-logo">Seoulful</p>
-            <p className="brand-line">Ramen</p>
+          <div className="brand-block refined-brand-block" aria-hidden="true">
+            <img src="/seoulful-bowl-logo.png" alt="" />
           </div>
         </div>
 
-        <div className="corrected-menu-layout">
-          <div className="corrected-collections-grid">
-            {ramenCategories.map(({ category, items }) => (
-              <section className="corrected-menu-category" key={category.id}>
-                <div className="item-list corrected-item-list">
-                  {items.map((item) => (
-                    <article className={`menu-item corrected-menu-item ${item.status}`} key={item.id}>
-                      <div className="item-copy corrected-item-copy">
-                        <div className="item-title-line corrected-item-title-line">
-                          <h3>{item.name}</h3>
-                          <span className="dots" aria-hidden="true" />
-                          <strong>{money(item.price)}</strong>
-                        </div>
-                        {item.status === "out_of_stock" ? <span className="status-pill">Out of Stock</span> : null}
-                      </div>
-                    </article>
-                  ))}
-                </div>
-              </section>
-            ))}
-          </div>
-        </div>
+        <div className="ramen-product-grid">
+          {ramenItems.map((item) => {
+            const level = spiceLevel(item);
 
-        {addOns ? (
-          <section className="addons-bar corrected-addons-bar" aria-label={addOns.category.name}>
-            <h2>{addOns.category.name}</h2>
-            <div className="addons-list corrected-addons-list">
-              {addOns.items.map((item) => (
-                <article key={item.id}>
-                  <span className={`addon-icon ${addonClass(item)}`} aria-hidden="true" />
-                  <div>
-                    <h3>{item.name}</h3>
-                    <strong>{money(item.price)}</strong>
+            return (
+              <article className={`ramen-product ${item.status}`} key={item.id}>
+                <div className="ramen-product-media">
+                  {item.image_url ? (
+                    <img className="ramen-product-image" src={item.image_url} alt={item.name} />
+                  ) : (
+                    <div className={`ramen-pack ${packClass(item)}`} aria-label={`${item.name} image placeholder`}>
+                      <span>{item.name.split(" ")[0]}</span>
+                      <strong>{item.name.split(" ").slice(-2).join(" ")}</strong>
+                    </div>
+                  )}
+                  <div className="spice-row" aria-label={`${level} out of 5 spice level`}>
+                    {Array.from({ length: 5 }).map((_, index) => (
+                      <img
+                        alt=""
+                        aria-hidden="true"
+                        className={index < level ? "active" : "inactive"}
+                        key={index}
+                        src="/spice-chilli.png"
+                      />
+                    ))}
                   </div>
-                </article>
-              ))}
-            </div>
-          </section>
-        ) : null}
+                </div>
+
+                <div className="ramen-product-copy">
+                  <h2>{item.name}</h2>
+                  <strong>{money(item.price)}</strong>
+                  {item.status === "out_of_stock" ? <span className="status-pill">Out of Stock</span> : null}
+                </div>
+              </article>
+            );
+          })}
+        </div>
 
         {!menuData.settings.show_out_of_stock ? (
           <p className="hidden-note">

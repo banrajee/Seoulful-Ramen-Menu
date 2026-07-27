@@ -15,6 +15,7 @@ export type MenuItem = {
   price: number;
   category_id: string;
   image_url: string | null;
+  spice_level?: number;
   status: ItemStatus;
   sort_order: number;
   created_at?: string;
