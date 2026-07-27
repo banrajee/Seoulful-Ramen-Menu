@@ -43,7 +43,7 @@ export function OwnerDashboard() {
   const [menuData, setMenuData] = useState<MenuData>(sampleMenu);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isLoggedIn, setIsLoggedIn] = useState(!hasSupabaseConfig());
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [draft, setDraft] = useState<MenuItemDraft | MenuItem>(emptyDraft);
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
@@ -163,26 +163,14 @@ export function OwnerDashboard() {
   if (!hasSupabaseConfig()) {
     return (
       <main className="owner-page">
-        <section className="owner-panel">
-          <h1>Owner Dashboard Preview</h1>
+        <section className="login-panel">
+          <p className="admin-kicker">Seoulful Ramen</p>
+          <h1>Supabase Setup Needed</h1>
           <p>
-            Supabase is not configured yet, so this page is showing the sample menu only. Add the
-            environment variables from <code>.env.example</code> to enable secure login and live edits.
+            The owner dashboard is locked until the Supabase environment variables are available in
+            Vercel. Add <code>NEXT_PUBLIC_SUPABASE_URL</code> and <code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code>,
+            then redeploy the site.
           </p>
-          <DashboardBody
-            busy={busy}
-            categories={menuData.categories}
-            draft={draft}
-            liveEditing={false}
-            menuData={menuData}
-            message={message}
-            setDraft={setDraft}
-            handleSave={handleSave}
-            handleDelete={handleDelete}
-            moveItem={moveItem}
-            setStatus={setStatus}
-            toggleOutOfStockVisibility={toggleOutOfStockVisibility}
-          />
         </section>
       </main>
     );
