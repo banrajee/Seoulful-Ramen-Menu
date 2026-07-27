@@ -1,6 +1,6 @@
 "use client";
 
-import { Clock, EyeOff } from "lucide-react";
+import { EyeOff } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { fetchMenuData, subscribeToMenuChanges } from "@/lib/menu-service";
 import { sampleMenu } from "@/lib/sample-data";
@@ -24,14 +24,10 @@ function visibleItemsForCategory(items: MenuItem[], category: Category, showOutO
 
 export function LiveMenu() {
   const [menuData, setMenuData] = useState<MenuData>(sampleMenu);
-  const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
-  const [loading, setLoading] = useState(true);
 
   async function refreshMenu() {
     const nextMenu = await fetchMenuData();
     setMenuData(nextMenu);
-    setLastUpdated(new Date());
-    setLoading(false);
   }
 
   useEffect(() => {
@@ -56,6 +52,15 @@ export function LiveMenu() {
   const addOns = categoriesWithItems.find(({ category }) => category.id === "addons");
   const yopokki = categoriesWithItems.find(({ category }) => category.id === "yopokki");
 
+  function addonClass(item: MenuItem) {
+    const name = item.name.toLowerCase();
+    if (name.includes("raw")) return "raw-egg";
+    if (name.includes("boiled")) return "boiled-egg";
+    if (name.includes("corn")) return "corn";
+    if (name.includes("cheese")) return "cheese";
+    return "chicken";
+  }
+
   return (
     <main className="menu-page">
       <section className="menu-shell" aria-label="Seoulful Ramen digital menu">
@@ -74,14 +79,6 @@ export function LiveMenu() {
             <p className="script-logo">Seoulful</p>
             <p className="brand-line">Ramen</p>
           </div>
-        </div>
-
-        <div className="live-strip">
-          <span className="pulse-dot" />
-          <span>Live menu</span>
-          <span className="strip-divider" />
-          <Clock size={15} aria-hidden="true" />
-          <span>{loading ? "Loading latest items" : `Updated ${lastUpdated.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`}</span>
         </div>
 
         <div className="menu-layout">
@@ -128,6 +125,11 @@ export function LiveMenu() {
                   </li>
                 ))}
               </ul>
+              <div className="yopokki-stack" aria-hidden="true">
+                <span className="cup cup-one">Yopokki</span>
+                <span className="cup cup-two">Yopokki</span>
+                <span className="cup cup-three">Yopokki</span>
+              </div>
             </aside>
           ) : null}
         </div>
@@ -138,9 +140,7 @@ export function LiveMenu() {
             <div className="addons-list">
               {addOns.items.map((item) => (
                 <article key={item.id}>
-                  <span className="addon-icon" aria-hidden="true">
-                    {item.name.toLowerCase().includes("egg") ? "o" : item.name.toLowerCase().includes("cheese") ? "□" : "+"}
-                  </span>
+                  <span className={`addon-icon ${addonClass(item)}`} aria-hidden="true" />
                   <div>
                     <h3>{item.name}</h3>
                     <strong>{money(item.price)}</strong>
@@ -158,7 +158,11 @@ export function LiveMenu() {
           </p>
         ) : null}
 
-        <footer>All prices include disposable bowl, cutlery, and self-cook station access.</footer>
+        <footer>
+          <span>All prices include: Disposable Bowl</span>
+          <span>Cutlery</span>
+          <span>Self-Cook Station Access</span>
+        </footer>
       </section>
     </main>
   );

@@ -36,7 +36,7 @@ export const sampleMenu: MenuData = {
     {
       id: "shin-ramyeon",
       name: "Nongshim Shin Ramyeon",
-      description: "Original spicy Korean ramen with rich broth.",
+      description: "Original spicy Korean ramen.",
       price: 189,
       category_id: "classic",
       image_url: null,
@@ -46,7 +46,7 @@ export const sampleMenu: MenuData = {
     {
       id: "shin-kimchi",
       name: "Nongshim Shin Kimchi",
-      description: "Classic Shin heat with bright kimchi flavor.",
+      description: "Spicy ramen with kimchi flavour.",
       price: 189,
       category_id: "classic",
       image_url: null,
@@ -56,17 +56,17 @@ export const sampleMenu: MenuData = {
     {
       id: "soon-veggie",
       name: "Nongshim Soon Veggie",
-      description: "Mild vegetable ramen with clean savory notes.",
+      description: "Vegetable ramen with mild spice.",
       price: 189,
       category_id: "classic",
       image_url: null,
-      status: "out_of_stock",
+      status: "available",
       sort_order: 3
     },
     {
       id: "jin-mild",
       name: "Ottogi Jin Ramen Mild",
-      description: "Comforting mild broth for an easy bowl.",
+      description: "Mild Korean ramen broth.",
       price: 189,
       category_id: "classic",
       image_url: null,
@@ -74,9 +74,9 @@ export const sampleMenu: MenuData = {
       sort_order: 4
     },
     {
-      id: "paldo-seafood",
-      name: "Paldo Seafood",
-      description: "Seafood-style broth with a clean spicy finish.",
+      id: "jin-spicy",
+      name: "Ottogi Jin Ramen Spicy",
+      description: "Spicy Korean ramen broth.",
       price: 189,
       category_id: "classic",
       image_url: null,
@@ -84,9 +84,39 @@ export const sampleMenu: MenuData = {
       sort_order: 5
     },
     {
+      id: "paldo-kokomen",
+      name: "Paldo Kokomen",
+      description: "Clean chicken-style spicy ramen.",
+      price: 189,
+      category_id: "classic",
+      image_url: null,
+      status: "available",
+      sort_order: 6
+    },
+    {
+      id: "paldo-seafood",
+      name: "Paldo Seafood",
+      description: "Seafood-style spicy ramen.",
+      price: 189,
+      category_id: "classic",
+      image_url: null,
+      status: "available",
+      sort_order: 7
+    },
+    {
+      id: "paldo-namja",
+      name: "Paldo Namja Ramyun",
+      description: "Bold Korean ramyun broth.",
+      price: 189,
+      category_id: "classic",
+      image_url: null,
+      status: "available",
+      sort_order: 8
+    },
+    {
       id: "samyang-carbonara",
       name: "Samyang Carbonara",
-      description: "Creamy, spicy buldak-style ramen.",
+      description: "Creamy spicy ramen.",
       price: 219,
       category_id: "premium",
       image_url: null,
@@ -96,7 +126,7 @@ export const sampleMenu: MenuData = {
     {
       id: "samyang-cheese",
       name: "Samyang Cheese",
-      description: "Hot chicken ramen with a cheesy kick.",
+      description: "Spicy ramen with cheese.",
       price: 219,
       category_id: "premium",
       image_url: null,
@@ -106,7 +136,7 @@ export const sampleMenu: MenuData = {
     {
       id: "samyang-rose",
       name: "Samyang Rose",
-      description: "Creamy rose-style heat with smooth spice.",
+      description: "Rose-style creamy ramen.",
       price: 219,
       category_id: "premium",
       image_url: null,
@@ -114,19 +144,89 @@ export const sampleMenu: MenuData = {
       sort_order: 3
     },
     {
-      id: "samyang-3x",
-      name: "Samyang 3x",
-      description: "Extra fiery ramen for serious spice lovers.",
+      id: "samyang-original",
+      name: "Samyang Original",
+      description: "Original spicy Samyang ramen.",
       price: 219,
       category_id: "premium",
       image_url: null,
-      status: "hidden",
+      status: "available",
       sort_order: 4
+    },
+    {
+      id: "samyang-black",
+      name: "Samyang Black",
+      description: "Rich spicy Samyang ramen.",
+      price: 219,
+      category_id: "premium",
+      image_url: null,
+      status: "available",
+      sort_order: 5
+    },
+    {
+      id: "samyang-jjajang",
+      name: "Samyang Jjajang",
+      description: "Black bean spicy ramen.",
+      price: 219,
+      category_id: "premium",
+      image_url: null,
+      status: "available",
+      sort_order: 6
+    },
+    {
+      id: "samyang-habanero-lime",
+      name: "Samyang Habanero Lime",
+      description: "Hot ramen with lime flavour.",
+      price: 219,
+      category_id: "premium",
+      image_url: null,
+      status: "available",
+      sort_order: 7
+    },
+    {
+      id: "samyang-hot-chicken-stew",
+      name: "Samyang Hot Chicken Stew",
+      description: "Stew-style spicy ramen.",
+      price: 219,
+      category_id: "premium",
+      image_url: null,
+      status: "available",
+      sort_order: 8
+    },
+    {
+      id: "samyang-3x",
+      name: "Samyang 3x",
+      description: "Extra hot Samyang ramen.",
+      price: 219,
+      category_id: "premium",
+      image_url: null,
+      status: "available",
+      sort_order: 9
+    },
+    {
+      id: "paldo-volcano-carbonara",
+      name: "Paldo Volcano Carbonara",
+      description: "Creamy volcano-style ramen.",
+      price: 219,
+      category_id: "premium",
+      image_url: null,
+      status: "available",
+      sort_order: 10
+    },
+    {
+      id: "paldo-samgyetang",
+      name: "Paldo Samgyetang",
+      description: "Chicken soup-style ramen.",
+      price: 219,
+      category_id: "premium",
+      image_url: null,
+      status: "available",
+      sort_order: 11
     },
     {
       id: "shin-toomba",
       name: "Nongshim Shin Toomba",
-      description: "Creamy premium Shin ramen with deep spice.",
+      description: "Creamy premium Shin ramen.",
       price: 249,
       category_id: "signature",
       image_url: null,
@@ -136,7 +236,7 @@ export const sampleMenu: MenuData = {
     {
       id: "cheese-stir-fry",
       name: "Nongshim Shin Cheese Stir Fry",
-      description: "Dry-style noodles with cheese and chili.",
+      description: "Cheese stir-fry noodles.",
       price: 249,
       category_id: "signature",
       image_url: null,
@@ -144,19 +244,69 @@ export const sampleMenu: MenuData = {
       sort_order: 2
     },
     {
-      id: "paldo-lobster",
-      name: "Paldo Lobster",
-      description: "Signature seafood ramen with bold broth.",
+      id: "ottogi-cheese",
+      name: "Ottogi Cheese Ramen",
+      description: "Cheesy Korean ramen.",
       price: 249,
       category_id: "signature",
       image_url: null,
-      status: "out_of_stock",
+      status: "available",
       sort_order: 3
+    },
+    {
+      id: "ottogi-spicy-stir-fry",
+      name: "Ottogi Spicy Stir Fry",
+      description: "Spicy dry-style ramen.",
+      price: 249,
+      category_id: "signature",
+      image_url: null,
+      status: "available",
+      sort_order: 4
+    },
+    {
+      id: "paldo-rabokki",
+      name: "Paldo Rabokki",
+      description: "Ramen and rice cake flavour.",
+      price: 249,
+      category_id: "signature",
+      image_url: null,
+      status: "available",
+      sort_order: 5
+    },
+    {
+      id: "paldo-jjajangmen",
+      name: "Paldo Jjajangmen",
+      description: "Black bean sauce ramen.",
+      price: 249,
+      category_id: "signature",
+      image_url: null,
+      status: "available",
+      sort_order: 6
+    },
+    {
+      id: "paldo-zangmyeon-loopy",
+      name: "Paldo Zangmyeon Loopy",
+      description: "Signature Paldo ramen.",
+      price: 249,
+      category_id: "signature",
+      image_url: null,
+      status: "available",
+      sort_order: 7
+    },
+    {
+      id: "paldo-lobster",
+      name: "Paldo Lobster",
+      description: "Lobster-style seafood ramen.",
+      price: 249,
+      category_id: "signature",
+      image_url: null,
+      status: "available",
+      sort_order: 8
     },
     {
       id: "raw-egg",
       name: "Raw Egg",
-      description: "Add a fresh egg to cook into the broth.",
+      description: "Fresh egg add-on.",
       price: 15,
       category_id: "addons",
       image_url: null,
@@ -166,7 +316,7 @@ export const sampleMenu: MenuData = {
     {
       id: "boiled-egg",
       name: "Boiled Egg",
-      description: "Simple boiled egg topping.",
+      description: "Boiled egg add-on.",
       price: 19,
       category_id: "addons",
       image_url: null,
@@ -174,9 +324,9 @@ export const sampleMenu: MenuData = {
       sort_order: 2
     },
     {
-      id: "cheese",
-      name: "Cheese",
-      description: "Melty cheese slice for a richer bowl.",
+      id: "corn",
+      name: "Corn",
+      description: "Sweet corn add-on.",
       price: 19,
       category_id: "addons",
       image_url: null,
@@ -184,14 +334,24 @@ export const sampleMenu: MenuData = {
       sort_order: 3
     },
     {
-      id: "shredded-chicken",
-      name: "Shredded Chicken",
-      description: "Protein topping for extra bite.",
-      price: 29,
+      id: "cheese",
+      name: "Cheese",
+      description: "Cheese slice add-on.",
+      price: 19,
       category_id: "addons",
       image_url: null,
       status: "available",
       sort_order: 4
+    },
+    {
+      id: "shredded-chicken",
+      name: "Shredded Chicken",
+      description: "Shredded chicken add-on.",
+      price: 29,
+      category_id: "addons",
+      image_url: null,
+      status: "available",
+      sort_order: 5
     },
     {
       id: "yopokki-spicy-carbonara",
@@ -212,6 +372,26 @@ export const sampleMenu: MenuData = {
       image_url: null,
       status: "available",
       sort_order: 2
+    },
+    {
+      id: "yopokki-sweet-spicy",
+      name: "Sweet & Spicy Yopokki",
+      description: "Rice cakes with sweet spicy sauce.",
+      price: 359,
+      category_id: "yopokki",
+      image_url: null,
+      status: "available",
+      sort_order: 3
+    },
+    {
+      id: "yopokki-cheese",
+      name: "Cheese Yopokki",
+      description: "Rice cakes with cheese sauce.",
+      price: 359,
+      category_id: "yopokki",
+      image_url: null,
+      status: "available",
+      sort_order: 4
     }
   ]
 };
