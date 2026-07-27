@@ -1777,7 +1777,7 @@ select:disabled {
 .refined-hero-grid {
   display: grid;
   grid-template-columns: minmax(700px, 1fr) minmax(440px, 0.5fr);
-  gap: 8px;
+  gap: 18px;
   align-items: center;
   text-align: left;
 }
@@ -1833,7 +1833,7 @@ select:disabled {
 .refined-brand-block {
   justify-self: start;
   padding-top: 6px;
-  transform: translateX(-46px);
+  transform: translateX(28px);
 }
 
 .refined-brand-block img {
