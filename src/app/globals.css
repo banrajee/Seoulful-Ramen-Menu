@@ -1251,3 +1251,234 @@ select:disabled {
     grid-column: span 1;
   }
 }
+
+/* Uniform product menu requested after deployment. */
+.product-menu-page {
+  min-height: 100vh;
+  padding: clamp(16px, 3vw, 42px);
+  overflow-x: hidden;
+  background:
+    radial-gradient(circle at 12% 10%, rgba(255, 255, 255, 0.9), transparent 22rem),
+    linear-gradient(180deg, #fffaf1 0%, #f8ecd7 100%);
+}
+
+.product-menu-shell {
+  width: min(1320px, 100%);
+  margin: 0 auto;
+  padding: clamp(10px, 2vw, 22px);
+}
+
+.product-menu-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px 34px;
+}
+
+.product-menu-item {
+  display: grid;
+  grid-template-columns: 118px minmax(0, 1fr);
+  gap: 18px;
+  align-items: center;
+  min-height: 150px;
+  padding: 12px 0;
+}
+
+.product-menu-item.out_of_stock {
+  opacity: 0.58;
+}
+
+.product-image-wrap {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+}
+
+.product-image {
+  display: block;
+  width: 92px;
+  height: 92px;
+  object-fit: contain;
+}
+
+.ramen-pack {
+  position: relative;
+  display: grid;
+  width: 92px;
+  height: 82px;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid rgba(9, 38, 42, 0.16);
+  border-radius: 5px;
+  background:
+    radial-gradient(circle at 74% 22%, rgba(255, 255, 255, 0.9) 0 9px, transparent 10px),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.18), transparent 45%),
+    var(--pack-color);
+  box-shadow: 0 8px 14px rgba(9, 38, 42, 0.12);
+  color: #fff;
+  text-align: center;
+  transform: rotate(-2deg);
+}
+
+.ramen-pack::before {
+  content: "";
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
+  height: 24px;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 38% 50%, #f8d252 0 7px, transparent 8px),
+    linear-gradient(90deg, #fff1c0, #f4b855);
+  border: 2px solid rgba(255, 255, 255, 0.72);
+}
+
+.ramen-pack span,
+.ramen-pack strong {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 86%;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.32);
+}
+
+.ramen-pack span {
+  align-self: end;
+  font-size: 0.72rem;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.ramen-pack strong {
+  align-self: start;
+  margin-top: 2px;
+  font-size: 0.82rem;
+  line-height: 1.05;
+}
+
+.pack-yellow {
+  --pack-color: #f29b21;
+}
+
+.pack-red {
+  --pack-color: #dc2b23;
+}
+
+.pack-green {
+  --pack-color: #1f9b64;
+}
+
+.pack-black {
+  --pack-color: #161b1e;
+}
+
+.pack-blue {
+  --pack-color: #247fc5;
+}
+
+.pack-orange {
+  --pack-color: #ef5f22;
+}
+
+.spice-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-height: 20px;
+}
+
+.spice-row img {
+  width: 17px;
+  height: 17px;
+  object-fit: contain;
+}
+
+.spice-row img.inactive {
+  opacity: 0.18;
+  filter: grayscale(1);
+}
+
+.product-copy {
+  min-width: 0;
+  padding: 16px 18px 17px;
+  border: 1px solid rgba(9, 38, 42, 0.1);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.56);
+  box-shadow: 0 8px 18px rgba(9, 38, 42, 0.06);
+}
+
+.product-title-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: baseline;
+}
+
+.product-title-row h2 {
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(1rem, 1.3vw, 1.28rem);
+  line-height: 1.14;
+}
+
+.product-title-row strong {
+  color: var(--red);
+  font-size: clamp(1rem, 1.25vw, 1.22rem);
+  font-weight: 950;
+}
+
+.product-copy p {
+  margin: 8px 0 0;
+  color: #1f3f42;
+  font-family: "Segoe Print", "Comic Sans MS", Arial, sans-serif;
+  font-size: clamp(0.94rem, 1.12vw, 1.08rem);
+  line-height: 1.36;
+}
+
+.product-menu-shell .hidden-note {
+  margin-top: 22px;
+}
+
+@media (max-width: 900px) {
+  .product-menu-page {
+    padding: 12px;
+  }
+
+  .product-menu-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .product-menu-item {
+    grid-template-columns: 96px minmax(0, 1fr);
+    gap: 12px;
+    min-height: 132px;
+  }
+
+  .ramen-pack,
+  .product-image {
+    width: 78px;
+    height: 72px;
+  }
+
+  .product-copy {
+    padding: 13px 14px;
+  }
+}
+
+@media (max-width: 460px) {
+  .product-menu-item {
+    grid-template-columns: 82px minmax(0, 1fr);
+  }
+
+  .spice-row img {
+    width: 14px;
+    height: 14px;
+  }
+
+  .product-title-row {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+}
