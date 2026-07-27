@@ -2080,3 +2080,136 @@ select:disabled {
     min-width: 980px;
   }
 }
+
+.owner-sections {
+  display: grid;
+  gap: 18px;
+  margin-top: 18px;
+}
+
+.owner-menu-section {
+  padding: 14px;
+  border: 1px solid rgba(9, 38, 42, 0.12);
+  border-radius: 8px;
+  background: #fff8e9;
+}
+
+.owner-menu-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.owner-menu-section-header h3 {
+  margin: 0;
+  color: var(--ink);
+  font-size: 1.12rem;
+}
+
+.owner-menu-section-header p,
+.empty-section-note {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.owner-menu-section-header button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 38px;
+  padding: 0 13px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--green);
+  color: white;
+  font-weight: 900;
+}
+
+.owner-menu-section .owner-items {
+  margin-top: 0;
+}
+
+.drinks-section {
+  margin: 44px 0 0;
+  padding: 22px 24px;
+  border: 2px solid rgba(9, 38, 42, 0.5);
+  border-radius: 12px;
+  background: rgba(255, 248, 232, 0.28);
+}
+
+.drinks-section h2 {
+  width: fit-content;
+  margin: 0 auto 18px;
+  padding: 9px 24px;
+  border-radius: 999px;
+  background: var(--green);
+  color: #fffbed;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 1.2rem;
+  font-weight: 950;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.drinks-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+}
+
+.drinks-list article {
+  display: grid;
+  grid-template-columns: 54px minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+  min-height: 66px;
+}
+
+.drinks-list article.out_of_stock {
+  opacity: 0.56;
+}
+
+.drinks-list img,
+.drinks-list span {
+  display: block;
+  width: 48px;
+  height: 48px;
+  border: 1px solid rgba(9, 38, 42, 0.14);
+  border-radius: 8px;
+  object-fit: contain;
+}
+
+.drinks-list span {
+  background:
+    radial-gradient(circle at 50% 28%, rgba(255, 255, 255, 0.8) 0 7px, transparent 8px),
+    linear-gradient(180deg, #7cc6d5, #2f7c8d);
+}
+
+.drinks-list h3 {
+  margin: 0;
+  color: var(--ink);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.drinks-list strong {
+  display: block;
+  margin-top: 4px;
+  color: var(--ink);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.drinks-list em {
+  display: block;
+  margin-top: 3px;
+  color: var(--red-deep);
+  font-size: 0.75rem;
+  font-style: normal;
+  font-weight: 900;
+  text-transform: uppercase;
+}

@@ -105,7 +105,8 @@ insert into public.categories (id, name, sort_order) values
   ('premium', 'Premium Collection', 2),
   ('signature', 'Signature Collection', 3),
   ('addons', 'Add-Ons', 4),
-  ('yopokki', 'Yopokki Rice Cakes', 5)
+  ('yopokki', 'Yopokki Rice Cakes', 5),
+  ('drinks', 'Drinks', 6)
 on conflict (id) do update set
   name = excluded.name,
   sort_order = excluded.sort_order;

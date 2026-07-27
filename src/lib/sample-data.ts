@@ -30,6 +30,11 @@ export const sampleMenu: MenuData = {
       id: "yopokki",
       name: "Yopokki Rice Cakes",
       sort_order: 5
+    },
+    {
+      id: "drinks",
+      name: "Drinks",
+      sort_order: 6
     }
   ],
   items: [

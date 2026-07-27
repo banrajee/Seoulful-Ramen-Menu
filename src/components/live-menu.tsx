@@ -52,7 +52,7 @@ function visibleRamenItems(menuData: MenuData) {
   const categoryOrder = new Map(menuData.categories.map((category) => [category.id, category.sort_order]));
 
   return menuData.items
-    .filter((item) => item.category_id !== "addons" && item.category_id !== "yopokki")
+    .filter((item) => item.category_id !== "addons" && item.category_id !== "drinks" && item.category_id !== "yopokki")
     .filter((item) => item.status !== "hidden")
     .filter((item) => menuData.settings.show_out_of_stock || item.status !== "out_of_stock")
     .sort((a, b) => {
@@ -79,6 +79,13 @@ export function LiveMenu() {
   const addOns = useMemo(() => {
     return menuData.items
       .filter((item) => item.category_id === "addons")
+      .filter((item) => item.status !== "hidden")
+      .filter((item) => menuData.settings.show_out_of_stock || item.status !== "out_of_stock")
+      .sort((a, b) => a.sort_order - b.sort_order);
+  }, [menuData]);
+  const drinks = useMemo(() => {
+    return menuData.items
+      .filter((item) => item.category_id === "drinks")
       .filter((item) => item.status !== "hidden")
       .filter((item) => menuData.settings.show_out_of_stock || item.status !== "out_of_stock")
       .sort((a, b) => a.sort_order - b.sort_order);
@@ -136,6 +143,24 @@ export function LiveMenu() {
             );
           })}
         </div>
+
+        {drinks.length > 0 ? (
+          <section className="drinks-section" aria-label="Drinks">
+            <h2>Drinks</h2>
+            <div className="drinks-list">
+              {drinks.map((item) => (
+                <article className={item.status} key={item.id}>
+                  {item.image_url ? <img src={item.image_url} alt={item.name} /> : <span aria-hidden="true" />}
+                  <div>
+                    <h3>{item.name}</h3>
+                    <strong>{money(item.price)}</strong>
+                    {item.status === "out_of_stock" ? <em>Out of Stock</em> : null}
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+        ) : null}
 
         {addOns.length > 0 ? (
           <section className="addons-bar refined-addons-bar" aria-label="Add-Ons">

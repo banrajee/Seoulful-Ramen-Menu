@@ -10,25 +10,52 @@ import {
   updateItemStatus,
   updateOutOfStockVisibility
 } from "@/lib/menu-service";
-import { createBrowserSupabaseClient, hasSupabaseConfig } from "@/lib/supabase";
 import { sampleMenu } from "@/lib/sample-data";
-import type { Category, ItemStatus, MenuData, MenuItem, MenuItemDraft } from "@/lib/types";
+import { createBrowserSupabaseClient, hasSupabaseConfig } from "@/lib/supabase";
+import type { ItemStatus, MenuData, MenuItem, MenuItemDraft } from "@/lib/types";
 
-const emptyDraft: MenuItemDraft = {
-  name: "",
-  description: "",
-  price: 189,
-  category_id: "classic",
-  image_url: "",
-  spice_level: 3,
-  status: "available",
-  sort_order: 99
+type DashboardSection = "ramen" | "addons" | "drinks";
+
+const sectionLabels: Record<DashboardSection, string> = {
+  ramen: "Ramen",
+  addons: "Add-Ons",
+  drinks: "Drinks"
+};
+
+const sectionCategoryIds: Record<Exclude<DashboardSection, "ramen">, string[]> = {
+  addons: ["addons"],
+  drinks: ["drinks"]
 };
 
 function statusLabel(status: ItemStatus) {
   if (status === "out_of_stock") return "Out of Stock";
   if (status === "hidden") return "Hidden";
   return "Available";
+}
+
+function sectionForCategory(categoryId: string): DashboardSection {
+  if (categoryId === "addons") return "addons";
+  if (categoryId === "drinks") return "drinks";
+  return "ramen";
+}
+
+function categoryForSection(section: DashboardSection) {
+  if (section === "addons") return "addons";
+  if (section === "drinks") return "drinks";
+  return "classic";
+}
+
+function createEmptyDraft(section: DashboardSection = "ramen", sortOrder = 99): MenuItemDraft {
+  return {
+    name: "",
+    description: "",
+    price: section === "addons" ? 19 : section === "drinks" ? 49 : 189,
+    category_id: categoryForSection(section),
+    image_url: "",
+    spice_level: section === "ramen" ? 3 : 0,
+    status: "available",
+    sort_order: sortOrder
+  };
 }
 
 function orderedItems(items: MenuItem[]) {
@@ -38,13 +65,23 @@ function orderedItems(items: MenuItem[]) {
   });
 }
 
+function itemsForSection(items: MenuItem[], section: DashboardSection) {
+  if (section === "ramen") {
+    return orderedItems(items).filter(
+      (item) => !sectionCategoryIds.addons.includes(item.category_id) && !sectionCategoryIds.drinks.includes(item.category_id)
+    );
+  }
+
+  return orderedItems(items).filter((item) => sectionCategoryIds[section].includes(item.category_id));
+}
+
 export function OwnerDashboard() {
   const supabase = useMemo(() => createBrowserSupabaseClient(), []);
   const [menuData, setMenuData] = useState<MenuData>(sampleMenu);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [draft, setDraft] = useState<MenuItemDraft | MenuItem>(emptyDraft);
+  const [draft, setDraft] = useState<MenuItemDraft | MenuItem>(createEmptyDraft());
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
 
@@ -99,7 +136,7 @@ export function OwnerDashboard() {
     try {
       await saveItem(draft);
       await loadData();
-      setDraft(emptyDraft);
+      setDraft(createEmptyDraft(sectionForCategory(draft.category_id)));
       setMessage("Menu item saved.");
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Could not save item.");
@@ -222,7 +259,6 @@ export function OwnerDashboard() {
 
         <DashboardBody
           busy={busy}
-          categories={menuData.categories}
           draft={draft}
           liveEditing={true}
           menuData={menuData}
@@ -233,6 +269,9 @@ export function OwnerDashboard() {
           moveItem={moveItem}
           setStatus={setStatus}
           toggleOutOfStockVisibility={toggleOutOfStockVisibility}
+          startNewItem={(section) =>
+            setDraft(createEmptyDraft(section, itemsForSection(menuData.items, section).length + 1))
+          }
         />
       </section>
     </main>
@@ -241,7 +280,6 @@ export function OwnerDashboard() {
 
 type DashboardBodyProps = {
   busy: boolean;
-  categories: Category[];
   draft: MenuItem | MenuItemDraft;
   liveEditing: boolean;
   menuData: MenuData;
@@ -252,11 +290,11 @@ type DashboardBodyProps = {
   moveItem: (item: MenuItem, direction: -1 | 1) => void;
   setStatus: (item: MenuItem, status: ItemStatus) => void;
   toggleOutOfStockVisibility: () => void;
+  startNewItem: (section: DashboardSection) => void;
 };
 
 function DashboardBody({
   busy,
-  categories,
   draft,
   liveEditing,
   menuData,
@@ -266,16 +304,17 @@ function DashboardBody({
   handleDelete,
   moveItem,
   setStatus,
-  toggleOutOfStockVisibility
+  toggleOutOfStockVisibility,
+  startNewItem
 }: DashboardBodyProps) {
-  const items = orderedItems(menuData.items);
+  const draftSection = sectionForCategory(draft.category_id);
 
   return (
     <div className="dashboard-grid">
       <form className="item-form" onSubmit={handleSave}>
         <div className="form-title">
           <Plus size={19} />
-          <h2>{"id" in draft ? "Edit Menu Item" : "Add Menu Item"}</h2>
+          <h2>{"id" in draft ? `Edit ${sectionLabels[draftSection]}` : `Add ${sectionLabels[draftSection]}`}</h2>
         </div>
 
         <label>
@@ -319,7 +358,7 @@ function DashboardBody({
         <label>
           Category
           <select value={draft.category_id} onChange={(event) => setDraft({ ...draft, category_id: event.target.value })}>
-            {categories.map((category) => (
+            {menuData.categories.map((category) => (
               <option key={category.id} value={category.id}>
                 {category.name}
               </option>
@@ -337,7 +376,7 @@ function DashboardBody({
         </label>
 
         <label>
-          Spice level
+          Spice level {draftSection !== "ramen" ? "(use 0 for no chillies)" : ""}
           <input
             min="0"
             max="5"
@@ -360,10 +399,10 @@ function DashboardBody({
         <div className="form-actions">
           <button disabled={busy || !liveEditing} type="submit">
             <Save size={17} />
-            {busy ? "Saving..." : liveEditing ? "Save Item" : "Connect Supabase"}
+            {busy ? "Saving..." : "Save Item"}
           </button>
           {"id" in draft ? (
-            <button className="secondary-button" onClick={() => setDraft(emptyDraft)} type="button">
+            <button className="secondary-button" onClick={() => setDraft(createEmptyDraft(draftSection))} type="button">
               Cancel Edit
             </button>
           ) : null}
@@ -384,48 +423,74 @@ function DashboardBody({
           </button>
         </div>
 
-        <div className="owner-items">
-          {items.map((item) => (
-            <article key={item.id} className="owner-item">
-              <div>
-                <h3>{item.name}</h3>
-                <p>
-                  {categories.find((category) => category.id === item.category_id)?.name} · ₹{item.price} ·{" "}
-                  {statusLabel(item.status)}
-                </p>
-              </div>
+        <div className="owner-sections">
+          {(["ramen", "addons", "drinks"] as DashboardSection[]).map((section) => {
+            const sectionItems = itemsForSection(menuData.items, section);
 
-              <div className="owner-item-actions">
-                <button disabled={!liveEditing} onClick={() => moveItem(item, -1)} title="Move up" type="button">
-                  <ArrowUp size={16} />
-                </button>
-                <button disabled={!liveEditing} onClick={() => moveItem(item, 1)} title="Move down" type="button">
-                  <ArrowDown size={16} />
-                </button>
-                <select
-                  disabled={!liveEditing}
-                  value={item.status}
-                  onChange={(event) => setStatus(item, event.target.value as ItemStatus)}
-                >
-                  <option value="available">Available</option>
-                  <option value="out_of_stock">Out of Stock</option>
-                  <option value="hidden">Hidden</option>
-                </select>
-                <button onClick={() => setDraft(item)} type="button">
-                  Edit
-                </button>
-                <button
-                  className="danger-button"
-                  disabled={!liveEditing}
-                  onClick={() => handleDelete(item)}
-                  title="Delete item"
-                  type="button"
-                >
-                  <Trash2 size={16} />
-                </button>
-              </div>
-            </article>
-          ))}
+            return (
+              <section className="owner-menu-section" key={section}>
+                <div className="owner-menu-section-header">
+                  <div>
+                    <h3>{sectionLabels[section]}</h3>
+                    <p>
+                      {sectionItems.length} item{sectionItems.length === 1 ? "" : "s"}
+                    </p>
+                  </div>
+                  <button disabled={!liveEditing} onClick={() => startNewItem(section)} type="button">
+                    <Plus size={16} />
+                    Add
+                  </button>
+                </div>
+
+                <div className="owner-items">
+                  {sectionItems.length > 0 ? (
+                    sectionItems.map((item) => (
+                      <article key={item.id} className="owner-item">
+                        <div>
+                          <h3>{item.name}</h3>
+                          <p>
+                            &#8377;{item.price} · {statusLabel(item.status)}
+                          </p>
+                        </div>
+
+                        <div className="owner-item-actions">
+                          <button disabled={!liveEditing} onClick={() => moveItem(item, -1)} title="Move up" type="button">
+                            <ArrowUp size={16} />
+                          </button>
+                          <button disabled={!liveEditing} onClick={() => moveItem(item, 1)} title="Move down" type="button">
+                            <ArrowDown size={16} />
+                          </button>
+                          <select
+                            disabled={!liveEditing}
+                            value={item.status}
+                            onChange={(event) => setStatus(item, event.target.value as ItemStatus)}
+                          >
+                            <option value="available">Available</option>
+                            <option value="out_of_stock">Out of Stock</option>
+                            <option value="hidden">Hidden</option>
+                          </select>
+                          <button onClick={() => setDraft(item)} type="button">
+                            Edit
+                          </button>
+                          <button
+                            className="danger-button"
+                            disabled={!liveEditing}
+                            onClick={() => handleDelete(item)}
+                            title="Delete item"
+                            type="button"
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
+                      </article>
+                    ))
+                  ) : (
+                    <p className="empty-section-note">No {sectionLabels[section].toLowerCase()} added yet.</p>
+                  )}
+                </div>
+              </section>
+            );
+          })}
         </div>
       </section>
     </div>
