@@ -39,6 +39,15 @@ function packClass(item: MenuItem) {
   return "pack-orange";
 }
 
+function addonClass(item: MenuItem) {
+  const name = item.name.toLowerCase();
+  if (name.includes("raw")) return "raw-egg";
+  if (name.includes("boiled")) return "boiled-egg";
+  if (name.includes("corn")) return "corn";
+  if (name.includes("cheese")) return "cheese";
+  return "chicken";
+}
+
 function visibleRamenItems(menuData: MenuData) {
   const categoryOrder = new Map(menuData.categories.map((category) => [category.id, category.sort_order]));
 
@@ -67,6 +76,13 @@ export function LiveMenu() {
   }, []);
 
   const ramenItems = useMemo(() => visibleRamenItems(menuData), [menuData]);
+  const addOns = useMemo(() => {
+    return menuData.items
+      .filter((item) => item.category_id === "addons")
+      .filter((item) => item.status !== "hidden")
+      .filter((item) => menuData.settings.show_out_of_stock || item.status !== "out_of_stock")
+      .sort((a, b) => a.sort_order - b.sort_order);
+  }, [menuData]);
 
   return (
     <main className="menu-page refined-menu-page">
@@ -76,10 +92,6 @@ export function LiveMenu() {
             <p className="kicker">Come and cook your own</p>
             <h1>Ramen</h1>
             <p className="subtitle">Self-Cook Korean Ramen Experience</p>
-          </div>
-
-          <div className="bowl-stage refined-bowl-stage" aria-hidden="true">
-            <img src="/seoulful-bowl-logo.png" alt="" />
           </div>
 
           <div className="brand-block refined-brand-block" aria-hidden="true">
@@ -124,6 +136,23 @@ export function LiveMenu() {
             );
           })}
         </div>
+
+        {addOns.length > 0 ? (
+          <section className="addons-bar refined-addons-bar" aria-label="Add-Ons">
+            <h2>Add-Ons</h2>
+            <div className="addons-list refined-addons-list">
+              {addOns.map((item) => (
+                <article key={item.id}>
+                  <span className={`addon-icon ${addonClass(item)}`} aria-hidden="true" />
+                  <div>
+                    <h3>{item.name}</h3>
+                    <strong>{money(item.price)}</strong>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+        ) : null}
 
         {!menuData.settings.show_out_of_stock ? (
           <p className="hidden-note">
