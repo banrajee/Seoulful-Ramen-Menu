@@ -28,6 +28,7 @@ const sectionCategoryIds: Record<Exclude<DashboardSection, "ramen">, string[]> =
 };
 
 const drinkCategoryOptions = ["drink_soda", "drink_non_soda", "drink_diet"];
+const excludedRamenCategoryIds = ["addons", "drinks", "drink_soda", "drink_non_soda", "drink_diet", "yopokki"];
 
 function statusLabel(status: ItemStatus) {
   if (status === "out_of_stock") return "Out of Stock";
@@ -83,12 +84,27 @@ function categoryIdsForForm(section: DashboardSection) {
   return null;
 }
 
+function normalizedDraftForSection(draft: MenuItem | MenuItemDraft, section: DashboardSection) {
+  const categoryIds = categoryIdsForForm(section);
+
+  if (categoryIds && !categoryIds.includes(draft.category_id)) {
+    return { ...draft, category_id: categoryForSection(section), spice_level: section === "drinks" ? 0 : draft.spice_level };
+  }
+
+  if (section === "ramen" && excludedRamenCategoryIds.includes(draft.category_id)) {
+    return { ...draft, category_id: categoryForSection(section), spice_level: draft.spice_level ?? 3 };
+  }
+
+  return section === "drinks" ? { ...draft, spice_level: 0 } : draft;
+}
+
 export function OwnerDashboard() {
   const supabase = useMemo(() => createBrowserSupabaseClient(), []);
   const [menuData, setMenuData] = useState<MenuData>(sampleMenu);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [editorSection, setEditorSection] = useState<DashboardSection>("ramen");
   const [draft, setDraft] = useState<MenuItemDraft | MenuItem>(createEmptyDraft());
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
@@ -142,9 +158,10 @@ export function OwnerDashboard() {
     setMessage("");
 
     try {
-      await saveItem(draft);
+      const normalizedDraft = normalizedDraftForSection(draft, editorSection);
+      await saveItem(normalizedDraft);
       await loadData();
-      setDraft(createEmptyDraft(sectionForCategory(draft.category_id)));
+      setDraft(createEmptyDraft(editorSection));
       setMessage("Menu item saved.");
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Could not save item.");
@@ -268,18 +285,21 @@ export function OwnerDashboard() {
         <DashboardBody
           busy={busy}
           draft={draft}
+          editorSection={editorSection}
           liveEditing={true}
           menuData={menuData}
           message={message}
           setDraft={setDraft}
+          setEditorSection={setEditorSection}
           handleSave={handleSave}
           handleDelete={handleDelete}
           moveItem={moveItem}
           setStatus={setStatus}
           toggleOutOfStockVisibility={toggleOutOfStockVisibility}
-          startNewItem={(section) =>
-            setDraft(createEmptyDraft(section, itemsForSection(menuData.items, section).length + 1))
-          }
+          startNewItem={(section) => {
+            setEditorSection(section);
+            setDraft(createEmptyDraft(section, itemsForSection(menuData.items, section).length + 1));
+          }}
         />
       </section>
     </main>
@@ -289,10 +309,12 @@ export function OwnerDashboard() {
 type DashboardBodyProps = {
   busy: boolean;
   draft: MenuItem | MenuItemDraft;
+  editorSection: DashboardSection;
   liveEditing: boolean;
   menuData: MenuData;
   message: string;
   setDraft: (draft: MenuItem | MenuItemDraft) => void;
+  setEditorSection: (section: DashboardSection) => void;
   handleSave: (event: FormEvent<HTMLFormElement>) => void;
   handleDelete: (item: MenuItem) => void;
   moveItem: (item: MenuItem, direction: -1 | 1) => void;
@@ -304,10 +326,12 @@ type DashboardBodyProps = {
 function DashboardBody({
   busy,
   draft,
+  editorSection,
   liveEditing,
   menuData,
   message,
   setDraft,
+  setEditorSection,
   handleSave,
   handleDelete,
   moveItem,
@@ -315,18 +339,20 @@ function DashboardBody({
   toggleOutOfStockVisibility,
   startNewItem
 }: DashboardBodyProps) {
-  const draftSection = sectionForCategory(draft.category_id);
-  const categoryFilter = categoryIdsForForm(draftSection);
+  const categoryFilter = categoryIdsForForm(editorSection);
   const categoryOptions = categoryFilter
     ? menuData.categories.filter((category) => categoryFilter.includes(category.id))
-    : menuData.categories.filter((category) => !sectionCategoryIds.addons.includes(category.id) && !sectionCategoryIds.drinks.includes(category.id));
+    : menuData.categories.filter((category) => !excludedRamenCategoryIds.includes(category.id));
+  const categoryValue = categoryOptions.some((category) => category.id === draft.category_id)
+    ? draft.category_id
+    : categoryForSection(editorSection);
 
   return (
     <div className="dashboard-grid">
       <form className="item-form" onSubmit={handleSave}>
         <div className="form-title">
           <Plus size={19} />
-          <h2>{"id" in draft ? `Edit ${sectionLabels[draftSection]}` : `Add ${sectionLabels[draftSection]}`}</h2>
+          <h2>{"id" in draft ? `Edit ${sectionLabels[editorSection]}` : `Add ${sectionLabels[editorSection]}`}</h2>
         </div>
 
         <label>
@@ -369,7 +395,7 @@ function DashboardBody({
 
         <label>
           Category
-          <select value={draft.category_id} onChange={(event) => setDraft({ ...draft, category_id: event.target.value })}>
+          <select value={categoryValue} onChange={(event) => setDraft({ ...draft, category_id: event.target.value })}>
             {categoryOptions.map((category) => (
               <option key={category.id} value={category.id}>
                 {category.name}
@@ -387,9 +413,9 @@ function DashboardBody({
           />
         </label>
 
-        {draftSection !== "drinks" ? (
+        {editorSection === "ramen" ? (
           <label>
-            Spice level {draftSection !== "ramen" ? "(use 0 for no chillies)" : ""}
+            Spice level
             <input
               min="0"
               max="5"
@@ -416,7 +442,7 @@ function DashboardBody({
             {busy ? "Saving..." : "Save Item"}
           </button>
           {"id" in draft ? (
-            <button className="secondary-button" onClick={() => setDraft(createEmptyDraft(draftSection))} type="button">
+            <button className="secondary-button" onClick={() => setDraft(createEmptyDraft(editorSection))} type="button">
               Cancel Edit
             </button>
           ) : null}
@@ -483,7 +509,14 @@ function DashboardBody({
                             <option value="out_of_stock">Out of Stock</option>
                             <option value="hidden">Hidden</option>
                           </select>
-                          <button onClick={() => setDraft(item)} type="button">
+                          <button
+                            onClick={() => {
+                              const nextSection = sectionForCategory(item.category_id);
+                              setEditorSection(nextSection);
+                              setDraft(normalizedDraftForSection(item, nextSection));
+                            }}
+                            type="button"
+                          >
                             Edit
                           </button>
                           <button
