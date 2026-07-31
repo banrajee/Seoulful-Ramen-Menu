@@ -1961,11 +1961,6 @@ select:disabled {
   min-width: 0;
 }
 
-.hero-image-block picture,
-.refined-brand-block picture {
-  display: block;
-}
-
 .hero-image-block img {
   display: block;
   width: min(900px, 100%);
