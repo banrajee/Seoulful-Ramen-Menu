@@ -27,6 +27,8 @@ const sectionCategoryIds: Record<Exclude<DashboardSection, "ramen">, string[]> =
   drinks: ["drinks", "drink_soda", "drink_non_soda", "drink_diet"]
 };
 
+const drinkCategoryOptions = ["drink_soda", "drink_non_soda", "drink_diet"];
+
 function statusLabel(status: ItemStatus) {
   if (status === "out_of_stock") return "Out of Stock";
   if (status === "hidden") return "Hidden";
@@ -73,6 +75,12 @@ function itemsForSection(items: MenuItem[], section: DashboardSection) {
   }
 
   return orderedItems(items).filter((item) => sectionCategoryIds[section].includes(item.category_id));
+}
+
+function categoryIdsForForm(section: DashboardSection) {
+  if (section === "drinks") return drinkCategoryOptions;
+  if (section === "addons") return sectionCategoryIds.addons;
+  return null;
 }
 
 export function OwnerDashboard() {
@@ -308,6 +316,10 @@ function DashboardBody({
   startNewItem
 }: DashboardBodyProps) {
   const draftSection = sectionForCategory(draft.category_id);
+  const categoryFilter = categoryIdsForForm(draftSection);
+  const categoryOptions = categoryFilter
+    ? menuData.categories.filter((category) => categoryFilter.includes(category.id))
+    : menuData.categories.filter((category) => !sectionCategoryIds.addons.includes(category.id) && !sectionCategoryIds.drinks.includes(category.id));
 
   return (
     <div className="dashboard-grid">
@@ -358,7 +370,7 @@ function DashboardBody({
         <label>
           Category
           <select value={draft.category_id} onChange={(event) => setDraft({ ...draft, category_id: event.target.value })}>
-            {menuData.categories.map((category) => (
+            {categoryOptions.map((category) => (
               <option key={category.id} value={category.id}>
                 {category.name}
               </option>
@@ -375,17 +387,19 @@ function DashboardBody({
           />
         </label>
 
-        <label>
-          Spice level {draftSection !== "ramen" ? "(use 0 for no chillies)" : ""}
-          <input
-            min="0"
-            max="5"
-            type="number"
-            value={draft.spice_level ?? 1}
-            onChange={(event) => setDraft({ ...draft, spice_level: Number(event.target.value) })}
-            required
-          />
-        </label>
+        {draftSection !== "drinks" ? (
+          <label>
+            Spice level {draftSection !== "ramen" ? "(use 0 for no chillies)" : ""}
+            <input
+              min="0"
+              max="5"
+              type="number"
+              value={draft.spice_level ?? 1}
+              onChange={(event) => setDraft({ ...draft, spice_level: Number(event.target.value) })}
+              required
+            />
+          </label>
+        ) : null}
 
         <label>
           Status
