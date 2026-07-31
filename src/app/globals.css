@@ -2667,11 +2667,6 @@ select:disabled {
   height: 108px;
 }
 
-.refined-addons-list .addon-image.spring-onions {
-  width: 148px;
-  height: 112px;
-}
-
 @media (max-width: 760px) {
   .refined-menu-page {
     padding: 0;
@@ -2796,8 +2791,7 @@ select:disabled {
   .refined-addons-list .addon-image.raw-egg,
   .refined-addons-list .addon-image.corn,
   .refined-addons-list .addon-image.sausage,
-  .refined-addons-list .addon-image.corn-dog,
-  .refined-addons-list .addon-image.spring-onions {
+  .refined-addons-list .addon-image.corn-dog {
     width: 104px;
     height: 84px;
   }
