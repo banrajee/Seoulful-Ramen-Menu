@@ -2667,10 +2667,6 @@ select:disabled {
   height: 108px;
 }
 
-.refined-addons-list .addon-image.spring-onions {
-  transform: scale(2.35);
-}
-
 @media (max-width: 760px) {
   .refined-menu-page {
     padding: 0;
@@ -2798,10 +2794,6 @@ select:disabled {
   .refined-addons-list .addon-image.corn-dog {
     width: 104px;
     height: 84px;
-  }
-
-  .refined-addons-list .addon-image.spring-onions {
-    transform: scale(2.1);
   }
 
   .refined-menu-shell footer {
