@@ -2069,11 +2069,11 @@ select:disabled {
 
 .refined-addons-list article {
   display: grid;
-  grid-template-columns: 132px minmax(0, 1fr);
-  gap: 14px;
+  grid-template-columns: 150px minmax(0, 1fr);
+  gap: 16px;
   align-items: center;
-  min-height: 108px;
-  padding: 0 20px;
+  min-height: 122px;
+  padding: 0 18px;
   border-right: 2px dotted rgba(9, 38, 42, 0.52);
 }
 
@@ -2227,24 +2227,24 @@ select:disabled {
 
 .refined-addons-list .addon-image {
   display: block;
-  width: 118px;
-  height: 88px;
+  width: 136px;
+  height: 104px;
   object-fit: contain;
   filter: drop-shadow(0 5px 4px rgba(9, 38, 42, 0.14));
 }
 
 .refined-addons-list .addon-image.sausage,
 .refined-addons-list .addon-image.corn-dog {
-  width: 128px;
-  height: 92px;
+  width: 148px;
+  height: 112px;
 }
 
 .refined-addons-list .addon-image.corn {
-  width: 122px;
-  height: 94px;
+  width: 142px;
+  height: 112px;
 }
 
 .refined-addons-list .addon-image.raw-egg {
-  width: 112px;
-  height: 90px;
+  width: 132px;
+  height: 108px;
 }
