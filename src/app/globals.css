@@ -1964,13 +1964,13 @@ select:disabled {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 2px;
-  min-height: 19px;
+  gap: 3px;
+  min-height: 25px;
 }
 
 .spice-row img {
-  width: 16px;
-  height: 16px;
+  width: 22px;
+  height: 22px;
   object-fit: contain;
 }
 
