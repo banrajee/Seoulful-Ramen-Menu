@@ -954,13 +954,13 @@ footer span + span::before {
 
 .owner-page {
   min-height: 100vh;
-  padding: 18px;
+  padding: 10px;
   background: #f3ead7;
 }
 
 .login-panel,
 .owner-panel {
-  width: min(1480px, 100%);
+  width: 100%;
   margin: 0 auto;
   border: 1px solid rgba(9, 38, 42, 0.12);
   border-radius: 8px;
@@ -1257,11 +1257,11 @@ select:disabled {
 
 @media (min-width: 1280px) {
   .owner-page {
-    padding: 22px 28px;
+    padding: 12px;
   }
 
   .dashboard-grid {
-    grid-template-columns: 380px minmax(0, 1fr);
+    grid-template-columns: 400px minmax(0, 1fr);
   }
 
   .owner-sections {
@@ -1294,6 +1294,108 @@ select:disabled {
   .owner-item-actions button:nth-of-type(3),
   .owner-item-actions button:nth-of-type(4) {
     grid-column: span 1;
+  }
+}
+
+@media (max-width: 760px) {
+  .owner-page {
+    padding: 0;
+  }
+
+  .owner-panel {
+    min-height: 100vh;
+    padding: 14px;
+    border-radius: 0;
+  }
+
+  .owner-header {
+    align-items: flex-start;
+    margin-bottom: 16px;
+  }
+
+  .owner-panel h1 {
+    font-size: clamp(2rem, 13vw, 2.7rem);
+  }
+
+  .dashboard-stack {
+    gap: 12px;
+  }
+
+  .owner-add-toolbar {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .owner-add-toolbar button {
+    width: 100%;
+    min-height: 46px;
+    padding: 0 10px;
+    font-size: 0.88rem;
+  }
+
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .item-form,
+  .items-panel {
+    padding: 12px;
+  }
+
+  .two-columns {
+    grid-template-columns: 1fr;
+  }
+
+  .settings-row {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .settings-row button {
+    width: 100%;
+  }
+
+  .owner-sections {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-top: 14px;
+  }
+
+  .owner-menu-section {
+    padding: 12px;
+  }
+
+  .owner-item {
+    grid-template-columns: 1fr;
+    padding: 12px;
+  }
+
+  .owner-item-actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .owner-item-actions select {
+    grid-column: 1 / -1;
+  }
+
+  .owner-item-actions button {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .owner-item-actions button:nth-of-type(3),
+  .owner-item-actions button:nth-of-type(4) {
+    grid-column: span 1;
+  }
+}
+
+@media (max-width: 420px) {
+  .owner-add-toolbar {
+    grid-template-columns: 1fr;
   }
 }
 
