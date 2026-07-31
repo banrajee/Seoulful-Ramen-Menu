@@ -399,6 +399,16 @@ export const sampleMenu: MenuData = {
       sort_order: 7
     },
     {
+      id: "sausage",
+      name: "Sausage",
+      description: "Sausage add-on.",
+      price: 29,
+      category_id: "addons",
+      image_url: null,
+      status: "available",
+      sort_order: 8
+    },
+    {
       id: "yopokki-spicy-carbonara",
       name: "Spicy Carbonara Yopokki",
       description: "Rice cakes in a creamy spicy sauce cup.",

@@ -2651,7 +2651,6 @@ select:disabled {
   filter: drop-shadow(0 5px 4px rgba(9, 38, 42, 0.14));
 }
 
-.refined-addons-list .addon-image.sausage,
 .refined-addons-list .addon-image.corn-dog {
   width: 148px;
   height: 112px;
@@ -2790,7 +2789,6 @@ select:disabled {
   .refined-addons-list .addon-image,
   .refined-addons-list .addon-image.raw-egg,
   .refined-addons-list .addon-image.corn,
-  .refined-addons-list .addon-image.sausage,
   .refined-addons-list .addon-image.corn-dog {
     width: 104px;
     height: 84px;
