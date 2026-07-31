@@ -158,14 +158,20 @@ export function LiveMenu() {
       <section className="menu-shell refined-menu-shell" aria-label="Seoulful Ramen digital menu">
         <div className="hero-grid refined-hero-grid">
           <div className="hero-image-block">
-            <img
-              src="/menu-heading-hero-transparent.png"
-              alt="Come and cook your own ramen. Self-Cook Korean Ramen Experience."
-            />
+            <picture>
+              <source media="(max-width: 760px)" srcSet="/menu-heading-hero-mobile.png" />
+              <img
+                src="/menu-heading-hero-transparent.png"
+                alt="Come and cook your own ramen. Self-Cook Korean Ramen Experience."
+              />
+            </picture>
           </div>
 
           <div className="brand-block refined-brand-block">
-            <img src="/menu-right-logo-transparent.png" alt="Seoulful Ramen" />
+            <picture>
+              <source media="(max-width: 760px)" srcSet="/menu-right-logo-mobile.png" />
+              <img src="/menu-right-logo-transparent.png" alt="Seoulful Ramen" />
+            </picture>
           </div>
         </div>
 
