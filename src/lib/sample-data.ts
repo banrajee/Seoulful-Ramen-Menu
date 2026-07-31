@@ -339,6 +339,16 @@ export const sampleMenu: MenuData = {
       sort_order: 3
     },
     {
+      id: "corn-dog",
+      name: "Corn Dog",
+      description: "Crispy corn dog add-on.",
+      price: 49,
+      category_id: "addons",
+      image_url: null,
+      status: "available",
+      sort_order: 4
+    },
+    {
       id: "cheese",
       name: "Cheese",
       description: "Cheese slice add-on.",
@@ -346,7 +356,7 @@ export const sampleMenu: MenuData = {
       category_id: "addons",
       image_url: null,
       status: "available",
-      sort_order: 4
+      sort_order: 5
     },
     {
       id: "shredded-chicken",
@@ -356,7 +366,7 @@ export const sampleMenu: MenuData = {
       category_id: "addons",
       image_url: null,
       status: "available",
-      sort_order: 5
+      sort_order: 6
     },
     {
       id: "yopokki-spicy-carbonara",

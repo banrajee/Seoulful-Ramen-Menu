@@ -2224,3 +2224,26 @@ select:disabled {
   font-weight: 900;
   text-transform: uppercase;
 }
+
+.refined-addons-list .addon-image {
+  display: block;
+  width: 76px;
+  height: 62px;
+  object-fit: contain;
+  filter: drop-shadow(0 5px 4px rgba(9, 38, 42, 0.14));
+}
+
+.refined-addons-list .addon-image.sausage,
+.refined-addons-list .addon-image.corn-dog {
+  width: 86px;
+}
+
+.refined-addons-list .addon-image.corn {
+  width: 78px;
+  height: 66px;
+}
+
+.refined-addons-list .addon-image.raw-egg {
+  width: 78px;
+  height: 66px;
+}

@@ -43,9 +43,23 @@ function addonClass(item: MenuItem) {
   const name = item.name.toLowerCase();
   if (name.includes("raw")) return "raw-egg";
   if (name.includes("boiled")) return "boiled-egg";
+  if (name.includes("corn dog")) return "corn-dog";
   if (name.includes("corn")) return "corn";
   if (name.includes("cheese")) return "cheese";
+  if (name.includes("sausage") || name.includes("hot dog")) return "sausage";
   return "chicken";
+}
+
+function addonImage(item: MenuItem) {
+  const name = item.name.toLowerCase();
+  if (name.includes("raw")) return "/addon-raw-egg.png";
+  if (name.includes("boiled")) return "/addon-boiled-egg.png";
+  if (name.includes("corn dog")) return "/addon-corn-dog.png";
+  if (name.includes("corn")) return "/addon-corn.png";
+  if (name.includes("cheese")) return "/addon-cheese.png";
+  if (name.includes("sausage") || name.includes("hot dog")) return "/addon-sausage.png";
+  if (name.includes("chicken")) return "/addon-shredded-chicken.png";
+  return null;
 }
 
 function visibleRamenItems(menuData: MenuData) {
@@ -167,15 +181,23 @@ export function LiveMenu() {
           <section className="addons-bar refined-addons-bar" aria-label="Add-Ons">
             <h2>Add-Ons</h2>
             <div className="addons-list refined-addons-list">
-              {addOns.map((item) => (
-                <article key={item.id}>
-                  <span className={`addon-icon ${addonClass(item)}`} aria-hidden="true" />
-                  <div>
-                    <h3>{item.name}</h3>
-                    <strong>{money(item.price)}</strong>
-                  </div>
-                </article>
-              ))}
+              {addOns.map((item) => {
+                const image = addonImage(item);
+
+                return (
+                  <article key={item.id}>
+                    {image ? (
+                      <img className={`addon-image ${addonClass(item)}`} src={image} alt="" aria-hidden="true" />
+                    ) : (
+                      <span className={`addon-icon ${addonClass(item)}`} aria-hidden="true" />
+                    )}
+                    <div>
+                      <h3>{item.name}</h3>
+                      <strong>{money(item.price)}</strong>
+                    </div>
+                  </article>
+                );
+              })}
             </div>
           </section>
         ) : null}
