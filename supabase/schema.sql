@@ -155,6 +155,23 @@ insert into public.shop_settings (id, show_out_of_stock)
 values ('default', true)
 on conflict (id) do nothing;
 
+with ranked_menu_items as (
+  select
+    id,
+    row_number() over (
+      partition by category_id, lower(trim(name))
+      order by created_at asc, updated_at desc, id asc
+    ) as duplicate_rank
+  from public.menu_items
+)
+delete from public.menu_items
+using ranked_menu_items
+where public.menu_items.id = ranked_menu_items.id
+  and ranked_menu_items.duplicate_rank > 1;
+
+create unique index if not exists menu_items_category_name_unique
+on public.menu_items (category_id, lower(trim(name)));
+
 insert into public.menu_items (name, description, price, category_id, image_url, status, sort_order) values
   ('Nongshim Shin Ramyeon', 'Original spicy Korean ramen.', 189, 'classic', null, 'available', 1),
   ('Nongshim Shin Kimchi', 'Spicy ramen with kimchi flavour.', 189, 'classic', null, 'available', 2),
