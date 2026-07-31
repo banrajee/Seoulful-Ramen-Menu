@@ -50,6 +50,18 @@ function selfCookPrice(item: MenuItem) {
   return Number(item.self_cook_price ?? item.price);
 }
 
+function drinkPriceType(item: MenuItem) {
+  return item.drink_price_type ?? "single";
+}
+
+function drinkCupIcePrice(item: MenuItem) {
+  return Number(item.cup_ice_price ?? 0);
+}
+
+function drinkWithCupIcePrice(item: MenuItem) {
+  return Number(item.with_cup_ice_price ?? Number(item.price) + drinkCupIcePrice(item));
+}
+
 function packClass(item: MenuItem) {
   const text = `${item.name} ${item.category_id}`.toLowerCase();
 
@@ -227,16 +239,37 @@ export function LiveMenu() {
                   <section className="drink-group" key={group.id}>
                     <h3>{group.label}</h3>
                     <div className="drinks-list">
-                      {groupItems.map((item) => (
-                        <article className={item.status} key={item.id}>
-                          {item.image_url ? <img src={item.image_url} alt={item.name} /> : <span aria-hidden="true" />}
-                          <div>
-                            <h4>{item.name}</h4>
-                            <strong>{money(item.price)}</strong>
-                            {item.status === "out_of_stock" ? <em>Out of Stock</em> : null}
-                          </div>
-                        </article>
-                      ))}
+                      {groupItems.map((item) => {
+                        const type = drinkPriceType(item);
+                        const cupIceAvailable = item.cup_ice_available !== false;
+
+                        return (
+                          <article className={item.status} key={item.id}>
+                            {item.image_url ? <img src={item.image_url} alt={item.name} /> : <span aria-hidden="true" />}
+                            <div>
+                              <h4>{item.name}</h4>
+                              {type === "dual" ? (
+                                <div className="drink-price-stack">
+                                  <span>Packet Only: {money(Number(item.packet_only_price ?? item.price))}</span>
+                                  <strong>With Cup + Ice: {money(drinkWithCupIcePrice(item))}</strong>
+                                </div>
+                              ) : (
+                                <>
+                                  <strong>{money(item.price)}</strong>
+                                  {type === "optional_addon" || item.has_cup_ice_option ? (
+                                    <span className={`drink-cup-ice-line ${cupIceAvailable ? "" : "unavailable"}`}>
+                                      {cupIceAvailable
+                                        ? `+ Cup + Ice — ${money(drinkCupIcePrice(item))}`
+                                        : "Cup + Ice unavailable"}
+                                    </span>
+                                  ) : null}
+                                </>
+                              )}
+                              {item.status === "out_of_stock" ? <em>Out of Stock</em> : null}
+                            </div>
+                          </article>
+                        );
+                      })}
                     </div>
                   </section>
                 );
@@ -298,7 +331,7 @@ export function LiveMenu() {
         <footer>
           <span>
             For ramen, choose Packet Only or Self-Cook Bowl. Self-Cook Bowl includes disposable bowl, cutlery, and
-            access to the self-cook station.
+            access to the self-cook station. Cup and ice are optional for drinks and may be charged separately.
           </span>
         </footer>
       </section>

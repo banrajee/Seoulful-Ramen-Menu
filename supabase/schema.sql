@@ -15,7 +15,12 @@ create table if not exists public.menu_items (
   price numeric(10, 2) not null check (price >= 0),
   packet_only_price numeric(10, 2) check (packet_only_price is null or packet_only_price >= 0),
   self_cook_price numeric(10, 2) check (self_cook_price is null or self_cook_price >= 0),
+  with_cup_ice_price numeric(10, 2) check (with_cup_ice_price is null or with_cup_ice_price >= 0),
   price_type text not null default 'single' check (price_type in ('single', 'dual')),
+  drink_price_type text not null default 'single' check (drink_price_type in ('single', 'optional_addon', 'dual')),
+  has_cup_ice_option boolean not null default false,
+  cup_ice_price numeric(10, 2) check (cup_ice_price is null or cup_ice_price >= 0),
+  cup_ice_available boolean not null default true,
   category_id text not null references public.categories(id) on delete cascade,
   image_url text,
   spice_level integer not null default 1 check (spice_level between 0 and 5),
@@ -43,7 +48,22 @@ alter table public.menu_items
 add column if not exists self_cook_price numeric(10, 2) check (self_cook_price is null or self_cook_price >= 0);
 
 alter table public.menu_items
+add column if not exists with_cup_ice_price numeric(10, 2) check (with_cup_ice_price is null or with_cup_ice_price >= 0);
+
+alter table public.menu_items
 add column if not exists price_type text not null default 'single' check (price_type in ('single', 'dual'));
+
+alter table public.menu_items
+add column if not exists drink_price_type text not null default 'single' check (drink_price_type in ('single', 'optional_addon', 'dual'));
+
+alter table public.menu_items
+add column if not exists has_cup_ice_option boolean not null default false;
+
+alter table public.menu_items
+add column if not exists cup_ice_price numeric(10, 2) check (cup_ice_price is null or cup_ice_price >= 0);
+
+alter table public.menu_items
+add column if not exists cup_ice_available boolean not null default true;
 
 alter table public.menu_items
 add column if not exists food_type text check (food_type is null or food_type in ('veg', 'non_veg'));
@@ -204,7 +224,7 @@ where category_id not in (
 update public.menu_items
 set
   price_type = 'single',
-  packet_only_price = null,
+  packet_only_price = case when category_id in ('drinks', 'drink_soda', 'drink_non_soda', 'drink_diet') then packet_only_price else null end,
   self_cook_price = null,
   food_type = null
 where category_id in (
@@ -216,6 +236,30 @@ where category_id in (
   'k_snacks_sides',
   'yopokki'
 );
+
+update public.menu_items
+set
+  drink_price_type = coalesce(drink_price_type, 'single'),
+  has_cup_ice_option = coalesce(has_cup_ice_option, false),
+  cup_ice_price = case
+    when drink_price_type in ('optional_addon', 'dual') or has_cup_ice_option then coalesce(cup_ice_price, 20)
+    else cup_ice_price
+  end,
+  cup_ice_available = coalesce(cup_ice_available, true),
+  with_cup_ice_price = case
+    when drink_price_type = 'dual' then coalesce(with_cup_ice_price, price + coalesce(cup_ice_price, 20))
+    else with_cup_ice_price
+  end
+where category_id in ('drinks', 'drink_soda', 'drink_non_soda', 'drink_diet');
+
+update public.menu_items
+set
+  drink_price_type = 'single',
+  has_cup_ice_option = false,
+  cup_ice_price = null,
+  cup_ice_available = true,
+  with_cup_ice_price = null
+where category_id not in ('drinks', 'drink_soda', 'drink_non_soda', 'drink_diet');
 
 do $$
 begin

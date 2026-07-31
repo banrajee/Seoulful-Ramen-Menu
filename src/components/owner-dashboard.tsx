@@ -12,7 +12,7 @@ import {
 } from "@/lib/menu-service";
 import { sampleMenu } from "@/lib/sample-data";
 import { createBrowserSupabaseClient, hasSupabaseConfig } from "@/lib/supabase";
-import type { ItemStatus, MenuData, MenuItem, MenuItemDraft } from "@/lib/types";
+import type { DrinkPriceType, ItemStatus, MenuData, MenuItem, MenuItemDraft } from "@/lib/types";
 
 type DashboardSection = "ramen" | "addons" | "drinks" | "snacks";
 
@@ -47,6 +47,20 @@ function statusLabel(status: ItemStatus) {
 }
 
 function ownerPriceLabel(item: MenuItem) {
+  if (sectionCategoryIds.drinks.includes(item.category_id)) {
+    if (item.drink_price_type === "dual") {
+      return `Packet Rs ${Number(item.packet_only_price ?? item.price)} / With Cup + Ice Rs ${Number(
+        item.with_cup_ice_price ?? item.price
+      )}`;
+    }
+
+    if (item.drink_price_type === "optional_addon" || item.has_cup_ice_option) {
+      const cupIceText =
+        item.cup_ice_available === false ? "Cup + Ice unavailable" : `Cup + Ice +Rs ${Number(item.cup_ice_price ?? 0)}`;
+      return `Rs ${item.price} · ${cupIceText}`;
+    }
+  }
+
   if (item.price_type === "dual") {
     return `Packet ₹${Number(item.packet_only_price ?? item.price)} / Bowl ₹${Number(item.self_cook_price ?? item.price)}`;
   }
@@ -76,6 +90,7 @@ function categoryForSection(section: DashboardSection) {
 
 function createEmptyDraft(section: DashboardSection = "ramen", sortOrder = 99): MenuItemDraft {
   const isRamen = section === "ramen";
+  const isDrink = section === "drinks";
   const singlePrice = section === "addons" ? 19 : section === "drinks" || section === "snacks" ? 49 : 189;
 
   return {
@@ -84,7 +99,12 @@ function createEmptyDraft(section: DashboardSection = "ramen", sortOrder = 99): 
     price: singlePrice,
     packet_only_price: isRamen ? Math.max(0, singlePrice - 40) : null,
     self_cook_price: isRamen ? singlePrice : null,
+    with_cup_ice_price: null,
     price_type: isRamen ? "dual" : "single",
+    drink_price_type: "single",
+    has_cup_ice_option: false,
+    cup_ice_price: isDrink ? 20 : null,
+    cup_ice_available: true,
     category_id: categoryForSection(section),
     image_url: "",
     spice_level: section === "ramen" ? 3 : 0,
@@ -124,16 +144,25 @@ function categoryIdsForForm(section: DashboardSection) {
 function normalizedDraftForSection(draft: MenuItem | MenuItemDraft, section: DashboardSection): MenuItem | MenuItemDraft {
   const categoryIds = categoryIdsForForm(section);
   const isRamen = section === "ramen";
+  const isDrink = section === "drinks";
   const selfCookPrice = Number(draft.self_cook_price ?? draft.price);
   const packetOnlyPrice = Number(draft.packet_only_price ?? Math.max(0, selfCookPrice - 40));
+  const drinkPriceType = draft.drink_price_type ?? "single";
+  const cupIcePrice = Number(draft.cup_ice_price ?? 20);
+  const drinkPacketOnlyPrice = Number(draft.packet_only_price ?? draft.price);
 
   if (categoryIds && !categoryIds.includes(draft.category_id)) {
     return {
       ...draft,
       category_id: categoryForSection(section),
       price_type: "single",
-      packet_only_price: null,
+      packet_only_price: isDrink && drinkPriceType === "dual" ? drinkPacketOnlyPrice : null,
       self_cook_price: null,
+      with_cup_ice_price: isDrink && drinkPriceType === "dual" ? Number(draft.with_cup_ice_price ?? draft.price + cupIcePrice) : null,
+      drink_price_type: isDrink ? drinkPriceType : "single",
+      has_cup_ice_option: isDrink && drinkPriceType === "optional_addon",
+      cup_ice_price: isDrink && drinkPriceType !== "single" ? cupIcePrice : null,
+      cup_ice_available: isDrink ? draft.cup_ice_available ?? true : true,
       food_type: null,
       spice_level: section === "drinks" ? 0 : draft.spice_level
     };
@@ -145,7 +174,12 @@ function normalizedDraftForSection(draft: MenuItem | MenuItemDraft, section: Das
       price: selfCookPrice,
       packet_only_price: packetOnlyPrice,
       self_cook_price: selfCookPrice,
+      with_cup_ice_price: null,
       price_type: "dual",
+      drink_price_type: "single",
+      has_cup_ice_option: false,
+      cup_ice_price: null,
+      cup_ice_available: true,
       category_id: categoryForSection(section),
       food_type: draft.food_type ?? "veg",
       spice_level: draft.spice_level ?? 3
@@ -158,7 +192,12 @@ function normalizedDraftForSection(draft: MenuItem | MenuItemDraft, section: Das
       price: selfCookPrice,
       packet_only_price: packetOnlyPrice,
       self_cook_price: selfCookPrice,
+      with_cup_ice_price: null,
       price_type: "dual",
+      drink_price_type: "single",
+      has_cup_ice_option: false,
+      cup_ice_price: null,
+      cup_ice_available: true,
       food_type: draft.food_type ?? "veg",
       spice_level: draft.spice_level ?? 3
     };
@@ -167,8 +206,13 @@ function normalizedDraftForSection(draft: MenuItem | MenuItemDraft, section: Das
   return {
     ...draft,
     price_type: "single",
-    packet_only_price: null,
+    packet_only_price: isDrink && drinkPriceType === "dual" ? drinkPacketOnlyPrice : null,
     self_cook_price: null,
+    with_cup_ice_price: isDrink && drinkPriceType === "dual" ? Number(draft.with_cup_ice_price ?? draft.price + cupIcePrice) : null,
+    drink_price_type: isDrink ? drinkPriceType : "single",
+    has_cup_ice_option: isDrink && drinkPriceType === "optional_addon",
+    cup_ice_price: isDrink && drinkPriceType !== "single" ? cupIcePrice : null,
+    cup_ice_available: isDrink ? draft.cup_ice_available ?? true : true,
     food_type: null,
     spice_level: section === "drinks" ? 0 : draft.spice_level
   };
@@ -424,6 +468,8 @@ function DashboardBody({
     : categoryForSection(editorSection);
   const showCategoryField = editorSection === "drinks" || editorSection === "snacks";
   const isRamenEditor = editorSection === "ramen";
+  const isDrinksEditor = editorSection === "drinks";
+  const drinkPriceType = draft.drink_price_type ?? "single";
 
   return (
     <div className="dashboard-stack">
@@ -500,18 +546,118 @@ function DashboardBody({
               />
             </label>
           </div>
+        ) : isDrinksEditor && drinkPriceType === "dual" ? (
+          <div className="two-columns">
+            <label>
+              Packet Only Price
+              <input
+                min="0"
+                type="number"
+                value={draft.packet_only_price ?? draft.price}
+                onChange={(event) =>
+                  setDraft({
+                    ...draft,
+                    price: Number(event.target.value),
+                    packet_only_price: Number(event.target.value),
+                    drink_price_type: "dual"
+                  })
+                }
+                required
+              />
+            </label>
+
+            <label>
+              With Cup + Ice Price
+              <input
+                min="0"
+                type="number"
+                value={draft.with_cup_ice_price ?? draft.price}
+                onChange={(event) =>
+                  setDraft({
+                    ...draft,
+                    with_cup_ice_price: Number(event.target.value),
+                    drink_price_type: "dual"
+                  })
+                }
+                required
+              />
+            </label>
+          </div>
         ) : (
           <label>
-            Price
+            {isDrinksEditor ? "Normal Drink Price" : "Price"}
             <input
               min="0"
               type="number"
               value={draft.price}
-              onChange={(event) => setDraft({ ...draft, price: Number(event.target.value), price_type: "single" })}
+              onChange={(event) =>
+                setDraft({
+                  ...draft,
+                  price: Number(event.target.value),
+                  price_type: "single",
+                  packet_only_price: isDrinksEditor && drinkPriceType === "dual" ? Number(event.target.value) : draft.packet_only_price
+                })
+              }
               required
             />
           </label>
         )}
+
+        {isDrinksEditor ? (
+          <>
+            <label>
+              Drink price display
+              <select
+                value={drinkPriceType}
+                onChange={(event) => {
+                  const nextType = event.target.value as DrinkPriceType;
+                  const nextCupIcePrice = Number(draft.cup_ice_price ?? 20);
+
+                  setDraft({
+                    ...draft,
+                    drink_price_type: nextType,
+                    has_cup_ice_option: nextType === "optional_addon",
+                    cup_ice_price: nextType === "single" ? null : nextCupIcePrice,
+                    cup_ice_available: draft.cup_ice_available ?? true,
+                    packet_only_price: nextType === "dual" ? Number(draft.packet_only_price ?? draft.price) : null,
+                    with_cup_ice_price:
+                      nextType === "dual" ? Number(draft.with_cup_ice_price ?? draft.price + nextCupIcePrice) : null
+                  });
+                }}
+              >
+                <option value="single">Single price only</option>
+                <option value="optional_addon">Single price + optional Cup/Ice add-on</option>
+                <option value="dual">Dual display: Packet Only / With Cup + Ice</option>
+              </select>
+            </label>
+
+            {drinkPriceType !== "single" ? (
+              <div className="two-columns">
+                <label>
+                  Cup + Ice Price
+                  <input
+                    min="0"
+                    type="number"
+                    value={draft.cup_ice_price ?? 20}
+                    onChange={(event) => setDraft({ ...draft, cup_ice_price: Number(event.target.value) })}
+                    required
+                  />
+                </label>
+
+                <label>
+                  Cup + Ice Status
+                  <select
+                    value={draft.cup_ice_available === false ? "unavailable" : "available"}
+                    onChange={(event) => setDraft({ ...draft, cup_ice_available: event.target.value === "available" })}
+                  >
+                    <option value="available">Available</option>
+                    <option value="unavailable">Unavailable</option>
+                  </select>
+                </label>
+              </div>
+            ) : null}
+          </>
+        ) : null}
 
         <div className="two-columns">
           <label>

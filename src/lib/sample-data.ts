@@ -434,12 +434,19 @@ export const sampleMenu: MenuData = {
 const sampleRamenCategoryIds = new Set(["classic", "premium", "signature"]);
 
 sampleMenu.items = sampleMenu.items.map((item) => {
+  const isDrink = ["drinks", "drink_soda", "drink_non_soda", "drink_diet"].includes(item.category_id);
+
   if (!sampleRamenCategoryIds.has(item.category_id)) {
     return {
       ...item,
       price_type: "single",
+      drink_price_type: "single",
       packet_only_price: null,
       self_cook_price: null,
+      with_cup_ice_price: null,
+      has_cup_ice_option: false,
+      cup_ice_price: isDrink ? 20 : null,
+      cup_ice_available: true,
       food_type: null
     };
   }
@@ -449,8 +456,13 @@ sampleMenu.items = sampleMenu.items.map((item) => {
   return {
     ...item,
     price_type: "dual",
+    drink_price_type: "single",
     packet_only_price: Math.max(0, item.price - 40),
     self_cook_price: item.price,
+    with_cup_ice_price: null,
+    has_cup_ice_option: false,
+    cup_ice_price: null,
+    cup_ice_available: true,
     food_type: isNonVeg ? "non_veg" : "veg"
   };
 });

@@ -1,5 +1,6 @@
 export type ItemStatus = "available" | "out_of_stock" | "hidden";
 export type PriceType = "single" | "dual";
+export type DrinkPriceType = "single" | "optional_addon" | "dual";
 export type FoodType = "veg" | "non_veg";
 
 export type Category = {
@@ -17,7 +18,12 @@ export type MenuItem = {
   price: number;
   packet_only_price?: number | null;
   self_cook_price?: number | null;
+  with_cup_ice_price?: number | null;
   price_type?: PriceType;
+  drink_price_type?: DrinkPriceType;
+  has_cup_ice_option?: boolean;
+  cup_ice_price?: number | null;
+  cup_ice_available?: boolean;
   category_id: string;
   image_url: string | null;
   spice_level?: number;
