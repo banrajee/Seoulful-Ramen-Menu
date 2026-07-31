@@ -38,6 +38,18 @@ function spiceLevel(item: MenuItem) {
   return Math.min(5, Math.max(0, Number(item.spice_level ?? fallbackSpiceLevel(item))));
 }
 
+function isDualPrice(item: MenuItem) {
+  return item.price_type === "dual" || item.packet_only_price != null || item.self_cook_price != null;
+}
+
+function packetOnlyPrice(item: MenuItem) {
+  return Number(item.packet_only_price ?? Math.max(0, Number(item.price) - 40));
+}
+
+function selfCookPrice(item: MenuItem) {
+  return Number(item.self_cook_price ?? item.price);
+}
+
 function packClass(item: MenuItem) {
   const text = `${item.name} ${item.category_id}`.toLowerCase();
 
@@ -144,6 +156,11 @@ export function LiveMenu() {
           </div>
         </div>
 
+        <p className="ramen-price-note">
+          Packet Only is for takeaway packet purchase. Self-Cook Bowl includes bowl, cutlery, and self-cook station
+          access.
+        </p>
+
         <div className="ramen-product-grid">
           {ramenItems.map((item) => {
             const level = spiceLevel(item);
@@ -173,8 +190,23 @@ export function LiveMenu() {
                 </div>
 
                 <div className="ramen-product-copy">
-                  <h2>{item.name}</h2>
-                  <strong>{money(item.price)}</strong>
+                  <div className="ramen-title-row">
+                    <h2>{item.name}</h2>
+                    {item.food_type ? (
+                      <span
+                        className={`food-marker ${item.food_type}`}
+                        aria-label={item.food_type === "veg" ? "Vegetarian" : "Non-vegetarian"}
+                      />
+                    ) : null}
+                  </div>
+                  {isDualPrice(item) ? (
+                    <div className="dual-price-stack">
+                      <span>Packet Only: {money(packetOnlyPrice(item))}</span>
+                      <strong>Self-Cook Bowl: {money(selfCookPrice(item))}</strong>
+                    </div>
+                  ) : (
+                    <strong>{money(item.price)}</strong>
+                  )}
                   {item.status === "out_of_stock" ? <span className="status-pill">Out of Stock</span> : null}
                 </div>
               </article>
@@ -264,9 +296,10 @@ export function LiveMenu() {
         ) : null}
 
         <footer>
-          <span>All prices include: Disposable Bowl</span>
-          <span>Cutlery</span>
-          <span>Self-Cook Station Access</span>
+          <span>
+            For ramen, choose Packet Only or Self-Cook Bowl. Self-Cook Bowl includes disposable bowl, cutlery, and
+            access to the self-cook station.
+          </span>
         </footer>
       </section>
     </main>

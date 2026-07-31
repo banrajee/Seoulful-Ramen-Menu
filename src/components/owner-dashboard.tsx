@@ -46,6 +46,20 @@ function statusLabel(status: ItemStatus) {
   return "Available";
 }
 
+function ownerPriceLabel(item: MenuItem) {
+  if (item.price_type === "dual") {
+    return `Packet ₹${Number(item.packet_only_price ?? item.price)} / Bowl ₹${Number(item.self_cook_price ?? item.price)}`;
+  }
+
+  return `₹${item.price}`;
+}
+
+function foodTypeLabel(item: MenuItem) {
+  if (item.food_type === "veg") return "Veg";
+  if (item.food_type === "non_veg") return "Non-Veg";
+  return null;
+}
+
 function sectionForCategory(categoryId: string): DashboardSection {
   if (categoryId === "addons") return "addons";
   if (sectionCategoryIds.drinks.includes(categoryId)) return "drinks";
@@ -61,13 +75,20 @@ function categoryForSection(section: DashboardSection) {
 }
 
 function createEmptyDraft(section: DashboardSection = "ramen", sortOrder = 99): MenuItemDraft {
+  const isRamen = section === "ramen";
+  const singlePrice = section === "addons" ? 19 : section === "drinks" || section === "snacks" ? 49 : 189;
+
   return {
     name: "",
     description: "",
-    price: section === "addons" ? 19 : section === "drinks" || section === "snacks" ? 49 : 189,
+    price: singlePrice,
+    packet_only_price: isRamen ? Math.max(0, singlePrice - 40) : null,
+    self_cook_price: isRamen ? singlePrice : null,
+    price_type: isRamen ? "dual" : "single",
     category_id: categoryForSection(section),
     image_url: "",
     spice_level: section === "ramen" ? 3 : 0,
+    food_type: isRamen ? "veg" : null,
     status: "available",
     sort_order: sortOrder
   };
@@ -100,18 +121,57 @@ function categoryIdsForForm(section: DashboardSection) {
   return null;
 }
 
-function normalizedDraftForSection(draft: MenuItem | MenuItemDraft, section: DashboardSection) {
+function normalizedDraftForSection(draft: MenuItem | MenuItemDraft, section: DashboardSection): MenuItem | MenuItemDraft {
   const categoryIds = categoryIdsForForm(section);
+  const isRamen = section === "ramen";
+  const selfCookPrice = Number(draft.self_cook_price ?? draft.price);
+  const packetOnlyPrice = Number(draft.packet_only_price ?? Math.max(0, selfCookPrice - 40));
 
   if (categoryIds && !categoryIds.includes(draft.category_id)) {
-    return { ...draft, category_id: categoryForSection(section), spice_level: section === "drinks" ? 0 : draft.spice_level };
+    return {
+      ...draft,
+      category_id: categoryForSection(section),
+      price_type: "single",
+      packet_only_price: null,
+      self_cook_price: null,
+      food_type: null,
+      spice_level: section === "drinks" ? 0 : draft.spice_level
+    };
   }
 
   if (section === "ramen" && excludedRamenCategoryIds.includes(draft.category_id)) {
-    return { ...draft, category_id: categoryForSection(section), spice_level: draft.spice_level ?? 3 };
+    return {
+      ...draft,
+      price: selfCookPrice,
+      packet_only_price: packetOnlyPrice,
+      self_cook_price: selfCookPrice,
+      price_type: "dual",
+      category_id: categoryForSection(section),
+      food_type: draft.food_type ?? "veg",
+      spice_level: draft.spice_level ?? 3
+    };
   }
 
-  return section === "drinks" ? { ...draft, spice_level: 0 } : draft;
+  if (isRamen) {
+    return {
+      ...draft,
+      price: selfCookPrice,
+      packet_only_price: packetOnlyPrice,
+      self_cook_price: selfCookPrice,
+      price_type: "dual",
+      food_type: draft.food_type ?? "veg",
+      spice_level: draft.spice_level ?? 3
+    };
+  }
+
+  return {
+    ...draft,
+    price_type: "single",
+    packet_only_price: null,
+    self_cook_price: null,
+    food_type: null,
+    spice_level: section === "drinks" ? 0 : draft.spice_level
+  };
 }
 
 export function OwnerDashboard() {
@@ -363,6 +423,7 @@ function DashboardBody({
     ? draft.category_id
     : categoryForSection(editorSection);
   const showCategoryField = editorSection === "drinks" || editorSection === "snacks";
+  const isRamenEditor = editorSection === "ramen";
 
   return (
     <div className="dashboard-stack">
@@ -402,18 +463,57 @@ function DashboardBody({
           />
         </label>
 
-        <div className="two-columns">
+        {isRamenEditor ? (
+          <div className="two-columns">
+            <label>
+              Packet Only Price
+              <input
+                min="0"
+                type="number"
+                value={draft.packet_only_price ?? ""}
+                onChange={(event) =>
+                  setDraft({
+                    ...draft,
+                    packet_only_price: Number(event.target.value),
+                    price_type: "dual"
+                  })
+                }
+                required
+              />
+            </label>
+
+            <label>
+              Self-Cook Bowl Price
+              <input
+                min="0"
+                type="number"
+                value={draft.self_cook_price ?? draft.price}
+                onChange={(event) =>
+                  setDraft({
+                    ...draft,
+                    price: Number(event.target.value),
+                    self_cook_price: Number(event.target.value),
+                    price_type: "dual"
+                  })
+                }
+                required
+              />
+            </label>
+          </div>
+        ) : (
           <label>
             Price
             <input
               min="0"
               type="number"
               value={draft.price}
-              onChange={(event) => setDraft({ ...draft, price: Number(event.target.value) })}
+              onChange={(event) => setDraft({ ...draft, price: Number(event.target.value), price_type: "single" })}
               required
             />
           </label>
+        )}
 
+        <div className="two-columns">
           <label>
             Order
             <input
@@ -424,6 +524,19 @@ function DashboardBody({
               required
             />
           </label>
+
+          {isRamenEditor ? (
+            <label>
+              Veg / Non-Veg
+              <select
+                value={draft.food_type ?? "veg"}
+                onChange={(event) => setDraft({ ...draft, food_type: event.target.value as "veg" | "non_veg" })}
+              >
+                <option value="veg">Veg</option>
+                <option value="non_veg">Non-Veg</option>
+              </select>
+            </label>
+          ) : null}
         </div>
 
         {showCategoryField ? (
@@ -520,7 +633,8 @@ function DashboardBody({
                         <div>
                           <h3>{item.name}</h3>
                           <p>
-                            &#8377;{item.price} · {statusLabel(item.status)}
+                            {ownerPriceLabel(item)} · {statusLabel(item.status)}
+                            {foodTypeLabel(item) ? ` · ${foodTypeLabel(item)}` : ""}
                           </p>
                         </div>
 

@@ -2025,6 +2025,21 @@ select:disabled {
   margin-top: 18px;
 }
 
+.ramen-price-note {
+  width: min(980px, 100%);
+  margin: 18px auto 0;
+  padding: 10px 16px;
+  border: 1px solid rgba(33, 79, 43, 0.22);
+  border-radius: 8px;
+  background: rgba(255, 253, 245, 0.54);
+  color: #294145;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.96rem;
+  font-weight: 800;
+  line-height: 1.35;
+  text-align: center;
+}
+
 .ramen-product {
   display: grid;
   grid-template-columns: 118px minmax(0, 1fr);
@@ -2156,14 +2171,20 @@ select:disabled {
 
 .ramen-product-copy {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 12px;
-  align-items: baseline;
+  gap: 8px;
+  align-items: center;
   min-width: 0;
   padding: 0;
   background: transparent;
   border: 0;
   box-shadow: none;
+}
+
+.ramen-title-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 42px;
+  gap: 8px;
+  align-items: center;
 }
 
 .ramen-product-copy h2 {
@@ -2177,11 +2198,51 @@ select:disabled {
   line-height: 1.25;
 }
 
-.ramen-product-copy strong {
+.food-marker {
+  display: block;
+  width: 42px;
+  height: 42px;
+  background-image: url("/veg-nonveg-marker.png");
+  background-repeat: no-repeat;
+  background-size: 84px 42px;
+}
+
+.food-marker.veg {
+  background-position: left top;
+}
+
+.food-marker.non_veg {
+  background-position: right top;
+}
+
+.dual-price-stack {
+  display: grid;
+  gap: 4px;
+  color: var(--ink);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.dual-price-stack span {
+  color: #405250;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.dual-price-stack strong,
+.ramen-product-copy > strong {
   color: var(--ink);
   font-family: Arial, Helvetica, sans-serif;
   font-size: clamp(1rem, 1.12vw, 1.2rem);
   font-weight: 700;
+}
+
+.dual-price-stack strong {
+  width: fit-content;
+  padding: 4px 8px;
+  border-radius: 7px;
+  background: rgba(33, 79, 43, 0.12);
+  color: var(--green-deep);
+  font-weight: 950;
 }
 
 .ramen-product-copy .status-pill {
@@ -2643,6 +2704,30 @@ select:disabled {
   .ramen-product-copy h2,
   .ramen-product-copy strong {
     font-size: 1rem;
+  }
+
+  .ramen-price-note {
+    margin-top: 14px;
+    font-size: 0.84rem;
+    text-align: left;
+  }
+
+  .ramen-title-row {
+    grid-template-columns: minmax(0, 1fr) 34px;
+  }
+
+  .food-marker {
+    width: 34px;
+    height: 34px;
+    background-size: 68px 34px;
+  }
+
+  .dual-price-stack span {
+    font-size: 0.82rem;
+  }
+
+  .dual-price-stack strong {
+    font-size: 0.92rem;
   }
 
   .drinks-section,

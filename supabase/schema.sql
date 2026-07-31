@@ -13,9 +13,13 @@ create table if not exists public.menu_items (
   name text not null,
   description text not null default '',
   price numeric(10, 2) not null check (price >= 0),
+  packet_only_price numeric(10, 2) check (packet_only_price is null or packet_only_price >= 0),
+  self_cook_price numeric(10, 2) check (self_cook_price is null or self_cook_price >= 0),
+  price_type text not null default 'single' check (price_type in ('single', 'dual')),
   category_id text not null references public.categories(id) on delete cascade,
   image_url text,
   spice_level integer not null default 1 check (spice_level between 0 and 5),
+  food_type text check (food_type is null or food_type in ('veg', 'non_veg')),
   status text not null default 'available' check (status in ('available', 'out_of_stock', 'hidden')),
   sort_order integer not null default 0,
   created_at timestamptz not null default now(),
@@ -31,6 +35,18 @@ create table if not exists public.shop_settings (
 
 alter table public.menu_items
 add column if not exists spice_level integer not null default 1 check (spice_level between 0 and 5);
+
+alter table public.menu_items
+add column if not exists packet_only_price numeric(10, 2) check (packet_only_price is null or packet_only_price >= 0);
+
+alter table public.menu_items
+add column if not exists self_cook_price numeric(10, 2) check (self_cook_price is null or self_cook_price >= 0);
+
+alter table public.menu_items
+add column if not exists price_type text not null default 'single' check (price_type in ('single', 'dual'));
+
+alter table public.menu_items
+add column if not exists food_type text check (food_type is null or food_type in ('veg', 'non_veg'));
 
 create or replace function public.set_updated_at()
 returns trigger
@@ -158,6 +174,48 @@ insert into public.menu_items (name, description, price, category_id, image_url,
   ('Sweet & Spicy Yopokki', 'Rice cakes with sweet spicy sauce.', 359, 'yopokki', null, 'available', 3),
   ('Cheese Yopokki', 'Rice cakes with cheese sauce.', 359, 'yopokki', null, 'available', 4)
 on conflict do nothing;
+
+update public.menu_items
+set
+  price_type = 'dual',
+  self_cook_price = coalesce(self_cook_price, price),
+  packet_only_price = coalesce(packet_only_price, greatest(price - 40, 0)),
+  food_type = coalesce(
+    food_type,
+    case
+      when lower(name) like '%chicken%'
+        or lower(name) like '%seafood%'
+        or lower(name) like '%lobster%'
+        or lower(name) like '%samgyetang%'
+      then 'non_veg'
+      else 'veg'
+    end
+  )
+where category_id not in (
+  'addons',
+  'drinks',
+  'drink_soda',
+  'drink_non_soda',
+  'drink_diet',
+  'k_snacks_sides',
+  'yopokki'
+);
+
+update public.menu_items
+set
+  price_type = 'single',
+  packet_only_price = null,
+  self_cook_price = null,
+  food_type = null
+where category_id in (
+  'addons',
+  'drinks',
+  'drink_soda',
+  'drink_non_soda',
+  'drink_diet',
+  'k_snacks_sides',
+  'yopokki'
+);
 
 do $$
 begin

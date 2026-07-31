@@ -48,9 +48,13 @@ export async function saveItem(item: MenuItem | MenuItemDraft) {
     name: item.name,
     description: item.description,
     price: Number(item.price),
+    packet_only_price: item.packet_only_price == null ? null : Number(item.packet_only_price),
+    self_cook_price: item.self_cook_price == null ? null : Number(item.self_cook_price),
+    price_type: item.price_type ?? "single",
     category_id: item.category_id,
     image_url: item.image_url || null,
     spice_level: Math.min(5, Math.max(0, Number(item.spice_level ?? 1))),
+    food_type: item.food_type ?? null,
     status: item.status,
     sort_order: Number(item.sort_order)
   };

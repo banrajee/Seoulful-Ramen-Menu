@@ -101,9 +101,10 @@ Because the QR code points to the website URL, the QR code does not need to chan
    - `Available` shows the item normally.
    - `Out of Stock` shows an out-of-stock label, unless the global setting hides out-of-stock items.
    - `Hidden` removes the item from the public menu.
-4. To change a price or description, click `Edit`, change the fields, and click `Save Item`.
-5. To add a new item, fill the form and click `Save Item`.
-6. To change order, use the up/down buttons or edit the `Order` number.
-7. To decide whether out-of-stock items show or disappear, use the `Show OOS` / `Hide OOS` button in the dashboard.
+4. To change a ramen price or description, click `Edit`, update `Packet Only Price`, `Self-Cook Bowl Price`, veg/non-veg, or other fields, and click `Save Item`.
+5. Drinks, add-ons, and snacks use one normal price field.
+6. To add a new item, fill the form and click `Save Item`.
+7. To change order, use the up/down buttons or edit the `Order` number.
+8. To decide whether out-of-stock items show or disappear, use the `Show OOS` / `Hide OOS` button in the dashboard.
 
 Customers see changes on the public menu immediately through Supabase realtime updates.

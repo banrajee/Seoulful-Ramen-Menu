@@ -430,3 +430,27 @@ export const sampleMenu: MenuData = {
     }
   ]
 };
+
+const sampleRamenCategoryIds = new Set(["classic", "premium", "signature"]);
+
+sampleMenu.items = sampleMenu.items.map((item) => {
+  if (!sampleRamenCategoryIds.has(item.category_id)) {
+    return {
+      ...item,
+      price_type: "single",
+      packet_only_price: null,
+      self_cook_price: null,
+      food_type: null
+    };
+  }
+
+  const isNonVeg = /chicken|seafood|lobster|samgyetang/i.test(item.name);
+
+  return {
+    ...item,
+    price_type: "dual",
+    packet_only_price: Math.max(0, item.price - 40),
+    self_cook_price: item.price,
+    food_type: isNonVeg ? "non_veg" : "veg"
+  };
+});

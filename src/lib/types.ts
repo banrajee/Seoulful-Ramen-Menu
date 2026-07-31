@@ -1,4 +1,6 @@
 export type ItemStatus = "available" | "out_of_stock" | "hidden";
+export type PriceType = "single" | "dual";
+export type FoodType = "veg" | "non_veg";
 
 export type Category = {
   id: string;
@@ -13,9 +15,13 @@ export type MenuItem = {
   name: string;
   description: string;
   price: number;
+  packet_only_price?: number | null;
+  self_cook_price?: number | null;
+  price_type?: PriceType;
   category_id: string;
   image_url: string | null;
   spice_level?: number;
+  food_type?: FoodType | null;
   status: ItemStatus;
   sort_order: number;
   created_at?: string;
