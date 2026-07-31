@@ -2440,6 +2440,16 @@ select:disabled {
   }
 }
 
+.owner-sections {
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 900px) {
+  .owner-menu-section .owner-items {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 .drinks-section {
   position: relative;
   margin: 48px 0 0;
