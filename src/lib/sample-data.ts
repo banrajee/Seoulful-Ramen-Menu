@@ -389,6 +389,16 @@ export const sampleMenu: MenuData = {
       sort_order: 6
     },
     {
+      id: "spring-onions",
+      name: "Spring Onions",
+      description: "Fresh spring onion garnish.",
+      price: 5,
+      category_id: "addons",
+      image_url: null,
+      status: "available",
+      sort_order: 7
+    },
+    {
       id: "yopokki-spicy-carbonara",
       name: "Spicy Carbonara Yopokki",
       description: "Rice cakes in a creamy spicy sauce cup.",

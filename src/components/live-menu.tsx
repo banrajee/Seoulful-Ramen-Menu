@@ -80,6 +80,7 @@ function addonClass(item: MenuItem) {
   if (name.includes("corn dog")) return "corn-dog";
   if (name.includes("corn")) return "corn";
   if (name.includes("cheese")) return "cheese";
+  if (name.includes("spring onion")) return "spring-onions";
   if (name.includes("sausage") || name.includes("hot dog")) return "sausage";
   return "chicken";
 }
@@ -91,6 +92,7 @@ function addonImage(item: MenuItem) {
   if (name.includes("corn dog")) return "/addon-corn-dog.png";
   if (name.includes("corn")) return "/addon-corn.png";
   if (name.includes("cheese")) return "/addon-cheese.png";
+  if (name.includes("spring onion")) return "/addon-spring-onions.png";
   if (name.includes("sausage") || name.includes("hot dog")) return "/addon-sausage.png";
   if (name.includes("chicken")) return "/addon-shredded-chicken.png";
   return null;
