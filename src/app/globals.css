@@ -2873,7 +2873,31 @@ select:disabled {
     grid-template-columns: 1fr;
   }
 
+  .drinks-list {
+    gap: 0;
+  }
+
+  .drinks-list article {
+    grid-template-columns: 64px minmax(0, 1fr);
+    min-height: 82px;
+    padding: 0 0 14px;
+    border-bottom: 2px dotted rgba(9, 38, 42, 0.24);
+  }
+
+  .drinks-list article:last-child {
+    padding-bottom: 0;
+    border-bottom: 0;
+  }
+
+  .drinks-list img,
+  .drinks-list span {
+    width: 54px;
+    height: 54px;
+  }
+
   .snacks-list article {
+    grid-template-columns: 84px minmax(0, 1fr);
+    min-height: 94px;
     padding: 0 0 14px;
     border-right: 0;
     border-bottom: 2px dotted rgba(9, 38, 42, 0.36);
@@ -2882,6 +2906,12 @@ select:disabled {
   .snacks-list article:last-child {
     padding-bottom: 0;
     border-bottom: 0;
+  }
+
+  .snacks-list img,
+  .snacks-list span {
+    width: 72px;
+    height: 72px;
   }
 
   .refined-addons-list article {
