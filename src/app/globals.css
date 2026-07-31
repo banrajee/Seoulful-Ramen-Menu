@@ -2018,16 +2018,48 @@ select:disabled {
   filter: contrast(1.04) saturate(1.02);
 }
 
+.ramen-section {
+  position: relative;
+  margin: 48px 0 0;
+  padding: 34px 28px 26px;
+  border: 2px solid rgba(9, 38, 42, 0.64);
+  border-radius: 12px;
+  background: transparent;
+}
+
+.ramen-section > h2 {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  min-width: 230px;
+  width: fit-content;
+  margin: 0;
+  padding: 10px 24px;
+  border-radius: 999px / 34px;
+  background:
+    linear-gradient(90deg, transparent 0%, var(--green-deep) 7%, var(--green) 20%, var(--green) 80%, var(--green-deep) 93%, transparent 100%);
+  color: #fffbed;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: clamp(1.08rem, 1.5vw, 1.72rem);
+  font-weight: 950;
+  letter-spacing: 0.06em;
+  line-height: 1.1;
+  text-align: center;
+  text-transform: uppercase;
+  transform: translate(-50%, -50%);
+  box-shadow: inset 0 -9px 0 rgba(0, 0, 0, 0.09);
+}
+
 .ramen-product-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 28px 48px;
-  margin-top: 18px;
+  margin-top: 20px;
 }
 
 .ramen-price-note {
   width: min(980px, 100%);
-  margin: 18px auto 0;
+  margin: 0 auto;
   padding: 10px 16px;
   border: 1px solid rgba(33, 79, 43, 0.22);
   border-radius: 8px;
@@ -2187,7 +2219,7 @@ select:disabled {
   align-items: center;
 }
 
-.ramen-product-copy h2 {
+.ramen-product-copy h3 {
   min-width: 0;
   margin: 0;
   color: var(--ink);
@@ -2347,6 +2379,10 @@ select:disabled {
     transform: none;
   }
 
+  .ramen-section {
+    padding-inline: 18px;
+  }
+
   .ramen-product-grid {
     grid-template-columns: 1fr;
   }
@@ -2439,13 +2475,25 @@ select:disabled {
 .drink-groups {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 20px;
+  gap: 0;
   align-items: start;
 }
 
 .drink-group {
   display: grid;
   gap: 10px;
+  min-width: 0;
+  padding: 0 22px;
+  border-right: 2px dotted rgba(9, 38, 42, 0.36);
+}
+
+.drink-group:first-child {
+  padding-left: 0;
+}
+
+.drink-group:last-child {
+  padding-right: 0;
+  border-right: 0;
 }
 
 .drink-group h3 {
@@ -2589,7 +2637,7 @@ select:disabled {
 .snacks-list {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-  gap: 14px;
+  gap: 0;
 }
 
 .snacks-list article {
@@ -2598,6 +2646,17 @@ select:disabled {
   gap: 12px;
   align-items: center;
   min-height: 72px;
+  padding: 0 22px;
+  border-right: 2px dotted rgba(9, 38, 42, 0.36);
+}
+
+.snacks-list article:first-child {
+  padding-left: 0;
+}
+
+.snacks-list article:last-child {
+  padding-right: 0;
+  border-right: 0;
 }
 
 .snacks-list article.out_of_stock {
@@ -2734,13 +2793,13 @@ select:disabled {
     gap: 8px;
   }
 
-  .ramen-product-copy h2,
+  .ramen-product-copy h3,
   .ramen-product-copy strong {
     font-size: 1rem;
   }
 
   .ramen-price-note {
-    margin-top: 14px;
+    margin-top: 0;
     font-size: 0.84rem;
     text-align: left;
   }
@@ -2763,6 +2822,7 @@ select:disabled {
     font-size: 0.92rem;
   }
 
+  .ramen-section,
   .drinks-section,
   .snacks-section,
   .refined-addons-bar {
@@ -2774,10 +2834,32 @@ select:disabled {
     grid-template-columns: 1fr;
   }
 
+  .drink-group {
+    padding: 0 0 16px;
+    border-right: 0;
+    border-bottom: 2px dotted rgba(9, 38, 42, 0.36);
+  }
+
+  .drink-group:last-child {
+    padding-bottom: 0;
+    border-bottom: 0;
+  }
+
   .drinks-list,
   .snacks-list,
   .refined-addons-list {
     grid-template-columns: 1fr;
+  }
+
+  .snacks-list article {
+    padding: 0 0 14px;
+    border-right: 0;
+    border-bottom: 2px dotted rgba(9, 38, 42, 0.36);
+  }
+
+  .snacks-list article:last-child {
+    padding-bottom: 0;
+    border-bottom: 0;
   }
 
   .refined-addons-list article {

@@ -12,8 +12,7 @@ const snackCategoryIds = ["k_snacks_sides"];
 const drinkGroups = [
   { id: "drink_soda", label: "Soda" },
   { id: "drink_non_soda", label: "Non-Soda" },
-  { id: "drink_diet", label: "Diet" },
-  { id: "drinks", label: "Other Drinks" }
+  { id: "drink_diet", label: "Diet" }
 ];
 
 function money(value: number) {
@@ -170,72 +169,75 @@ export function LiveMenu() {
           </div>
         </div>
 
-        <p className="ramen-price-note">
-          Packet Only is for takeaway packet purchase. Self-Cook Bowl includes bowl, cutlery, and self-cook station
-          access.
-        </p>
+        <section className="ramen-section" aria-label="Ramen and Ramyeon">
+          <h2>Ramen / Ramyeon</h2>
+          <p className="ramen-price-note">
+            Packet Only is for takeaway packet purchase. Self-Cook Bowl includes bowl, cutlery, and self-cook station
+            access.
+          </p>
 
-        <div className="ramen-product-grid">
-          {ramenItems.map((item) => {
-            const level = spiceLevel(item);
+          <div className="ramen-product-grid">
+            {ramenItems.map((item) => {
+              const level = spiceLevel(item);
 
-            return (
-              <article className={`ramen-product ${item.status}`} key={item.id}>
-                <div className="ramen-product-media">
-                  {item.image_url ? (
-                    <img className="ramen-product-image" src={item.image_url} alt={item.name} />
-                  ) : (
-                    <div className={`ramen-pack ${packClass(item)}`} aria-label={`${item.name} image placeholder`}>
-                      <span>{item.name.split(" ")[0]}</span>
-                      <strong>{item.name.split(" ").slice(-2).join(" ")}</strong>
+              return (
+                <article className={`ramen-product ${item.status}`} key={item.id}>
+                  <div className="ramen-product-media">
+                    {item.image_url ? (
+                      <img className="ramen-product-image" src={item.image_url} alt={item.name} />
+                    ) : (
+                      <div className={`ramen-pack ${packClass(item)}`} aria-label={`${item.name} image placeholder`}>
+                        <span>{item.name.split(" ")[0]}</span>
+                        <strong>{item.name.split(" ").slice(-2).join(" ")}</strong>
+                      </div>
+                    )}
+                    <div className="spice-row" aria-label={`${level} out of 5 spice level`}>
+                      {Array.from({ length: 5 }).map((_, index) => (
+                        <img
+                          alt=""
+                          aria-hidden="true"
+                          className={index < level ? "active" : "inactive"}
+                          key={index}
+                          src="/spice-chilli.png"
+                        />
+                      ))}
                     </div>
-                  )}
-                  <div className="spice-row" aria-label={`${level} out of 5 spice level`}>
-                    {Array.from({ length: 5 }).map((_, index) => (
-                      <img
-                        alt=""
-                        aria-hidden="true"
-                        className={index < level ? "active" : "inactive"}
-                        key={index}
-                        src="/spice-chilli.png"
-                      />
-                    ))}
                   </div>
-                </div>
 
-                <div className="ramen-product-copy">
-                  <div className="ramen-title-row">
-                    <h2>{item.name}</h2>
-                    {item.food_type ? (
-                      <span
-                        className={`food-marker ${item.food_type}`}
-                        aria-label={item.food_type === "veg" ? "Vegetarian" : "Non-vegetarian"}
-                      />
-                    ) : null}
-                  </div>
-                  {isDualPrice(item) ? (
-                    <div className="dual-price-stack">
-                      <span>Packet Only: {money(packetOnlyPrice(item))}</span>
-                      <strong>Self-Cook Bowl: {money(selfCookPrice(item))}</strong>
+                  <div className="ramen-product-copy">
+                    <div className="ramen-title-row">
+                      <h3>{item.name}</h3>
+                      {item.food_type ? (
+                        <span
+                          className={`food-marker ${item.food_type}`}
+                          aria-label={item.food_type === "veg" ? "Vegetarian" : "Non-vegetarian"}
+                        />
+                      ) : null}
                     </div>
-                  ) : (
-                    <strong>{money(item.price)}</strong>
-                  )}
-                  {item.status === "out_of_stock" ? <span className="status-pill">Out of Stock</span> : null}
-                </div>
-              </article>
-            );
-          })}
-        </div>
+                    {isDualPrice(item) ? (
+                      <div className="dual-price-stack">
+                        <span>Packet Only: {money(packetOnlyPrice(item))}</span>
+                        <strong>Self-Cook Bowl: {money(selfCookPrice(item))}</strong>
+                      </div>
+                    ) : (
+                      <strong>{money(item.price)}</strong>
+                    )}
+                    {item.status === "out_of_stock" ? <span className="status-pill">Out of Stock</span> : null}
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        </section>
 
         {drinks.length > 0 ? (
           <section className="drinks-section" aria-label="Drinks">
             <h2>Drinks</h2>
             <div className="drink-groups">
               {drinkGroups.map((group) => {
-                const groupItems = drinks.filter((item) => item.category_id === group.id);
-
-                if (groupItems.length === 0) return null;
+                const groupItems = drinks.filter(
+                  (item) => item.category_id === group.id || (group.id === "drink_soda" && item.category_id === "drinks")
+                );
 
                 return (
                   <section className="drink-group" key={group.id}>
