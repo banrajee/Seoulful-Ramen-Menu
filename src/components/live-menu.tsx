@@ -6,6 +6,15 @@ import { fetchMenuData, subscribeToMenuChanges } from "@/lib/menu-service";
 import { sampleMenu } from "@/lib/sample-data";
 import type { MenuData, MenuItem } from "@/lib/types";
 
+const drinkCategoryIds = ["drinks", "drink_soda", "drink_non_soda", "drink_diet"];
+
+const drinkGroups = [
+  { id: "drink_soda", label: "Soda" },
+  { id: "drink_non_soda", label: "Non-Soda" },
+  { id: "drink_diet", label: "Diet" },
+  { id: "drinks", label: "Other Drinks" }
+];
+
 function money(value: number) {
   return new Intl.NumberFormat("en-IN", {
     style: "currency",
@@ -66,7 +75,7 @@ function visibleRamenItems(menuData: MenuData) {
   const categoryOrder = new Map(menuData.categories.map((category) => [category.id, category.sort_order]));
 
   return menuData.items
-    .filter((item) => item.category_id !== "addons" && item.category_id !== "drinks" && item.category_id !== "yopokki")
+    .filter((item) => item.category_id !== "addons" && !drinkCategoryIds.includes(item.category_id) && item.category_id !== "yopokki")
     .filter((item) => item.status !== "hidden")
     .filter((item) => menuData.settings.show_out_of_stock || item.status !== "out_of_stock")
     .sort((a, b) => {
@@ -99,7 +108,7 @@ export function LiveMenu() {
   }, [menuData]);
   const drinks = useMemo(() => {
     return menuData.items
-      .filter((item) => item.category_id === "drinks")
+      .filter((item) => drinkCategoryIds.includes(item.category_id))
       .filter((item) => item.status !== "hidden")
       .filter((item) => menuData.settings.show_out_of_stock || item.status !== "out_of_stock")
       .sort((a, b) => a.sort_order - b.sort_order);
@@ -162,17 +171,30 @@ export function LiveMenu() {
         {drinks.length > 0 ? (
           <section className="drinks-section" aria-label="Drinks">
             <h2>Drinks</h2>
-            <div className="drinks-list">
-              {drinks.map((item) => (
-                <article className={item.status} key={item.id}>
-                  {item.image_url ? <img src={item.image_url} alt={item.name} /> : <span aria-hidden="true" />}
-                  <div>
-                    <h3>{item.name}</h3>
-                    <strong>{money(item.price)}</strong>
-                    {item.status === "out_of_stock" ? <em>Out of Stock</em> : null}
-                  </div>
-                </article>
-              ))}
+            <div className="drink-groups">
+              {drinkGroups.map((group) => {
+                const groupItems = drinks.filter((item) => item.category_id === group.id);
+
+                if (groupItems.length === 0) return null;
+
+                return (
+                  <section className="drink-group" key={group.id}>
+                    <h3>{group.label}</h3>
+                    <div className="drinks-list">
+                      {groupItems.map((item) => (
+                        <article className={item.status} key={item.id}>
+                          {item.image_url ? <img src={item.image_url} alt={item.name} /> : <span aria-hidden="true" />}
+                          <div>
+                            <h4>{item.name}</h4>
+                            <strong>{money(item.price)}</strong>
+                            {item.status === "out_of_stock" ? <em>Out of Stock</em> : null}
+                          </div>
+                        </article>
+                      ))}
+                    </div>
+                  </section>
+                );
+              })}
             </div>
           </section>
         ) : null}

@@ -2166,6 +2166,30 @@ select:disabled {
   text-transform: uppercase;
 }
 
+.drink-groups {
+  display: grid;
+  gap: 20px;
+}
+
+.drink-group {
+  display: grid;
+  gap: 10px;
+}
+
+.drink-group h3 {
+  width: fit-content;
+  margin: 0;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: rgba(9, 38, 42, 0.08);
+  color: var(--ink);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.9rem;
+  font-weight: 950;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
 .drinks-list {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -2200,7 +2224,8 @@ select:disabled {
     linear-gradient(180deg, #7cc6d5, #2f7c8d);
 }
 
-.drinks-list h3 {
+.drinks-list h3,
+.drinks-list h4 {
   margin: 0;
   color: var(--ink);
   font-family: Arial, Helvetica, sans-serif;

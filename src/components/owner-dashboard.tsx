@@ -24,7 +24,7 @@ const sectionLabels: Record<DashboardSection, string> = {
 
 const sectionCategoryIds: Record<Exclude<DashboardSection, "ramen">, string[]> = {
   addons: ["addons"],
-  drinks: ["drinks"]
+  drinks: ["drinks", "drink_soda", "drink_non_soda", "drink_diet"]
 };
 
 function statusLabel(status: ItemStatus) {
@@ -35,13 +35,13 @@ function statusLabel(status: ItemStatus) {
 
 function sectionForCategory(categoryId: string): DashboardSection {
   if (categoryId === "addons") return "addons";
-  if (categoryId === "drinks") return "drinks";
+  if (sectionCategoryIds.drinks.includes(categoryId)) return "drinks";
   return "ramen";
 }
 
 function categoryForSection(section: DashboardSection) {
   if (section === "addons") return "addons";
-  if (section === "drinks") return "drinks";
+  if (section === "drinks") return "drink_soda";
   return "classic";
 }
 

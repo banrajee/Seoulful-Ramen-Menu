@@ -35,6 +35,21 @@ export const sampleMenu: MenuData = {
       id: "drinks",
       name: "Drinks",
       sort_order: 6
+    },
+    {
+      id: "drink_soda",
+      name: "Soda",
+      sort_order: 7
+    },
+    {
+      id: "drink_non_soda",
+      name: "Non-Soda",
+      sort_order: 8
+    },
+    {
+      id: "drink_diet",
+      name: "Diet",
+      sort_order: 9
     }
   ],
   items: [
