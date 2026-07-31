@@ -109,7 +109,8 @@ insert into public.categories (id, name, sort_order) values
   ('drinks', 'Drinks', 6),
   ('drink_soda', 'Soda', 7),
   ('drink_non_soda', 'Non-Soda', 8),
-  ('drink_diet', 'Diet', 9)
+  ('drink_diet', 'Diet', 9),
+  ('k_snacks_sides', 'K-Snacks & Sides', 10)
 on conflict (id) do update set
   name = excluded.name,
   sort_order = excluded.sort_order;

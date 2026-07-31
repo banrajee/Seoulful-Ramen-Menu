@@ -14,21 +14,31 @@ import { sampleMenu } from "@/lib/sample-data";
 import { createBrowserSupabaseClient, hasSupabaseConfig } from "@/lib/supabase";
 import type { ItemStatus, MenuData, MenuItem, MenuItemDraft } from "@/lib/types";
 
-type DashboardSection = "ramen" | "addons" | "drinks";
+type DashboardSection = "ramen" | "addons" | "drinks" | "snacks";
 
 const sectionLabels: Record<DashboardSection, string> = {
   ramen: "Ramen",
   addons: "Add-Ons",
-  drinks: "Drinks"
+  drinks: "Drinks",
+  snacks: "K-Snacks & Sides"
 };
 
 const sectionCategoryIds: Record<Exclude<DashboardSection, "ramen">, string[]> = {
   addons: ["addons"],
-  drinks: ["drinks", "drink_soda", "drink_non_soda", "drink_diet"]
+  drinks: ["drinks", "drink_soda", "drink_non_soda", "drink_diet"],
+  snacks: ["k_snacks_sides"]
 };
 
 const drinkCategoryOptions = ["drink_soda", "drink_non_soda", "drink_diet"];
-const excludedRamenCategoryIds = ["addons", "drinks", "drink_soda", "drink_non_soda", "drink_diet", "yopokki"];
+const excludedRamenCategoryIds = [
+  "addons",
+  "drinks",
+  "drink_soda",
+  "drink_non_soda",
+  "drink_diet",
+  "k_snacks_sides",
+  "yopokki"
+];
 
 function statusLabel(status: ItemStatus) {
   if (status === "out_of_stock") return "Out of Stock";
@@ -39,12 +49,14 @@ function statusLabel(status: ItemStatus) {
 function sectionForCategory(categoryId: string): DashboardSection {
   if (categoryId === "addons") return "addons";
   if (sectionCategoryIds.drinks.includes(categoryId)) return "drinks";
+  if (sectionCategoryIds.snacks.includes(categoryId)) return "snacks";
   return "ramen";
 }
 
 function categoryForSection(section: DashboardSection) {
   if (section === "addons") return "addons";
   if (section === "drinks") return "drink_soda";
+  if (section === "snacks") return "k_snacks_sides";
   return "classic";
 }
 
@@ -52,7 +64,7 @@ function createEmptyDraft(section: DashboardSection = "ramen", sortOrder = 99): 
   return {
     name: "",
     description: "",
-    price: section === "addons" ? 19 : section === "drinks" ? 49 : 189,
+    price: section === "addons" ? 19 : section === "drinks" || section === "snacks" ? 49 : 189,
     category_id: categoryForSection(section),
     image_url: "",
     spice_level: section === "ramen" ? 3 : 0,
@@ -81,6 +93,7 @@ function itemsForSection(items: MenuItem[], section: DashboardSection) {
 function categoryIdsForForm(section: DashboardSection) {
   if (section === "drinks") return drinkCategoryOptions;
   if (section === "addons") return sectionCategoryIds.addons;
+  if (section === "snacks") return sectionCategoryIds.snacks;
   return null;
 }
 
@@ -348,8 +361,24 @@ function DashboardBody({
     : categoryForSection(editorSection);
 
   return (
-    <div className="dashboard-grid">
-      <form className="item-form" onSubmit={handleSave}>
+    <div className="dashboard-stack">
+      <div className="owner-add-toolbar" aria-label="Add menu items">
+        {(["ramen", "addons", "drinks", "snacks"] as DashboardSection[]).map((section) => (
+          <button
+            className={editorSection === section ? "active" : ""}
+            disabled={!liveEditing}
+            key={section}
+            onClick={() => startNewItem(section)}
+            type="button"
+          >
+            <Plus size={16} />
+            Add {sectionLabels[section]}
+          </button>
+        ))}
+      </div>
+
+      <div className="dashboard-grid">
+        <form className="item-form" onSubmit={handleSave}>
         <div className="form-title">
           <Plus size={19} />
           <h2>{"id" in draft ? `Edit ${sectionLabels[editorSection]}` : `Add ${sectionLabels[editorSection]}`}</h2>
@@ -449,38 +478,34 @@ function DashboardBody({
         </div>
 
         {message ? <p className="form-message">{message}</p> : null}
-      </form>
+        </form>
 
-      <section className="items-panel">
-        <div className="settings-row">
-          <div>
-            <h2>Menu Items</h2>
-            <p>Stock and price changes appear on the public QR menu immediately.</p>
+        <section className="items-panel">
+          <div className="settings-row">
+            <div>
+              <h2>Menu Items</h2>
+              <p>Stock and price changes appear on the public QR menu immediately.</p>
+            </div>
+            <button disabled={!liveEditing} onClick={toggleOutOfStockVisibility} type="button">
+              {menuData.settings.show_out_of_stock ? <Eye size={17} /> : <EyeOff size={17} />}
+              {menuData.settings.show_out_of_stock ? "Hide OOS" : "Show OOS"}
+            </button>
           </div>
-          <button disabled={!liveEditing} onClick={toggleOutOfStockVisibility} type="button">
-            {menuData.settings.show_out_of_stock ? <Eye size={17} /> : <EyeOff size={17} />}
-            {menuData.settings.show_out_of_stock ? "Hide OOS" : "Show OOS"}
-          </button>
-        </div>
 
-        <div className="owner-sections">
-          {(["ramen", "addons", "drinks"] as DashboardSection[]).map((section) => {
-            const sectionItems = itemsForSection(menuData.items, section);
+          <div className="owner-sections">
+            {(["ramen", "addons", "drinks", "snacks"] as DashboardSection[]).map((section) => {
+              const sectionItems = itemsForSection(menuData.items, section);
 
-            return (
-              <section className="owner-menu-section" key={section}>
-                <div className="owner-menu-section-header">
-                  <div>
-                    <h3>{sectionLabels[section]}</h3>
-                    <p>
-                      {sectionItems.length} item{sectionItems.length === 1 ? "" : "s"}
-                    </p>
+              return (
+                <section className="owner-menu-section" key={section}>
+                  <div className="owner-menu-section-header">
+                    <div>
+                      <h3>{sectionLabels[section]}</h3>
+                      <p>
+                        {sectionItems.length} item{sectionItems.length === 1 ? "" : "s"}
+                      </p>
+                    </div>
                   </div>
-                  <button disabled={!liveEditing} onClick={() => startNewItem(section)} type="button">
-                    <Plus size={16} />
-                    Add
-                  </button>
-                </div>
 
                 <div className="owner-items">
                   {sectionItems.length > 0 ? (
@@ -535,11 +560,12 @@ function DashboardBody({
                     <p className="empty-section-note">No {sectionLabels[section].toLowerCase()} added yet.</p>
                   )}
                 </div>
-              </section>
-            );
-          })}
-        </div>
-      </section>
+                </section>
+              );
+            })}
+          </div>
+        </section>
+      </div>
     </div>
   );
 }

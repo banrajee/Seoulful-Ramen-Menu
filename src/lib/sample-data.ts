@@ -50,6 +50,11 @@ export const sampleMenu: MenuData = {
       id: "drink_diet",
       name: "Diet",
       sort_order: 9
+    },
+    {
+      id: "k_snacks_sides",
+      name: "K-Snacks & Sides",
+      sort_order: 10
     }
   ],
   items: [

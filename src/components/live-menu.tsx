@@ -7,6 +7,7 @@ import { sampleMenu } from "@/lib/sample-data";
 import type { MenuData, MenuItem } from "@/lib/types";
 
 const drinkCategoryIds = ["drinks", "drink_soda", "drink_non_soda", "drink_diet"];
+const snackCategoryIds = ["k_snacks_sides"];
 
 const drinkGroups = [
   { id: "drink_soda", label: "Soda" },
@@ -75,7 +76,13 @@ function visibleRamenItems(menuData: MenuData) {
   const categoryOrder = new Map(menuData.categories.map((category) => [category.id, category.sort_order]));
 
   return menuData.items
-    .filter((item) => item.category_id !== "addons" && !drinkCategoryIds.includes(item.category_id) && item.category_id !== "yopokki")
+    .filter(
+      (item) =>
+        item.category_id !== "addons" &&
+        !drinkCategoryIds.includes(item.category_id) &&
+        !snackCategoryIds.includes(item.category_id) &&
+        item.category_id !== "yopokki"
+    )
     .filter((item) => item.status !== "hidden")
     .filter((item) => menuData.settings.show_out_of_stock || item.status !== "out_of_stock")
     .sort((a, b) => {
@@ -109,6 +116,13 @@ export function LiveMenu() {
   const drinks = useMemo(() => {
     return menuData.items
       .filter((item) => drinkCategoryIds.includes(item.category_id))
+      .filter((item) => item.status !== "hidden")
+      .filter((item) => menuData.settings.show_out_of_stock || item.status !== "out_of_stock")
+      .sort((a, b) => a.sort_order - b.sort_order);
+  }, [menuData]);
+  const snacks = useMemo(() => {
+    return menuData.items
+      .filter((item) => snackCategoryIds.includes(item.category_id))
       .filter((item) => item.status !== "hidden")
       .filter((item) => menuData.settings.show_out_of_stock || item.status !== "out_of_stock")
       .sort((a, b) => a.sort_order - b.sort_order);
@@ -195,6 +209,24 @@ export function LiveMenu() {
                   </section>
                 );
               })}
+            </div>
+          </section>
+        ) : null}
+
+        {snacks.length > 0 ? (
+          <section className="snacks-section" aria-label="K-Snacks and Sides">
+            <h2>K-Snacks &amp; Sides</h2>
+            <div className="snacks-list">
+              {snacks.map((item) => (
+                <article className={item.status} key={item.id}>
+                  {item.image_url ? <img src={item.image_url} alt={item.name} /> : <span aria-hidden="true" />}
+                  <div>
+                    <h3>{item.name}</h3>
+                    <strong>{money(item.price)}</strong>
+                    {item.status === "out_of_stock" ? <em>Out of Stock</em> : null}
+                  </div>
+                </article>
+              ))}
             </div>
           </section>
         ) : null}
