@@ -1278,6 +1278,10 @@ select:disabled {
   .owner-menu-section:first-child {
     grid-column: 1 / -1;
   }
+
+  .owner-menu-section:first-child .owner-items {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (min-width: 1600px) {
@@ -1291,6 +1295,10 @@ select:disabled {
 
   .owner-menu-section:first-child {
     grid-column: 1 / -1;
+  }
+
+  .owner-menu-section:first-child .owner-items {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
