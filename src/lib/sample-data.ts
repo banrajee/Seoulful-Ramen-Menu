@@ -369,9 +369,9 @@ export const sampleMenu: MenuData = {
       sort_order: 4
     },
     {
-      id: "cheese",
-      name: "Cheese",
-      description: "Cheese slice add-on.",
+      id: "sliced-cheese",
+      name: "Sliced Cheese",
+      description: "Sliced cheese add-on.",
       price: 19,
       category_id: "addons",
       image_url: null,
