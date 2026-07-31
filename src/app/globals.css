@@ -2078,8 +2078,14 @@ select:disabled {
   gap: 18px;
   align-items: center;
   min-height: 118px;
-  padding: 0;
+  padding: 0 24px 0 0;
+  border-right: 2px dotted rgba(9, 38, 42, 0.36);
   background: transparent;
+}
+
+.ramen-product:nth-child(2n) {
+  padding: 0 0 0 24px;
+  border-right: 0;
 }
 
 .ramen-product.out_of_stock {
@@ -2786,6 +2792,8 @@ select:disabled {
     grid-template-columns: 96px minmax(0, 1fr);
     gap: 12px;
     min-height: 104px;
+    padding: 0;
+    border-right: 0;
   }
 
   .ramen-product-image,
