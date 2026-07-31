@@ -1290,7 +1290,7 @@ select:disabled {
   }
 
   .owner-sections {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .owner-menu-section:first-child {
@@ -2329,26 +2329,50 @@ select:disabled {
   margin-top: 0;
 }
 
+@media (min-width: 1280px) {
+  .owner-sections {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .owner-menu-section:first-child {
+    grid-column: 1 / -1;
+  }
+
+  .owner-menu-section:first-child .owner-items {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 .drinks-section {
-  margin: 44px 0 0;
-  padding: 22px 24px;
-  border: 2px solid rgba(9, 38, 42, 0.5);
+  position: relative;
+  margin: 48px 0 0;
+  padding: 30px 24px 22px;
+  border: 2px solid rgba(9, 38, 42, 0.64);
   border-radius: 12px;
-  background: rgba(255, 248, 232, 0.28);
+  background: transparent;
 }
 
 .drinks-section h2 {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  min-width: 180px;
   width: fit-content;
-  margin: 0 auto 18px;
-  padding: 9px 24px;
-  border-radius: 999px;
-  background: var(--green);
+  margin: 0;
+  padding: 10px 24px;
+  border-radius: 999px / 34px;
+  background:
+    linear-gradient(90deg, transparent 0%, var(--green-deep) 7%, var(--green) 20%, var(--green) 80%, var(--green-deep) 93%, transparent 100%);
   color: #fffbed;
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 1.2rem;
+  font-size: clamp(1.16rem, 1.5vw, 1.72rem);
   font-weight: 950;
   letter-spacing: 0.06em;
+  line-height: 1.1;
+  text-align: center;
   text-transform: uppercase;
+  transform: translate(-50%, -50%);
+  box-shadow: inset 0 -9px 0 rgba(0, 0, 0, 0.09);
 }
 
 .drink-groups {
@@ -2436,25 +2460,35 @@ select:disabled {
 }
 
 .snacks-section {
-  margin: 44px 0 0;
-  padding: 22px 24px;
-  border: 2px solid rgba(9, 38, 42, 0.5);
+  position: relative;
+  margin: 48px 0 0;
+  padding: 30px 24px 22px;
+  border: 2px solid rgba(9, 38, 42, 0.64);
   border-radius: 12px;
-  background: rgba(255, 248, 232, 0.28);
+  background: transparent;
 }
 
 .snacks-section h2 {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  min-width: 250px;
   width: fit-content;
-  margin: 0 auto 18px;
-  padding: 9px 24px;
-  border-radius: 999px;
-  background: var(--green);
+  margin: 0;
+  padding: 10px 24px;
+  border-radius: 999px / 34px;
+  background:
+    linear-gradient(90deg, transparent 0%, var(--green-deep) 7%, var(--green) 20%, var(--green) 80%, var(--green-deep) 93%, transparent 100%);
   color: #fffbed;
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 1.2rem;
+  font-size: clamp(1.05rem, 1.5vw, 1.72rem);
   font-weight: 950;
   letter-spacing: 0.06em;
+  line-height: 1.1;
+  text-align: center;
   text-transform: uppercase;
+  transform: translate(-50%, -50%);
+  box-shadow: inset 0 -9px 0 rgba(0, 0, 0, 0.09);
 }
 
 .snacks-list {

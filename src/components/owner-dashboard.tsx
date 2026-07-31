@@ -83,7 +83,10 @@ function orderedItems(items: MenuItem[]) {
 function itemsForSection(items: MenuItem[], section: DashboardSection) {
   if (section === "ramen") {
     return orderedItems(items).filter(
-      (item) => !sectionCategoryIds.addons.includes(item.category_id) && !sectionCategoryIds.drinks.includes(item.category_id)
+      (item) =>
+        !sectionCategoryIds.addons.includes(item.category_id) &&
+        !sectionCategoryIds.drinks.includes(item.category_id) &&
+        !sectionCategoryIds.snacks.includes(item.category_id)
     );
   }
 
@@ -359,6 +362,7 @@ function DashboardBody({
   const categoryValue = categoryOptions.some((category) => category.id === draft.category_id)
     ? draft.category_id
     : categoryForSection(editorSection);
+  const showCategoryField = editorSection === "drinks" || editorSection === "snacks";
 
   return (
     <div className="dashboard-stack">
@@ -422,16 +426,18 @@ function DashboardBody({
           </label>
         </div>
 
-        <label>
-          Category
-          <select value={categoryValue} onChange={(event) => setDraft({ ...draft, category_id: event.target.value })}>
-            {categoryOptions.map((category) => (
-              <option key={category.id} value={category.id}>
-                {category.name}
-              </option>
-            ))}
-          </select>
-        </label>
+        {showCategoryField ? (
+          <label>
+            Category
+            <select value={categoryValue} onChange={(event) => setDraft({ ...draft, category_id: event.target.value })}>
+              {categoryOptions.map((category) => (
+                <option key={category.id} value={category.id}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
+          </label>
+        ) : null}
 
         <label>
           Image URL
