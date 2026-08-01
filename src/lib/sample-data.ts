@@ -49,7 +49,7 @@ export const sampleMenu: MenuData = {
       description: "Original spicy Korean ramen.",
       price: 189,
       category_id: "ramen",
-      image_url: null,
+      image_url: "/ramen-shin-ramyeon.png",
       status: "available",
       sort_order: 1
     },

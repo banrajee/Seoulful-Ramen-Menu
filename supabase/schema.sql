@@ -170,7 +170,7 @@ create unique index if not exists menu_items_category_name_unique
 on public.menu_items (category_id, lower(trim(name)));
 
 insert into public.menu_items (name, description, price, category_id, image_url, status, sort_order) values
-  ('Nongshim Shin Ramyeon', 'Original spicy Korean ramen.', 189, 'ramen', null, 'available', 1),
+  ('Nongshim Shin Ramyeon', 'Original spicy Korean ramen.', 189, 'ramen', '/ramen-shin-ramyeon.png', 'available', 1),
   ('Nongshim Shin Kimchi', 'Spicy ramen with kimchi flavour.', 189, 'ramen', null, 'available', 2),
   ('Nongshim Soon Veggie', 'Vegetable ramen with mild spice.', 189, 'ramen', null, 'available', 3),
   ('Ottogi Jin Ramen Mild', 'Mild Korean ramen broth.', 189, 'ramen', null, 'available', 4),
