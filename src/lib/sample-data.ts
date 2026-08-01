@@ -399,8 +399,6 @@ export const sampleMenu: MenuData = {
 const sampleRamenCategoryIds = new Set(["ramen"]);
 
 sampleMenu.items = sampleMenu.items.map((item) => {
-  const isDrink = ["drinks", "drink_soda", "drink_non_soda", "drink_diet"].includes(item.category_id);
-
   if (!sampleRamenCategoryIds.has(item.category_id)) {
     return {
       ...item,
@@ -410,7 +408,7 @@ sampleMenu.items = sampleMenu.items.map((item) => {
       self_cook_price: null,
       with_cup_ice_price: null,
       has_cup_ice_option: false,
-      cup_ice_price: isDrink ? 20 : null,
+      cup_ice_price: null,
       cup_ice_available: true,
       food_type: null
     };

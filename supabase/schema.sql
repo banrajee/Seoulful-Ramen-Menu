@@ -242,17 +242,14 @@ where category_id in (
 
 update public.menu_items
 set
-  drink_price_type = coalesce(drink_price_type, 'single'),
-  has_cup_ice_option = coalesce(has_cup_ice_option, false),
-  cup_ice_price = case
-    when drink_price_type in ('optional_addon', 'dual') or has_cup_ice_option then coalesce(cup_ice_price, 20)
-    else cup_ice_price
-  end,
-  cup_ice_available = coalesce(cup_ice_available, true),
-  with_cup_ice_price = case
-    when drink_price_type = 'dual' then coalesce(with_cup_ice_price, price + coalesce(cup_ice_price, 20))
-    else with_cup_ice_price
-  end
+  price_type = 'single',
+  packet_only_price = null,
+  self_cook_price = null,
+  with_cup_ice_price = null,
+  drink_price_type = 'single',
+  has_cup_ice_option = false,
+  cup_ice_price = null,
+  cup_ice_available = true
 where category_id in ('drinks', 'drink_soda', 'drink_non_soda', 'drink_diet');
 
 update public.menu_items
