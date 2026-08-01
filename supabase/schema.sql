@@ -137,16 +137,13 @@ using (true)
 with check (true);
 
 insert into public.categories (id, name, sort_order) values
-  ('classic', 'Classic Collection', 1),
-  ('premium', 'Premium Collection', 2),
-  ('signature', 'Signature Collection', 3),
-  ('addons', 'Add-Ons', 4),
-  ('yopokki', 'Yopokki Rice Cakes', 5),
-  ('drinks', 'Drinks', 6),
-  ('drink_soda', 'Soda', 7),
-  ('drink_non_soda', 'Non-Soda', 8),
-  ('drink_diet', 'Diet', 9),
-  ('k_snacks_sides', 'K-Snacks & Sides', 10)
+  ('ramen', 'Ramen', 1),
+  ('addons', 'Add-Ons', 2),
+  ('drinks', 'Drinks', 3),
+  ('drink_soda', 'Soda', 4),
+  ('drink_non_soda', 'Non-Soda', 5),
+  ('drink_diet', 'Diet', 6),
+  ('k_snacks_sides', 'K-Snacks & Sides', 7)
 on conflict (id) do update set
   name = excluded.name,
   sort_order = excluded.sort_order;
@@ -173,33 +170,33 @@ create unique index if not exists menu_items_category_name_unique
 on public.menu_items (category_id, lower(trim(name)));
 
 insert into public.menu_items (name, description, price, category_id, image_url, status, sort_order) values
-  ('Nongshim Shin Ramyeon', 'Original spicy Korean ramen.', 189, 'classic', null, 'available', 1),
-  ('Nongshim Shin Kimchi', 'Spicy ramen with kimchi flavour.', 189, 'classic', null, 'available', 2),
-  ('Nongshim Soon Veggie', 'Vegetable ramen with mild spice.', 189, 'classic', null, 'available', 3),
-  ('Ottogi Jin Ramen Mild', 'Mild Korean ramen broth.', 189, 'classic', null, 'available', 4),
-  ('Ottogi Jin Ramen Spicy', 'Spicy Korean ramen broth.', 189, 'classic', null, 'available', 5),
-  ('Paldo Kokomen', 'Clean chicken-style spicy ramen.', 189, 'classic', null, 'available', 6),
-  ('Paldo Seafood', 'Seafood-style spicy ramen.', 189, 'classic', null, 'available', 7),
-  ('Paldo Namja Ramyun', 'Bold Korean ramyun broth.', 189, 'classic', null, 'available', 8),
-  ('Samyang Carbonara', 'Creamy spicy ramen.', 219, 'premium', null, 'available', 1),
-  ('Samyang Cheese', 'Spicy ramen with cheese.', 219, 'premium', null, 'available', 2),
-  ('Samyang Rose', 'Rose-style creamy ramen.', 219, 'premium', null, 'available', 3),
-  ('Samyang Original', 'Original spicy Samyang ramen.', 219, 'premium', null, 'available', 4),
-  ('Samyang Black', 'Rich spicy Samyang ramen.', 219, 'premium', null, 'available', 5),
-  ('Samyang Jjajang', 'Black bean spicy ramen.', 219, 'premium', null, 'available', 6),
-  ('Samyang Habanero Lime', 'Hot ramen with lime flavour.', 219, 'premium', null, 'available', 7),
-  ('Samyang Hot Chicken Stew', 'Stew-style spicy ramen.', 219, 'premium', null, 'available', 8),
-  ('Samyang 3x', 'Extra hot Samyang ramen.', 219, 'premium', null, 'available', 9),
-  ('Paldo Volcano Carbonara', 'Creamy volcano-style ramen.', 219, 'premium', null, 'available', 10),
-  ('Paldo Samgyetang', 'Chicken soup-style ramen.', 219, 'premium', null, 'available', 11),
-  ('Nongshim Shin Toomba', 'Creamy premium Shin ramen.', 249, 'signature', null, 'available', 1),
-  ('Nongshim Shin Cheese Stir Fry', 'Cheese stir-fry noodles.', 249, 'signature', null, 'available', 2),
-  ('Ottogi Cheese Ramen', 'Cheesy Korean ramen.', 249, 'signature', null, 'available', 3),
-  ('Ottogi Spicy Stir Fry', 'Spicy dry-style ramen.', 249, 'signature', null, 'available', 4),
-  ('Paldo Rabokki', 'Ramen and rice cake flavour.', 249, 'signature', null, 'available', 5),
-  ('Paldo Jjajangmen', 'Black bean sauce ramen.', 249, 'signature', null, 'available', 6),
-  ('Paldo Zangmyeon Loopy', 'Signature Paldo ramen.', 249, 'signature', null, 'available', 7),
-  ('Paldo Lobster', 'Lobster-style seafood ramen.', 249, 'signature', null, 'available', 8),
+  ('Nongshim Shin Ramyeon', 'Original spicy Korean ramen.', 189, 'ramen', null, 'available', 1),
+  ('Nongshim Shin Kimchi', 'Spicy ramen with kimchi flavour.', 189, 'ramen', null, 'available', 2),
+  ('Nongshim Soon Veggie', 'Vegetable ramen with mild spice.', 189, 'ramen', null, 'available', 3),
+  ('Ottogi Jin Ramen Mild', 'Mild Korean ramen broth.', 189, 'ramen', null, 'available', 4),
+  ('Ottogi Jin Ramen Spicy', 'Spicy Korean ramen broth.', 189, 'ramen', null, 'available', 5),
+  ('Paldo Kokomen', 'Clean chicken-style spicy ramen.', 189, 'ramen', null, 'available', 6),
+  ('Paldo Seafood', 'Seafood-style spicy ramen.', 189, 'ramen', null, 'available', 7),
+  ('Paldo Namja Ramyun', 'Bold Korean ramyun broth.', 189, 'ramen', null, 'available', 8),
+  ('Samyang Carbonara', 'Creamy spicy ramen.', 219, 'ramen', null, 'available', 1),
+  ('Samyang Cheese', 'Spicy ramen with cheese.', 219, 'ramen', null, 'available', 2),
+  ('Samyang Rose', 'Rose-style creamy ramen.', 219, 'ramen', null, 'available', 3),
+  ('Samyang Original', 'Original spicy Samyang ramen.', 219, 'ramen', null, 'available', 4),
+  ('Samyang Black', 'Rich spicy Samyang ramen.', 219, 'ramen', null, 'available', 5),
+  ('Samyang Jjajang', 'Black bean spicy ramen.', 219, 'ramen', null, 'available', 6),
+  ('Samyang Habanero Lime', 'Hot ramen with lime flavour.', 219, 'ramen', null, 'available', 7),
+  ('Samyang Hot Chicken Stew', 'Stew-style spicy ramen.', 219, 'ramen', null, 'available', 8),
+  ('Samyang 3x', 'Extra hot Samyang ramen.', 219, 'ramen', null, 'available', 9),
+  ('Paldo Volcano Carbonara', 'Creamy volcano-style ramen.', 219, 'ramen', null, 'available', 10),
+  ('Paldo Samgyetang', 'Chicken soup-style ramen.', 219, 'ramen', null, 'available', 11),
+  ('Nongshim Shin Toomba', 'Creamy premium Shin ramen.', 249, 'ramen', null, 'available', 1),
+  ('Nongshim Shin Cheese Stir Fry', 'Cheese stir-fry noodles.', 249, 'ramen', null, 'available', 2),
+  ('Ottogi Cheese Ramen', 'Cheesy Korean ramen.', 249, 'ramen', null, 'available', 3),
+  ('Ottogi Spicy Stir Fry', 'Spicy dry-style ramen.', 249, 'ramen', null, 'available', 4),
+  ('Paldo Rabokki', 'Ramen and rice cake flavour.', 249, 'ramen', null, 'available', 5),
+  ('Paldo Jjajangmen', 'Black bean sauce ramen.', 249, 'ramen', null, 'available', 6),
+  ('Paldo Zangmyeon Loopy', 'Signature Paldo ramen.', 249, 'ramen', null, 'available', 7),
+  ('Paldo Lobster', 'Lobster-style seafood ramen.', 249, 'ramen', null, 'available', 8),
   ('Raw Egg', 'Fresh egg add-on.', 15, 'addons', null, 'available', 1),
   ('Boiled Egg', 'Boiled egg add-on.', 19, 'addons', null, 'available', 2),
   ('Corn', 'Sweet corn add-on.', 19, 'addons', null, 'available', 3),
@@ -207,11 +204,7 @@ insert into public.menu_items (name, description, price, category_id, image_url,
   ('Sliced Cheese', 'Sliced cheese add-on.', 19, 'addons', null, 'available', 5),
   ('Shredded Chicken', 'Shredded chicken add-on.', 29, 'addons', null, 'available', 6),
   ('Spring Onions', 'Fresh spring onion garnish.', 5, 'addons', null, 'available', 7),
-  ('Sausage', 'Sausage add-on.', 29, 'addons', null, 'available', 8),
-  ('Spicy Carbonara Yopokki', 'Rice cakes in a creamy spicy sauce cup.', 359, 'yopokki', null, 'available', 1),
-  ('Hot & Spicy Yopokki', 'Chewy rice cakes with classic fiery sauce.', 359, 'yopokki', null, 'available', 2),
-  ('Sweet & Spicy Yopokki', 'Rice cakes with sweet spicy sauce.', 359, 'yopokki', null, 'available', 3),
-  ('Cheese Yopokki', 'Rice cakes with cheese sauce.', 359, 'yopokki', null, 'available', 4)
+  ('Sausage', 'Sausage add-on.', 29, 'addons', null, 'available', 8)
 on conflict do nothing;
 
 update public.menu_items
@@ -230,15 +223,7 @@ set
       else 'veg'
     end
   )
-where category_id not in (
-  'addons',
-  'drinks',
-  'drink_soda',
-  'drink_non_soda',
-  'drink_diet',
-  'k_snacks_sides',
-  'yopokki'
-);
+where category_id = 'ramen';
 
 update public.menu_items
 set
@@ -252,8 +237,7 @@ where category_id in (
   'drink_soda',
   'drink_non_soda',
   'drink_diet',
-  'k_snacks_sides',
-  'yopokki'
+  'k_snacks_sides'
 );
 
 update public.menu_items

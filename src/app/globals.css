@@ -694,61 +694,6 @@ footer {
   background: var(--red);
 }
 
-.yopokki-stack {
-  position: relative;
-  flex: 1;
-  min-height: 220px;
-  margin-top: 20px;
-}
-
-.cup {
-  position: absolute;
-  display: grid;
-  width: 138px;
-  height: 92px;
-  place-items: center;
-  border: 3px solid currentColor;
-  border-radius: 12px 12px 24px 24px;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(238, 241, 231, 0.92)),
-    #fff;
-  color: var(--red);
-  font-size: 0.86rem;
-  font-weight: 950;
-  text-transform: uppercase;
-  transform: rotate(var(--tilt));
-  filter: drop-shadow(0 15px 14px rgba(9, 38, 42, 0.15));
-}
-
-.cup::before {
-  content: "";
-  position: absolute;
-  top: 13px;
-  left: 17px;
-  width: 72px;
-  height: 17px;
-  border: 3px solid #f07f27;
-  border-radius: 9px;
-}
-
-.cup-one {
-  --tilt: -12deg;
-  left: 12px;
-  top: 6px;
-}
-
-.cup-two {
-  --tilt: 7deg;
-  right: 0;
-  top: 58px;
-}
-
-.cup-three {
-  --tilt: 8deg;
-  left: 42px;
-  top: 128px;
-}
-
 .addons-bar {
   margin: 52px 0 0;
   padding: 30px 24px 22px;

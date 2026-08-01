@@ -36,8 +36,7 @@ const excludedRamenCategoryIds = [
   "drink_soda",
   "drink_non_soda",
   "drink_diet",
-  "k_snacks_sides",
-  "yopokki"
+  "k_snacks_sides"
 ];
 
 function statusLabel(status: ItemStatus) {
@@ -85,7 +84,7 @@ function categoryForSection(section: DashboardSection) {
   if (section === "addons") return "addons";
   if (section === "drinks") return "drink_soda";
   if (section === "snacks") return "k_snacks_sides";
-  return "classic";
+  return "ramen";
 }
 
 function createEmptyDraft(section: DashboardSection = "ramen", sortOrder = 99): MenuItemDraft {
@@ -198,6 +197,7 @@ function normalizedDraftForSection(draft: MenuItem | MenuItemDraft, section: Das
       has_cup_ice_option: false,
       cup_ice_price: null,
       cup_ice_available: true,
+      category_id: categoryForSection(section),
       food_type: draft.food_type ?? "veg",
       spice_level: draft.spice_level ?? 3
     };

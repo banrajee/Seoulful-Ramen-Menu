@@ -101,13 +101,7 @@ function visibleRamenItems(menuData: MenuData) {
   const categoryOrder = new Map(menuData.categories.map((category) => [category.id, category.sort_order]));
 
   return menuData.items
-    .filter(
-      (item) =>
-        item.category_id !== "addons" &&
-        !drinkCategoryIds.includes(item.category_id) &&
-        !snackCategoryIds.includes(item.category_id) &&
-        item.category_id !== "yopokki"
-    )
+    .filter((item) => item.category_id === "ramen")
     .filter((item) => item.status !== "hidden")
     .filter((item) => menuData.settings.show_out_of_stock || item.status !== "out_of_stock")
     .sort((a, b) => {
