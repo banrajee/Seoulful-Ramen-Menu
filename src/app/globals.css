@@ -2859,7 +2859,7 @@ select:disabled {
   .drink-group {
     padding: 0 0 16px;
     border-right: 0;
-    border-bottom: 2px dotted rgba(9, 38, 42, 0.36);
+    border-bottom: 0;
   }
 
   .drink-group:last-child {
@@ -2881,7 +2881,7 @@ select:disabled {
     grid-template-columns: 64px minmax(0, 1fr);
     min-height: 82px;
     padding: 0 0 14px;
-    border-bottom: 2px dotted rgba(9, 38, 42, 0.24);
+    border-bottom: 0;
   }
 
   .drinks-list article:last-child {
@@ -2900,7 +2900,7 @@ select:disabled {
     min-height: 94px;
     padding: 0 0 14px;
     border-right: 0;
-    border-bottom: 2px dotted rgba(9, 38, 42, 0.36);
+    border-bottom: 0;
   }
 
   .snacks-list article:last-child {
@@ -2919,7 +2919,7 @@ select:disabled {
     min-height: 106px;
     padding: 0;
     border-right: 0;
-    border-bottom: 2px dotted rgba(9, 38, 42, 0.36);
+    border-bottom: 0;
   }
 
   .refined-addons-list article:last-child {
