@@ -31,6 +31,18 @@ create table if not exists public.menu_items (
   updated_at timestamptz not null default now()
 );
 
+create table if not exists public.item_variants (
+  id uuid primary key default gen_random_uuid(),
+  menu_item_id uuid not null references public.menu_items(id) on delete cascade,
+  variant_name text not null,
+  price numeric(10, 2) not null check (price >= 0),
+  status text not null default 'available' check (status in ('available', 'out_of_stock', 'hidden')),
+  image_url text,
+  sort_order integer not null default 0,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
 -- Supporting setting for the owner's global "show or hide out-of-stock items" choice.
 create table if not exists public.shop_settings (
   id text primary key default 'default',
@@ -88,6 +100,11 @@ create trigger set_menu_items_updated_at
 before update on public.menu_items
 for each row execute function public.set_updated_at();
 
+drop trigger if exists set_item_variants_updated_at on public.item_variants;
+create trigger set_item_variants_updated_at
+before update on public.item_variants
+for each row execute function public.set_updated_at();
+
 drop trigger if exists set_shop_settings_updated_at on public.shop_settings;
 create trigger set_shop_settings_updated_at
 before update on public.shop_settings
@@ -95,6 +112,7 @@ for each row execute function public.set_updated_at();
 
 alter table public.categories enable row level security;
 alter table public.menu_items enable row level security;
+alter table public.item_variants enable row level security;
 alter table public.shop_settings enable row level security;
 
 drop policy if exists "Public can read categories" on public.categories;
@@ -106,6 +124,12 @@ using (true);
 drop policy if exists "Public can read menu items" on public.menu_items;
 create policy "Public can read menu items"
 on public.menu_items for select
+to anon, authenticated
+using (true);
+
+drop policy if exists "Public can read item variants" on public.item_variants;
+create policy "Public can read item variants"
+on public.item_variants for select
 to anon, authenticated
 using (true);
 
@@ -125,6 +149,13 @@ with check (true);
 drop policy if exists "Owner can manage menu items" on public.menu_items;
 create policy "Owner can manage menu items"
 on public.menu_items for all
+to authenticated
+using (true)
+with check (true);
+
+drop policy if exists "Owner can manage item variants" on public.item_variants;
+create policy "Owner can manage item variants"
+on public.item_variants for all
 to authenticated
 using (true)
 with check (true);
@@ -168,6 +199,9 @@ where public.menu_items.id = ranked_menu_items.id
 
 create unique index if not exists menu_items_category_name_unique
 on public.menu_items (category_id, lower(trim(name)));
+
+create unique index if not exists item_variants_item_name_unique
+on public.item_variants (menu_item_id, lower(trim(variant_name)));
 
 insert into public.menu_items (name, description, price, category_id, image_url, status, sort_order) values
   ('Nongshim Shin Ramyeon', 'Original spicy Korean ramen.', 189, 'ramen', '/ramen-shin-ramyeon.png', 'available', 1),
@@ -271,6 +305,13 @@ end $$;
 do $$
 begin
   alter publication supabase_realtime add table public.menu_items;
+exception
+  when duplicate_object then null;
+end $$;
+
+do $$
+begin
+  alter publication supabase_realtime add table public.item_variants;
 exception
   when duplicate_object then null;
 end $$;

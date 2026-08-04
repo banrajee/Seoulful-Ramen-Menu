@@ -42,6 +42,44 @@ export const sampleMenu: MenuData = {
       sort_order: 7
     }
   ],
+  variants: [
+    {
+      id: "fanta-orange",
+      menu_item_id: "fanta",
+      variant_name: "Orange",
+      price: 60,
+      status: "available",
+      image_url: null,
+      sort_order: 1
+    },
+    {
+      id: "fanta-grape",
+      menu_item_id: "fanta",
+      variant_name: "Grape",
+      price: 65,
+      status: "available",
+      image_url: null,
+      sort_order: 2
+    },
+    {
+      id: "fanta-pineapple",
+      menu_item_id: "fanta",
+      variant_name: "Pineapple",
+      price: 65,
+      status: "out_of_stock",
+      image_url: null,
+      sort_order: 3
+    },
+    {
+      id: "fanta-strawberry",
+      menu_item_id: "fanta",
+      variant_name: "Strawberry",
+      price: 70,
+      status: "available",
+      image_url: null,
+      sort_order: 4
+    }
+  ],
   items: [
     {
       id: "shin-ramyeon",
@@ -392,6 +430,16 @@ export const sampleMenu: MenuData = {
       image_url: null,
       status: "available",
       sort_order: 8
+    },
+    {
+      id: "fanta",
+      name: "Fanta",
+      description: "Fruit soda flavours.",
+      price: 60,
+      category_id: "drink_soda",
+      image_url: null,
+      status: "available",
+      sort_order: 1
     }
   ]
 };

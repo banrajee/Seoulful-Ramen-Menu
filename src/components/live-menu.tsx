@@ -4,7 +4,7 @@ import { EyeOff } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { fetchMenuData, subscribeToMenuChanges } from "@/lib/menu-service";
 import { sampleMenu } from "@/lib/sample-data";
-import type { MenuData, MenuItem } from "@/lib/types";
+import type { ItemVariant, MenuData, MenuItem } from "@/lib/types";
 
 const drinkCategoryIds = ["drinks", "drink_soda", "drink_non_soda", "drink_diet"];
 const snackCategoryIds = ["k_snacks_sides"];
@@ -97,6 +97,45 @@ function visibleRamenItems(menuData: MenuData) {
       if (categoryDelta !== 0) return categoryDelta;
       return a.sort_order - b.sort_order;
     });
+}
+
+function visibleVariantsForItem(menuData: MenuData, item: MenuItem) {
+  return menuData.variants
+    .filter((variant) => variant.menu_item_id === item.id)
+    .filter((variant) => variant.status !== "hidden")
+    .filter((variant) => menuData.settings.show_out_of_stock || variant.status !== "out_of_stock")
+    .sort((a, b) => a.sort_order - b.sort_order);
+}
+
+function compactPriceLabel(item: MenuItem, variants: ItemVariant[]) {
+  const availablePrices = variants
+    .filter((variant) => variant.status === "available")
+    .map((variant) => Number(variant.price));
+  const prices = availablePrices.length > 0 ? availablePrices : variants.map((variant) => Number(variant.price));
+
+  if (prices.length === 0) return money(item.price);
+
+  const minPrice = Math.min(...prices);
+  const maxPrice = Math.max(...prices);
+
+  return minPrice === maxPrice ? money(minPrice) : `From ${money(minPrice)}`;
+}
+
+function VariantList({ variants }: { variants: ItemVariant[] }) {
+  if (variants.length === 0) return null;
+
+  return (
+    <ul className="variant-list">
+      {variants.map((variant) => (
+        <li className={variant.status} key={variant.id}>
+          {variant.image_url ? <img src={variant.image_url} alt="" aria-hidden="true" /> : null}
+          <span>{variant.variant_name}</span>
+          <strong>{money(variant.price)}</strong>
+          {variant.status === "out_of_stock" ? <em>Out of Stock</em> : null}
+        </li>
+      ))}
+    </ul>
+  );
 }
 
 export function LiveMenu() {
@@ -227,14 +266,21 @@ export function LiveMenu() {
                     <h3>{group.label}</h3>
                     <div className="drinks-list">
                       {groupItems.map((item) => (
-                        <article className={item.status} key={item.id}>
-                          {item.image_url ? <img src={item.image_url} alt={item.name} /> : <span aria-hidden="true" />}
-                          <div>
-                            <h4>{item.name}</h4>
-                            <strong>{money(item.price)}</strong>
-                            {item.status === "out_of_stock" ? <em>Out of Stock</em> : null}
-                          </div>
-                        </article>
+                        (() => {
+                          const variants = visibleVariantsForItem(menuData, item);
+
+                          return (
+                            <article className={item.status} key={item.id}>
+                              {item.image_url ? <img src={item.image_url} alt={item.name} /> : <span aria-hidden="true" />}
+                              <div>
+                                <h4>{item.name}</h4>
+                                <strong>{compactPriceLabel(item, variants)}</strong>
+                                {item.status === "out_of_stock" ? <em>Out of Stock</em> : null}
+                                <VariantList variants={variants} />
+                              </div>
+                            </article>
+                          );
+                        })()
                       ))}
                     </div>
                   </section>
@@ -253,8 +299,9 @@ export function LiveMenu() {
                   {item.image_url ? <img src={item.image_url} alt={item.name} /> : <span aria-hidden="true" />}
                   <div>
                     <h3>{item.name}</h3>
-                    <strong>{money(item.price)}</strong>
+                    <strong>{compactPriceLabel(item, visibleVariantsForItem(menuData, item))}</strong>
                     {item.status === "out_of_stock" ? <em>Out of Stock</em> : null}
+                    <VariantList variants={visibleVariantsForItem(menuData, item)} />
                   </div>
                 </article>
               ))}

@@ -2,7 +2,7 @@
 
 import { createBrowserSupabaseClient, hasSupabaseConfig } from "./supabase";
 import { sampleMenu } from "./sample-data";
-import type { Category, MenuData, MenuItem, MenuItemDraft, ShopSettings } from "./types";
+import type { Category, ItemVariant, ItemVariantDraft, MenuData, MenuItem, MenuItemDraft, ShopSettings } from "./types";
 
 const defaultSettings: ShopSettings = {
   id: "default",
@@ -16,9 +16,10 @@ export async function fetchMenuData(): Promise<MenuData> {
     return sampleMenu;
   }
 
-  const [categoriesResult, itemsResult, settingsResult] = await Promise.all([
+  const [categoriesResult, itemsResult, variantsResult, settingsResult] = await Promise.all([
     supabase.from("categories").select("*").order("sort_order", { ascending: true }),
     supabase.from("menu_items").select("*").order("sort_order", { ascending: true }),
+    supabase.from("item_variants").select("*").order("sort_order", { ascending: true }),
     supabase.from("shop_settings").select("*").eq("id", "default").maybeSingle()
   ]);
 
@@ -30,9 +31,14 @@ export async function fetchMenuData(): Promise<MenuData> {
     return sampleMenu;
   }
 
+  if (variantsResult.error) {
+    console.warn("Item variants are not available yet. Run the item_variants SQL migration.", variantsResult.error);
+  }
+
   return {
     categories: (categoriesResult.data ?? []) as Category[],
     items: (itemsResult.data ?? []) as MenuItem[],
+    variants: variantsResult.error ? [] : ((variantsResult.data ?? []) as ItemVariant[]),
     settings: ((settingsResult.data as ShopSettings | null) ?? defaultSettings)
   };
 }
@@ -82,6 +88,56 @@ export async function deleteItem(id: string) {
   if (error) throw error;
 }
 
+export async function saveVariant(variant: ItemVariant | ItemVariantDraft) {
+  const supabase = createBrowserSupabaseClient();
+
+  if (!supabase) {
+    throw new Error("Supabase is not configured yet.");
+  }
+
+  const payload = {
+    menu_item_id: variant.menu_item_id,
+    variant_name: variant.variant_name,
+    price: Number(variant.price),
+    status: variant.status,
+    image_url: variant.image_url || null,
+    sort_order: Number(variant.sort_order)
+  };
+
+  if ("id" in variant && variant.id) {
+    const { error } = await supabase.from("item_variants").update(payload).eq("id", variant.id);
+    if (error) throw error;
+    return;
+  }
+
+  const { error } = await supabase.from("item_variants").insert(payload);
+  if (error) throw error;
+}
+
+export async function deleteVariant(id: string) {
+  const supabase = createBrowserSupabaseClient();
+  if (!supabase) throw new Error("Supabase is not configured yet.");
+
+  const { error } = await supabase.from("item_variants").delete().eq("id", id);
+  if (error) throw error;
+}
+
+export async function updateVariantStatus(id: string, status: ItemVariant["status"]) {
+  const supabase = createBrowserSupabaseClient();
+  if (!supabase) throw new Error("Supabase is not configured yet.");
+
+  const { error } = await supabase.from("item_variants").update({ status }).eq("id", id);
+  if (error) throw error;
+}
+
+export async function updateVariantOrder(id: string, sortOrder: number) {
+  const supabase = createBrowserSupabaseClient();
+  if (!supabase) throw new Error("Supabase is not configured yet.");
+
+  const { error } = await supabase.from("item_variants").update({ sort_order: sortOrder }).eq("id", id);
+  if (error) throw error;
+}
+
 export async function updateItemStatus(id: string, status: MenuItem["status"]) {
   const supabase = createBrowserSupabaseClient();
   if (!supabase) throw new Error("Supabase is not configured yet.");
@@ -120,6 +176,7 @@ export function subscribeToMenuChanges(onChange: () => void) {
     .channel("menu-live-updates")
     .on("postgres_changes", { event: "*", schema: "public", table: "categories" }, onChange)
     .on("postgres_changes", { event: "*", schema: "public", table: "menu_items" }, onChange)
+    .on("postgres_changes", { event: "*", schema: "public", table: "item_variants" }, onChange)
     .on("postgres_changes", { event: "*", schema: "public", table: "shop_settings" }, onChange)
     .subscribe();
 

@@ -4,15 +4,19 @@ import { ArrowDown, ArrowUp, Eye, EyeOff, LogOut, Plus, Save, Trash2 } from "luc
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import {
   deleteItem,
+  deleteVariant,
   fetchMenuData,
   saveItem,
+  saveVariant,
   updateItemOrder,
   updateItemStatus,
+  updateVariantOrder,
+  updateVariantStatus,
   updateOutOfStockVisibility
 } from "@/lib/menu-service";
 import { sampleMenu } from "@/lib/sample-data";
 import { createBrowserSupabaseClient, hasSupabaseConfig } from "@/lib/supabase";
-import type { ItemStatus, MenuData, MenuItem, MenuItemDraft } from "@/lib/types";
+import type { ItemStatus, ItemVariant, ItemVariantDraft, MenuData, MenuItem, MenuItemDraft } from "@/lib/types";
 
 type DashboardSection = "ramen" | "addons" | "drinks" | "snacks";
 
@@ -98,11 +102,26 @@ function createEmptyDraft(section: DashboardSection = "ramen", sortOrder = 99): 
   };
 }
 
+function createEmptyVariantDraft(menuItemId: string, sortOrder = 99): ItemVariantDraft {
+  return {
+    menu_item_id: menuItemId,
+    variant_name: "",
+    price: 0,
+    status: "available",
+    image_url: "",
+    sort_order: sortOrder
+  };
+}
+
 function orderedItems(items: MenuItem[]) {
   return items.slice().sort((a, b) => {
     if (a.category_id === b.category_id) return a.sort_order - b.sort_order;
     return a.category_id.localeCompare(b.category_id);
   });
+}
+
+function orderedVariants(variants: ItemVariant[]) {
+  return variants.slice().sort((a, b) => a.sort_order - b.sort_order);
 }
 
 function itemsForSection(items: MenuItem[], section: DashboardSection) {
@@ -314,6 +333,65 @@ export function OwnerDashboard() {
     }
   }
 
+  async function handleSaveVariant(variant: ItemVariant | ItemVariantDraft) {
+    setBusy(true);
+    setMessage("");
+
+    try {
+      await saveVariant(variant);
+      await loadData();
+      setMessage("Variant saved.");
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Could not save variant.");
+      throw error;
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function handleDeleteVariant(variant: ItemVariant) {
+    setBusy(true);
+
+    try {
+      await deleteVariant(variant.id);
+      await loadData();
+      setMessage(`${variant.variant_name} deleted.`);
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Could not delete variant.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function setVariantStatus(variant: ItemVariant, status: ItemStatus) {
+    try {
+      await updateVariantStatus(variant.id, status);
+      await loadData();
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Could not update variant status.");
+    }
+  }
+
+  async function moveVariant(variant: ItemVariant, direction: -1 | 1) {
+    const siblings = orderedVariants(
+      menuData.variants.filter((candidate) => candidate.menu_item_id === variant.menu_item_id)
+    );
+    const currentIndex = siblings.findIndex((candidate) => candidate.id === variant.id);
+    const neighbor = siblings[currentIndex + direction];
+
+    if (!neighbor) return;
+
+    try {
+      await Promise.all([
+        updateVariantOrder(variant.id, neighbor.sort_order),
+        updateVariantOrder(neighbor.id, variant.sort_order)
+      ]);
+      await loadData();
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Could not move variant.");
+    }
+  }
+
   async function toggleOutOfStockVisibility() {
     const nextValue = !menuData.settings.show_out_of_stock;
     try {
@@ -395,8 +473,12 @@ export function OwnerDashboard() {
           setEditorSection={setEditorSection}
           handleSave={handleSave}
           handleDelete={handleDelete}
+          handleDeleteVariant={handleDeleteVariant}
+          handleSaveVariant={handleSaveVariant}
           moveItem={moveItem}
+          moveVariant={moveVariant}
           setStatus={setStatus}
+          setVariantStatus={setVariantStatus}
           toggleOutOfStockVisibility={toggleOutOfStockVisibility}
           startNewItem={(section) => {
             setEditorSection(section);
@@ -419,8 +501,12 @@ type DashboardBodyProps = {
   setEditorSection: (section: DashboardSection) => void;
   handleSave: (event: FormEvent<HTMLFormElement>) => void;
   handleDelete: (item: MenuItem) => void;
+  handleDeleteVariant: (variant: ItemVariant) => void;
+  handleSaveVariant: (variant: ItemVariant | ItemVariantDraft) => Promise<void>;
   moveItem: (item: MenuItem, direction: -1 | 1) => void;
+  moveVariant: (variant: ItemVariant, direction: -1 | 1) => void;
   setStatus: (item: MenuItem, status: ItemStatus) => void;
+  setVariantStatus: (variant: ItemVariant, status: ItemStatus) => void;
   toggleOutOfStockVisibility: () => void;
   startNewItem: (section: DashboardSection) => void;
 };
@@ -436,8 +522,12 @@ function DashboardBody({
   setEditorSection,
   handleSave,
   handleDelete,
+  handleDeleteVariant,
+  handleSaveVariant,
   moveItem,
+  moveVariant,
   setStatus,
+  setVariantStatus,
   toggleOutOfStockVisibility,
   startNewItem
 }: DashboardBodyProps) {
@@ -450,6 +540,11 @@ function DashboardBody({
     : categoryForSection(editorSection);
   const showCategoryField = editorSection === "drinks" || editorSection === "snacks";
   const isRamenEditor = editorSection === "ramen";
+  const canUseVariants = editorSection === "drinks" || editorSection === "snacks";
+  const draftId = "id" in draft ? draft.id : null;
+  const draftVariants = draftId
+    ? orderedVariants(menuData.variants.filter((variant) => variant.menu_item_id === draftId))
+    : [];
 
   return (
     <div className="dashboard-stack">
@@ -623,6 +718,19 @@ function DashboardBody({
           </select>
         </label>
 
+        {canUseVariants ? (
+          <VariantEditor
+            busy={busy}
+            itemId={draftId}
+            onDeleteVariant={handleDeleteVariant}
+            onMoveVariant={moveVariant}
+            onSaveVariant={handleSaveVariant}
+            onSetVariantStatus={setVariantStatus}
+            sectionLabel={sectionLabels[editorSection]}
+            variants={draftVariants}
+          />
+        ) : null}
+
         <div className="form-actions">
           <button disabled={busy || !liveEditing} type="submit">
             <Save size={17} />
@@ -667,7 +775,12 @@ function DashboardBody({
 
                 <div className="owner-items">
                   {sectionItems.length > 0 ? (
-                    sectionItems.map((item) => (
+                    sectionItems.map((item) => {
+                      const itemVariants = orderedVariants(
+                        menuData.variants.filter((variant) => variant.menu_item_id === item.id)
+                      );
+
+                      return (
                       <article key={item.id} className="owner-item">
                         <div>
                           <h3>{item.name}</h3>
@@ -675,6 +788,11 @@ function DashboardBody({
                             {ownerPriceLabel(item)} · {statusLabel(item.status)}
                             {foodTypeLabel(item) ? ` · ${foodTypeLabel(item)}` : ""}
                           </p>
+                          {itemVariants.length > 0 ? (
+                            <p className="owner-variant-summary">
+                              {itemVariants.map((variant) => `${variant.variant_name} Rs ${variant.price}`).join(", ")}
+                            </p>
+                          ) : null}
                         </div>
 
                         <div className="owner-item-actions">
@@ -714,7 +832,8 @@ function DashboardBody({
                           </button>
                         </div>
                       </article>
-                    ))
+                      );
+                    })
                   ) : (
                     <p className="empty-section-note">No {sectionLabels[section].toLowerCase()} added yet.</p>
                   )}
@@ -726,5 +845,182 @@ function DashboardBody({
         </section>
       </div>
     </div>
+  );
+}
+
+type VariantEditorProps = {
+  busy: boolean;
+  itemId: string | null;
+  onDeleteVariant: (variant: ItemVariant) => void;
+  onMoveVariant: (variant: ItemVariant, direction: -1 | 1) => void;
+  onSaveVariant: (variant: ItemVariant | ItemVariantDraft) => Promise<void>;
+  onSetVariantStatus: (variant: ItemVariant, status: ItemStatus) => void;
+  sectionLabel: string;
+  variants: ItemVariant[];
+};
+
+function VariantEditor({
+  busy,
+  itemId,
+  onDeleteVariant,
+  onMoveVariant,
+  onSaveVariant,
+  onSetVariantStatus,
+  sectionLabel,
+  variants
+}: VariantEditorProps) {
+  const [variantDraft, setVariantDraft] = useState<ItemVariant | ItemVariantDraft | null>(null);
+
+  useEffect(() => {
+    setVariantDraft(itemId ? createEmptyVariantDraft(itemId, variants.length + 1) : null);
+  }, [itemId, variants.length]);
+
+  if (!itemId) {
+    return (
+      <section className="variant-panel">
+        <div>
+          <h3>Flavours / Variants</h3>
+          <p>Save the main {sectionLabel.toLowerCase()} item first, then add flavours or variants under it.</p>
+        </div>
+      </section>
+    );
+  }
+
+  const currentItemId = itemId;
+  const draft = variantDraft ?? createEmptyVariantDraft(currentItemId, variants.length + 1);
+
+  async function saveCurrentVariant() {
+    if (!draft.variant_name.trim()) return;
+
+    await onSaveVariant({
+      ...draft,
+      menu_item_id: currentItemId,
+      variant_name: draft.variant_name.trim(),
+      price: Number(draft.price),
+      image_url: draft.image_url || null,
+      sort_order: Number(draft.sort_order)
+    });
+
+    setVariantDraft(createEmptyVariantDraft(currentItemId, variants.length + 1));
+  }
+
+  return (
+    <section className="variant-panel">
+      <div>
+        <h3>Flavours / Variants</h3>
+        <p>Add flavours under this one main {sectionLabel.toLowerCase()} card.</p>
+      </div>
+
+      <div className="variant-form-grid">
+        <label>
+          Flavour name
+          <input
+            value={draft.variant_name}
+            onChange={(event) => setVariantDraft({ ...draft, variant_name: event.target.value })}
+            placeholder="Orange, Grape, Seaweed..."
+          />
+        </label>
+        <label>
+          Price
+          <input
+            min="0"
+            type="number"
+            value={draft.price}
+            onChange={(event) => setVariantDraft({ ...draft, price: Number(event.target.value) })}
+          />
+        </label>
+        <label>
+          Order
+          <input
+            min="1"
+            type="number"
+            value={draft.sort_order}
+            onChange={(event) => setVariantDraft({ ...draft, sort_order: Number(event.target.value) })}
+          />
+        </label>
+        <label>
+          Status
+          <select
+            value={draft.status}
+            onChange={(event) => setVariantDraft({ ...draft, status: event.target.value as ItemStatus })}
+          >
+            <option value="available">Available</option>
+            <option value="out_of_stock">Out of Stock</option>
+            <option value="hidden">Hidden</option>
+          </select>
+        </label>
+      </div>
+
+      <label>
+        Variant image URL
+        <input
+          value={draft.image_url ?? ""}
+          onChange={(event) => setVariantDraft({ ...draft, image_url: event.target.value })}
+          placeholder="Optional public image URL"
+        />
+      </label>
+
+      <div className="form-actions">
+        <button disabled={busy || !draft.variant_name.trim()} onClick={() => void saveCurrentVariant()} type="button">
+          <Save size={17} />
+          {"id" in draft ? "Save Variant" : "Add Variant"}
+        </button>
+        {"id" in draft ? (
+          <button
+            className="secondary-button"
+            onClick={() => setVariantDraft(createEmptyVariantDraft(itemId, variants.length + 1))}
+            type="button"
+          >
+            Cancel Variant Edit
+          </button>
+        ) : null}
+      </div>
+
+      {variants.length > 0 ? (
+        <div className="variant-items">
+          {variants.map((variant) => (
+            <article className="variant-item" key={variant.id}>
+              <div>
+                <h4>{variant.variant_name}</h4>
+                <p>
+                  Rs {variant.price} Â· {statusLabel(variant.status)}
+                </p>
+              </div>
+              <div className="variant-actions">
+                <button disabled={busy} onClick={() => onMoveVariant(variant, -1)} title="Move up" type="button">
+                  <ArrowUp size={15} />
+                </button>
+                <button disabled={busy} onClick={() => onMoveVariant(variant, 1)} title="Move down" type="button">
+                  <ArrowDown size={15} />
+                </button>
+                <select
+                  disabled={busy}
+                  value={variant.status}
+                  onChange={(event) => onSetVariantStatus(variant, event.target.value as ItemStatus)}
+                >
+                  <option value="available">Available</option>
+                  <option value="out_of_stock">Out of Stock</option>
+                  <option value="hidden">Hidden</option>
+                </select>
+                <button disabled={busy} onClick={() => setVariantDraft(variant)} type="button">
+                  Edit
+                </button>
+                <button
+                  className="danger-button"
+                  disabled={busy}
+                  onClick={() => onDeleteVariant(variant)}
+                  title="Delete variant"
+                  type="button"
+                >
+                  <Trash2 size={15} />
+                </button>
+              </div>
+            </article>
+          ))}
+        </div>
+      ) : (
+        <p className="empty-section-note">No variants added yet.</p>
+      )}
+    </section>
   );
 }
