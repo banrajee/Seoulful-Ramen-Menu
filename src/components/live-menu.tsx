@@ -1,6 +1,7 @@
 "use client";
 
 import { EyeOff } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { fetchMenuData, subscribeToMenuChanges } from "@/lib/menu-service";
 import { sampleMenu } from "@/lib/sample-data";
@@ -13,6 +14,14 @@ const drinkGroups = [
   { id: "drink_soda", label: "Soda" },
   { id: "drink_non_soda", label: "Non-Soda" },
   { id: "drink_diet", label: "Diet" }
+];
+
+export type MenuPageType = "ramen" | "drinks" | "snacks";
+
+const menuPages: Array<{ href: string; id: MenuPageType; label: string }> = [
+  { href: "/", id: "ramen", label: "Ramen" },
+  { href: "/drinks", id: "drinks", label: "Drinks" },
+  { href: "/k-snacks", id: "snacks", label: "K-Snacks & Sides" }
 ];
 
 function money(value: number) {
@@ -138,7 +147,19 @@ function VariantList({ variants }: { variants: ItemVariant[] }) {
   );
 }
 
-export function LiveMenu() {
+function MenuNavigation({ activePage }: { activePage: MenuPageType }) {
+  return (
+    <nav className="menu-page-switcher" aria-label="Menu pages">
+      {menuPages.map((page) => (
+        <Link className={page.id === activePage ? "active" : ""} href={page.href} key={page.id}>
+          {page.label}
+        </Link>
+      ))}
+    </nav>
+  );
+}
+
+export function LiveMenu({ activePage = "ramen" }: { activePage?: MenuPageType }) {
   const [menuData, setMenuData] = useState<MenuData>(sampleMenu);
 
   async function refreshMenu() {
@@ -190,68 +211,99 @@ export function LiveMenu() {
           </div>
         </div>
 
-        <section className="ramen-section" aria-label="Ramen and Ramyeon">
-          <h2>Ramen / Ramyeon</h2>
-          <p className="ramen-price-note">
-            Packet Only is for takeaway packet purchase. Self-Cook Bowl includes bowl, cutlery, and self-cook station
-            access.
-          </p>
+        <MenuNavigation activePage={activePage} />
 
-          <div className="ramen-product-grid">
-            {ramenItems.map((item) => {
-              const level = spiceLevel(item);
+        {activePage === "ramen" ? (
+          <>
+            <section className="ramen-section" aria-label="Ramen and Ramyeon">
+              <h2>Ramen / Ramyeon</h2>
+              <p className="ramen-price-note">
+                Packet Only is for takeaway packet purchase. Self-Cook Bowl includes bowl, cutlery, and self-cook station
+                access.
+              </p>
 
-              return (
-                <article className={`ramen-product ${item.status}`} key={item.id}>
-                  <div className="ramen-product-media">
-                    {item.image_url ? (
-                      <img className="ramen-product-image" src={item.image_url} alt={item.name} />
-                    ) : (
-                      <div className={`ramen-pack ${packClass(item)}`} aria-label={`${item.name} image placeholder`}>
-                        <span>{item.name.split(" ")[0]}</span>
-                        <strong>{item.name.split(" ").slice(-2).join(" ")}</strong>
+              <div className="ramen-product-grid">
+                {ramenItems.map((item) => {
+                  const level = spiceLevel(item);
+
+                  return (
+                    <article className={`ramen-product ${item.status}`} key={item.id}>
+                      <div className="ramen-product-media">
+                        {item.image_url ? (
+                          <img className="ramen-product-image" src={item.image_url} alt={item.name} />
+                        ) : (
+                          <div className={`ramen-pack ${packClass(item)}`} aria-label={`${item.name} image placeholder`}>
+                            <span>{item.name.split(" ")[0]}</span>
+                            <strong>{item.name.split(" ").slice(-2).join(" ")}</strong>
+                          </div>
+                        )}
+                        <div className="spice-row" aria-label={`${level} out of 5 spice level`}>
+                          {Array.from({ length: 5 }).map((_, index) => (
+                            <img
+                              alt=""
+                              aria-hidden="true"
+                              className={index < level ? "active" : "inactive"}
+                              key={index}
+                              src="/spice-chilli.png"
+                            />
+                          ))}
+                        </div>
                       </div>
-                    )}
-                    <div className="spice-row" aria-label={`${level} out of 5 spice level`}>
-                      {Array.from({ length: 5 }).map((_, index) => (
-                        <img
-                          alt=""
-                          aria-hidden="true"
-                          className={index < level ? "active" : "inactive"}
-                          key={index}
-                          src="/spice-chilli.png"
-                        />
-                      ))}
-                    </div>
-                  </div>
 
-                  <div className="ramen-product-copy">
-                    <div className="ramen-title-row">
-                      <h3>{item.name}</h3>
-                      {item.food_type ? (
-                        <span
-                          className={`food-marker ${item.food_type}`}
-                          aria-label={item.food_type === "veg" ? "Vegetarian" : "Non-vegetarian"}
-                        />
-                      ) : null}
-                    </div>
-                    {isDualPrice(item) ? (
-                      <div className="dual-price-stack">
-                        <span>Packet Only: {money(packetOnlyPrice(item))}</span>
-                        <strong>Self-Cook Bowl: {money(selfCookPrice(item))}</strong>
+                      <div className="ramen-product-copy">
+                        <div className="ramen-title-row">
+                          <h3>{item.name}</h3>
+                          {item.food_type ? (
+                            <span
+                              className={`food-marker ${item.food_type}`}
+                              aria-label={item.food_type === "veg" ? "Vegetarian" : "Non-vegetarian"}
+                            />
+                          ) : null}
+                        </div>
+                        {isDualPrice(item) ? (
+                          <div className="dual-price-stack">
+                            <span>Packet Only: {money(packetOnlyPrice(item))}</span>
+                            <strong>Self-Cook Bowl: {money(selfCookPrice(item))}</strong>
+                          </div>
+                        ) : (
+                          <strong>{money(item.price)}</strong>
+                        )}
+                        {item.status === "out_of_stock" ? <span className="status-pill">Out of Stock</span> : null}
                       </div>
-                    ) : (
-                      <strong>{money(item.price)}</strong>
-                    )}
-                    {item.status === "out_of_stock" ? <span className="status-pill">Out of Stock</span> : null}
-                  </div>
-                </article>
-              );
-            })}
-          </div>
-        </section>
+                    </article>
+                  );
+                })}
+              </div>
+            </section>
 
-        {drinks.length > 0 ? (
+            {addOns.length > 0 ? (
+              <section className="addons-bar refined-addons-bar" aria-label="Add-Ons">
+                <h2>Add-Ons</h2>
+                <div className="addons-list refined-addons-list">
+                  {addOns.map((item) => {
+                    const image = addonImage(item);
+
+                    return (
+                      <article key={item.id}>
+                        {image ? (
+                          <img className={`addon-image ${addonClass(item)}`} src={image} alt="" aria-hidden="true" />
+                        ) : (
+                          <span className={`addon-icon ${addonClass(item)}`} aria-hidden="true" />
+                        )}
+                        <div>
+                          <h3>{item.name}</h3>
+                          <strong>{money(item.price)}</strong>
+                        </div>
+                      </article>
+                    );
+                  })}
+                </div>
+              </section>
+            ) : null}
+          </>
+        ) : null}
+
+        {activePage === "drinks" && drinks.length > 0 ? (
           <section className="drinks-section" aria-label="Drinks">
             <h2>Drinks</h2>
             <p className="drinks-price-note">Cup + Ice: {money(20)} extra.</p>
@@ -290,7 +342,7 @@ export function LiveMenu() {
           </section>
         ) : null}
 
-        {snacks.length > 0 ? (
+        {activePage === "snacks" && snacks.length > 0 ? (
           <section className="snacks-section" aria-label="K-Snacks and Sides">
             <h2>K-Snacks &amp; Sides</h2>
             <div className="snacks-list">
@@ -305,31 +357,6 @@ export function LiveMenu() {
                   </div>
                 </article>
               ))}
-            </div>
-          </section>
-        ) : null}
-
-        {addOns.length > 0 ? (
-          <section className="addons-bar refined-addons-bar" aria-label="Add-Ons">
-            <h2>Add-Ons</h2>
-            <div className="addons-list refined-addons-list">
-              {addOns.map((item) => {
-                const image = addonImage(item);
-
-                return (
-                  <article key={item.id}>
-                    {image ? (
-                      <img className={`addon-image ${addonClass(item)}`} src={image} alt="" aria-hidden="true" />
-                    ) : (
-                      <span className={`addon-icon ${addonClass(item)}`} aria-hidden="true" />
-                    )}
-                    <div>
-                      <h3>{item.name}</h3>
-                      <strong>{money(item.price)}</strong>
-                    </div>
-                  </article>
-                );
-              })}
             </div>
           </section>
         ) : null}
