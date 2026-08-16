@@ -237,28 +237,30 @@ export function LiveMenu({ activePage = "ramen" }: { activePage?: MenuPageType }
                             <strong>{item.name.split(" ").slice(-2).join(" ")}</strong>
                           </div>
                         )}
-                        <div className="spice-row" aria-label={`${level} out of 5 spice level`}>
-                          {Array.from({ length: 5 }).map((_, index) => (
-                            <img
-                              alt=""
-                              aria-hidden="true"
-                              className={index < level ? "active" : "inactive"}
-                              key={index}
-                              src="/spice-chilli.png"
-                            />
-                          ))}
-                        </div>
                       </div>
 
                       <div className="ramen-product-copy">
                         <div className="ramen-title-row">
                           <h3>{item.name}</h3>
-                          {item.food_type ? (
-                            <span
-                              className={`food-marker ${item.food_type}`}
-                              aria-label={item.food_type === "veg" ? "Vegetarian" : "Non-vegetarian"}
-                            />
-                          ) : null}
+                          <div className="ramen-meta-stack">
+                            {item.food_type ? (
+                              <span
+                                className={`food-marker ${item.food_type}`}
+                                aria-label={item.food_type === "veg" ? "Vegetarian" : "Non-vegetarian"}
+                              />
+                            ) : null}
+                            <div className="spice-row" aria-label={`${level} out of 5 spice level`}>
+                              {Array.from({ length: 5 }).map((_, index) => (
+                                <img
+                                  alt=""
+                                  aria-hidden="true"
+                                  className={index < level ? "active" : "inactive"}
+                                  key={index}
+                                  src="/spice-chilli.png"
+                                />
+                              ))}
+                            </div>
+                          </div>
                         </div>
                         {isDualPrice(item) ? (
                           <div className="dual-price-stack">

@@ -2275,9 +2275,16 @@ select:disabled {
 
 .ramen-title-row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 42px;
+  grid-template-columns: minmax(0, 1fr) max-content;
   gap: 8px;
-  align-items: center;
+  align-items: start;
+}
+
+.ramen-meta-stack {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  justify-self: end;
 }
 
 .ramen-product-copy h3 {
@@ -2926,7 +2933,8 @@ select:disabled {
   }
 
   .ramen-title-row {
-    grid-template-columns: minmax(0, 1fr) 34px;
+    grid-template-columns: minmax(0, 1fr) max-content;
+    gap: 8px;
   }
 
   .food-marker {
