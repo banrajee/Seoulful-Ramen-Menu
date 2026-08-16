@@ -149,11 +149,15 @@ function VariantList({ variants }: { variants: ItemVariant[] }) {
   );
 }
 
-function MenuNavigation({ activePage }: { activePage: MenuPageType }) {
+function MenuNavigation({ activePage, sessionRequired }: { activePage: MenuPageType; sessionRequired: boolean }) {
   return (
     <nav className="menu-page-switcher" aria-label="Menu pages">
       {menuPages.map((page) => (
-        <Link className={page.id === activePage ? "active" : ""} href={page.href} key={page.id}>
+        <Link
+          className={page.id === activePage ? "active" : ""}
+          href={sessionRequired ? `${page.href}?qr=1` : page.href}
+          key={page.id}
+        >
           {page.label}
         </Link>
       ))}
@@ -190,7 +194,8 @@ function MenuSessionChecking() {
 
 export function LiveMenu({ activePage = "ramen" }: { activePage?: MenuPageType }) {
   const [menuData, setMenuData] = useState<MenuData>(sampleMenu);
-  const [sessionState, setSessionState] = useState<MenuSessionState>("checking");
+  const [sessionRequired, setSessionRequired] = useState(false);
+  const [sessionState, setSessionState] = useState<MenuSessionState>("valid");
 
   async function refreshMenu() {
     const nextMenu = await fetchMenuData();
@@ -198,6 +203,17 @@ export function LiveMenu({ activePage = "ramen" }: { activePage?: MenuPageType }
   }
 
   useEffect(() => {
+    const shouldRequireSession = new URLSearchParams(window.location.search).get("qr") === "1";
+
+    setSessionRequired(shouldRequireSession);
+
+    if (!shouldRequireSession) {
+      setSessionState("valid");
+      return;
+    }
+
+    setSessionState("checking");
+
     function expireSession() {
       window.localStorage.removeItem(MENU_SESSION_EXPIRES_AT_KEY);
       setSessionState("expired");
@@ -277,7 +293,7 @@ export function LiveMenu({ activePage = "ramen" }: { activePage?: MenuPageType }
           </div>
         </div>
 
-        <MenuNavigation activePage={activePage} />
+        <MenuNavigation activePage={activePage} sessionRequired={sessionRequired} />
 
         {activePage === "ramen" ? (
           <>

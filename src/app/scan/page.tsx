@@ -12,7 +12,7 @@ export default function ScanPage() {
       MENU_SESSION_EXPIRES_AT_KEY,
       String(Date.now() + MENU_SESSION_DURATION_MS)
     );
-    router.replace("/");
+    router.replace("/?qr=1");
   }, [router]);
 
   return (
