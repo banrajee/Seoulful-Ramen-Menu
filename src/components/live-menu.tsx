@@ -4,6 +4,7 @@ import { EyeOff } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { fetchMenuData, subscribeToMenuChanges } from "@/lib/menu-service";
+import { MENU_SESSION_EXPIRES_AT_KEY } from "@/lib/menu-session";
 import { sampleMenu } from "@/lib/sample-data";
 import type { ItemVariant, MenuData, MenuItem } from "@/lib/types";
 
@@ -17,6 +18,7 @@ const drinkGroups = [
 ];
 
 export type MenuPageType = "ramen" | "drinks" | "snacks";
+type MenuSessionState = "checking" | "valid" | "expired";
 
 const menuPages: Array<{ href: string; id: MenuPageType; label: string }> = [
   { href: "/", id: "ramen", label: "Ramen" },
@@ -159,8 +161,36 @@ function MenuNavigation({ activePage }: { activePage: MenuPageType }) {
   );
 }
 
+function MenuSessionExpired() {
+  return (
+    <main className="menu-page refined-menu-page">
+      <section className="menu-shell refined-menu-shell session-message-shell" aria-label="Menu session expired">
+        <div>
+          <p className="admin-kicker">Seoulful Ramen</p>
+          <h1>Menu Session Expired</h1>
+          <p>Please scan the QR code again to open the latest menu.</p>
+        </div>
+      </section>
+    </main>
+  );
+}
+
+function MenuSessionChecking() {
+  return (
+    <main className="menu-page refined-menu-page">
+      <section className="menu-shell refined-menu-shell session-message-shell" aria-label="Checking menu session">
+        <div>
+          <p className="admin-kicker">Seoulful Ramen</p>
+          <h1>Opening Menu</h1>
+        </div>
+      </section>
+    </main>
+  );
+}
+
 export function LiveMenu({ activePage = "ramen" }: { activePage?: MenuPageType }) {
   const [menuData, setMenuData] = useState<MenuData>(sampleMenu);
+  const [sessionState, setSessionState] = useState<MenuSessionState>("checking");
 
   async function refreshMenu() {
     const nextMenu = await fetchMenuData();
@@ -168,9 +198,42 @@ export function LiveMenu({ activePage = "ramen" }: { activePage?: MenuPageType }
   }
 
   useEffect(() => {
+    function expireSession() {
+      window.localStorage.removeItem(MENU_SESSION_EXPIRES_AT_KEY);
+      setSessionState("expired");
+    }
+
+    function checkSession() {
+      const expiresAt = Number(window.localStorage.getItem(MENU_SESSION_EXPIRES_AT_KEY));
+
+      if (!expiresAt || expiresAt <= Date.now()) {
+        expireSession();
+        return 0;
+      }
+
+      setSessionState("valid");
+      return expiresAt - Date.now();
+    }
+
+    const timeLeft = checkSession();
+    const timeoutId = timeLeft > 0 ? window.setTimeout(expireSession, timeLeft) : undefined;
+
+    window.addEventListener("focus", checkSession);
+    document.addEventListener("visibilitychange", checkSession);
+
+    return () => {
+      if (timeoutId) window.clearTimeout(timeoutId);
+      window.removeEventListener("focus", checkSession);
+      document.removeEventListener("visibilitychange", checkSession);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (sessionState !== "valid") return;
+
     refreshMenu();
     return subscribeToMenuChanges(refreshMenu);
-  }, []);
+  }, [sessionState]);
 
   const ramenItems = useMemo(() => visibleRamenItems(menuData), [menuData]);
   const addOns = useMemo(() => {
@@ -194,6 +257,9 @@ export function LiveMenu({ activePage = "ramen" }: { activePage?: MenuPageType }
       .filter((item) => menuData.settings.show_out_of_stock || item.status !== "out_of_stock")
       .sort((a, b) => a.sort_order - b.sort_order);
   }, [menuData]);
+
+  if (sessionState === "checking") return <MenuSessionChecking />;
+  if (sessionState === "expired") return <MenuSessionExpired />;
 
   return (
     <main className="menu-page refined-menu-page">

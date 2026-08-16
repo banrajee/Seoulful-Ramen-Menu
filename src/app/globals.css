@@ -2073,6 +2073,41 @@ select:disabled {
   color: #fffbed;
 }
 
+.session-message-shell {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  text-align: center;
+}
+
+.session-message-shell > div {
+  width: min(520px, 100%);
+  padding: 30px;
+  border: 1px solid rgba(9, 38, 42, 0.12);
+  border-radius: 10px;
+  background: rgba(255, 253, 245, 0.58);
+}
+
+.session-message-shell h1 {
+  margin: 0;
+  color: var(--ink);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: clamp(2.3rem, 7vw, 4.6rem);
+  font-weight: 950;
+  letter-spacing: 0.02em;
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+
+.session-message-shell p:not(.admin-kicker) {
+  margin: 16px 0 0;
+  color: #294145;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 1.05rem;
+  font-weight: 800;
+  line-height: 1.4;
+}
+
 .ramen-section {
   position: relative;
   margin: 48px 0 0;
