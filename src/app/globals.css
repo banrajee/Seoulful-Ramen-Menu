@@ -2652,8 +2652,9 @@ select:disabled {
   margin: 0;
   color: var(--ink);
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 1rem;
+  font-size: clamp(1rem, 1.14vw, 1.22rem);
   font-weight: 500;
+  line-height: 1.25;
 }
 
 .drinks-list strong {
@@ -2661,6 +2662,8 @@ select:disabled {
   margin-top: 4px;
   color: var(--ink);
   font-family: Arial, Helvetica, sans-serif;
+  font-size: clamp(1rem, 1.12vw, 1.2rem);
+  font-weight: 700;
 }
 
 .drinks-list em {
@@ -2692,7 +2695,7 @@ select:disabled {
   background: rgba(9, 38, 42, 0.08);
   color: var(--ink);
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 0.78rem;
+  font-size: 0.9rem;
   font-weight: 800;
 }
 
@@ -2710,7 +2713,7 @@ select:disabled {
 
 .variant-list strong {
   margin: 0;
-  font-size: 0.78rem;
+  font-size: 0.9rem;
 }
 
 .variant-list em {
@@ -2803,8 +2806,9 @@ select:disabled {
   margin: 0;
   color: var(--ink);
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 1rem;
+  font-size: clamp(1rem, 1.14vw, 1.22rem);
   font-weight: 500;
+  line-height: 1.25;
 }
 
 .snacks-list strong {
@@ -2812,6 +2816,8 @@ select:disabled {
   margin-top: 4px;
   color: var(--ink);
   font-family: Arial, Helvetica, sans-serif;
+  font-size: clamp(1rem, 1.12vw, 1.2rem);
+  font-weight: 700;
 }
 
 .snacks-list em {
