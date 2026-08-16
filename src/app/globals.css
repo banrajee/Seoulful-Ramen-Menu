@@ -2276,8 +2276,14 @@ select:disabled {
 .ramen-title-row {
   display: grid;
   grid-template-columns: minmax(0, 1fr) max-content;
-  gap: 8px;
+  gap: 10px;
   align-items: start;
+}
+
+.ramen-text-stack {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
 }
 
 .ramen-meta-stack {
@@ -2317,7 +2323,7 @@ select:disabled {
 
 .dual-price-stack {
   display: grid;
-  gap: 4px;
+  gap: 3px;
   color: var(--ink);
   font-family: Arial, Helvetica, sans-serif;
 }

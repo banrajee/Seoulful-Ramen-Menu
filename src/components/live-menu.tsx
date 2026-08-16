@@ -241,7 +241,17 @@ export function LiveMenu({ activePage = "ramen" }: { activePage?: MenuPageType }
 
                       <div className="ramen-product-copy">
                         <div className="ramen-title-row">
-                          <h3>{item.name}</h3>
+                          <div className="ramen-text-stack">
+                            <h3>{item.name}</h3>
+                            {isDualPrice(item) ? (
+                              <div className="dual-price-stack">
+                                <span>Packet Only: {money(packetOnlyPrice(item))}</span>
+                                <strong>Self-Cook Bowl: {money(selfCookPrice(item))}</strong>
+                              </div>
+                            ) : (
+                              <strong>{money(item.price)}</strong>
+                            )}
+                          </div>
                           <div className="ramen-meta-stack">
                             {item.food_type ? (
                               <span
@@ -262,14 +272,6 @@ export function LiveMenu({ activePage = "ramen" }: { activePage?: MenuPageType }
                             </div>
                           </div>
                         </div>
-                        {isDualPrice(item) ? (
-                          <div className="dual-price-stack">
-                            <span>Packet Only: {money(packetOnlyPrice(item))}</span>
-                            <strong>Self-Cook Bowl: {money(selfCookPrice(item))}</strong>
-                          </div>
-                        ) : (
-                          <strong>{money(item.price)}</strong>
-                        )}
                         {item.status === "out_of_stock" ? <span className="status-pill">Out of Stock</span> : null}
                       </div>
                     </article>
