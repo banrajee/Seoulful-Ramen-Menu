@@ -3081,3 +3081,26 @@ select:disabled {
     min-height: auto;
   }
 }
+
+/* Temporary launch mode: hide drinks and K-Snacks image placeholders without leaving empty spacing. */
+.drinks-list article,
+.snacks-list article {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+  min-height: auto;
+}
+
+.drinks-list article > img,
+.drinks-list article > span,
+.snacks-list article > img,
+.snacks-list article > span {
+  display: none;
+}
+
+@media (max-width: 760px) {
+  .drinks-list article,
+  .snacks-list article {
+    grid-template-columns: minmax(0, 1fr);
+    min-height: auto;
+  }
+}
