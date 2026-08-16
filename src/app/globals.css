@@ -3046,3 +3046,24 @@ select:disabled {
     display: none;
   }
 }
+
+/* Temporary launch mode: keep ramen image placeholders in code, but hide them visually. */
+.ramen-product {
+  grid-template-columns: minmax(0, 1fr);
+  min-height: auto;
+}
+
+.ramen-product:nth-child(2n) {
+  padding-left: 24px;
+}
+
+.ramen-product-media {
+  display: none;
+}
+
+@media (max-width: 760px) {
+  .ramen-product {
+    grid-template-columns: minmax(0, 1fr);
+    min-height: auto;
+  }
+}
