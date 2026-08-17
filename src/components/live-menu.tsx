@@ -445,10 +445,20 @@ export function LiveMenu({ activePage = "ramen" }: { activePage?: MenuPageType }
                   <article className={item.status} key={item.id}>
                     {item.image_url ? <img src={item.image_url} alt={item.name} /> : <span aria-hidden="true" />}
                     <div>
-                      <h3>{item.name}</h3>
-                      <div className="snack-meta-row">
-                        <strong>{compactPriceLabel(item, visibleVariantsForItem(menuData, item))}</strong>
-                        <SpiceRow level={level} />
+                      <div className="snack-title-row">
+                        <div className="snack-text-stack">
+                          <h3>{item.name}</h3>
+                          <strong>{compactPriceLabel(item, visibleVariantsForItem(menuData, item))}</strong>
+                        </div>
+                        <div className="snack-meta-stack">
+                          {item.food_type ? (
+                            <span
+                              className={`food-marker ${item.food_type}`}
+                              aria-label={item.food_type === "veg" ? "Vegetarian" : "Non-vegetarian"}
+                            />
+                          ) : null}
+                          <SpiceRow level={level} />
+                        </div>
                       </div>
                       {item.status === "out_of_stock" ? <em>Out of Stock</em> : null}
                       <VariantList variants={visibleVariantsForItem(menuData, item)} />

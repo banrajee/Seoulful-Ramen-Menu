@@ -67,6 +67,10 @@ function supportsSpiceLevel(section: DashboardSection) {
   return section === "ramen" || section === "snacks";
 }
 
+function supportsFoodType(section: DashboardSection) {
+  return section === "ramen" || section === "snacks";
+}
+
 function spiceLevelLabel(item: MenuItem, section: DashboardSection) {
   if (!supportsSpiceLevel(section)) return null;
   return `Spice ${Math.min(5, Math.max(0, Number(item.spice_level ?? 0)))}/5`;
@@ -105,7 +109,7 @@ function createEmptyDraft(section: DashboardSection = "ramen", sortOrder = 99): 
     category_id: categoryForSection(section),
     image_url: "",
     spice_level: supportsSpiceLevel(section) ? 3 : 0,
-    food_type: isRamen ? "veg" : null,
+    food_type: supportsFoodType(section) ? "veg" : null,
     status: "available",
     sort_order: sortOrder
   };
@@ -171,7 +175,7 @@ function normalizedDraftForSection(draft: MenuItem | MenuItemDraft, section: Das
       has_cup_ice_option: false,
       cup_ice_price: null,
       cup_ice_available: true,
-      food_type: null,
+      food_type: supportsFoodType(section) ? draft.food_type ?? "veg" : null,
       spice_level: supportsSpiceLevel(section) ? draft.spice_level ?? 3 : 0
     };
   }
@@ -222,7 +226,7 @@ function normalizedDraftForSection(draft: MenuItem | MenuItemDraft, section: Das
     has_cup_ice_option: false,
     cup_ice_price: null,
     cup_ice_available: true,
-    food_type: null,
+    food_type: supportsFoodType(section) ? draft.food_type ?? "veg" : null,
     spice_level: supportsSpiceLevel(section) ? draft.spice_level ?? 3 : 0
   };
 }
@@ -549,6 +553,7 @@ function DashboardBody({
     : categoryForSection(editorSection);
   const showCategoryField = editorSection === "drinks" || editorSection === "snacks";
   const isRamenEditor = editorSection === "ramen";
+  const canSetFoodType = supportsFoodType(editorSection);
   const canUseVariants = editorSection === "drinks" || editorSection === "snacks";
   const draftId = "id" in draft ? draft.id : null;
   const draftVariants = draftId
@@ -668,7 +673,7 @@ function DashboardBody({
             />
           </label>
 
-          {isRamenEditor ? (
+          {canSetFoodType ? (
             <label>
               Veg / Non-Veg
               <select
