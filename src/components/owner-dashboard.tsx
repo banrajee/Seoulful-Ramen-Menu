@@ -63,6 +63,15 @@ function foodTypeLabel(item: MenuItem) {
   return null;
 }
 
+function supportsSpiceLevel(section: DashboardSection) {
+  return section === "ramen" || section === "snacks";
+}
+
+function spiceLevelLabel(item: MenuItem, section: DashboardSection) {
+  if (!supportsSpiceLevel(section)) return null;
+  return `Spice ${Math.min(5, Math.max(0, Number(item.spice_level ?? 0)))}/5`;
+}
+
 function sectionForCategory(categoryId: string): DashboardSection {
   if (categoryId === "addons") return "addons";
   if (sectionCategoryIds.drinks.includes(categoryId)) return "drinks";
@@ -95,7 +104,7 @@ function createEmptyDraft(section: DashboardSection = "ramen", sortOrder = 99): 
     cup_ice_available: true,
     category_id: categoryForSection(section),
     image_url: "",
-    spice_level: section === "ramen" ? 3 : 0,
+    spice_level: supportsSpiceLevel(section) ? 3 : 0,
     food_type: isRamen ? "veg" : null,
     status: "available",
     sort_order: sortOrder
@@ -163,7 +172,7 @@ function normalizedDraftForSection(draft: MenuItem | MenuItemDraft, section: Das
       cup_ice_price: null,
       cup_ice_available: true,
       food_type: null,
-      spice_level: section === "drinks" ? 0 : draft.spice_level
+      spice_level: supportsSpiceLevel(section) ? draft.spice_level ?? 3 : 0
     };
   }
 
@@ -214,7 +223,7 @@ function normalizedDraftForSection(draft: MenuItem | MenuItemDraft, section: Das
     cup_ice_price: null,
     cup_ice_available: true,
     food_type: null,
-    spice_level: section === "drinks" ? 0 : draft.spice_level
+    spice_level: supportsSpiceLevel(section) ? draft.spice_level ?? 3 : 0
   };
 }
 
@@ -695,7 +704,7 @@ function DashboardBody({
           />
         </label>
 
-        {editorSection === "ramen" ? (
+        {supportsSpiceLevel(editorSection) ? (
           <label>
             Spice level
             <input
@@ -787,6 +796,7 @@ function DashboardBody({
                           <p>
                             {ownerPriceLabel(item)} · {statusLabel(item.status)}
                             {foodTypeLabel(item) ? ` · ${foodTypeLabel(item)}` : ""}
+                            {spiceLevelLabel(item, section) ? ` · ${spiceLevelLabel(item, section)}` : ""}
                           </p>
                           {itemVariants.length > 0 ? (
                             <p className="owner-variant-summary">

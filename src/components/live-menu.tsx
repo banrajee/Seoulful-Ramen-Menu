@@ -48,6 +48,22 @@ function spiceLevel(item: MenuItem) {
   return Math.min(5, Math.max(0, Number(item.spice_level ?? fallbackSpiceLevel(item))));
 }
 
+function SpiceRow({ level }: { level: number }) {
+  return (
+    <div className="spice-row" aria-label={`${level} out of 5 spice level`}>
+      {Array.from({ length: 5 }).map((_, index) => (
+        <img
+          alt=""
+          aria-hidden="true"
+          className={index < level ? "active" : "inactive"}
+          key={index}
+          src="/spice-chilli.png"
+        />
+      ))}
+    </div>
+  );
+}
+
 function isDualPrice(item: MenuItem) {
   return item.price_type === "dual" || item.packet_only_price != null || item.self_cook_price != null;
 }
@@ -341,17 +357,7 @@ export function LiveMenu({ activePage = "ramen" }: { activePage?: MenuPageType }
                                 aria-label={item.food_type === "veg" ? "Vegetarian" : "Non-vegetarian"}
                               />
                             ) : null}
-                            <div className="spice-row" aria-label={`${level} out of 5 spice level`}>
-                              {Array.from({ length: 5 }).map((_, index) => (
-                                <img
-                                  alt=""
-                                  aria-hidden="true"
-                                  className={index < level ? "active" : "inactive"}
-                                  key={index}
-                                  src="/spice-chilli.png"
-                                />
-                              ))}
-                            </div>
+                            <SpiceRow level={level} />
                           </div>
                         </div>
                         {item.status === "out_of_stock" ? <span className="status-pill">Out of Stock</span> : null}
@@ -432,17 +438,24 @@ export function LiveMenu({ activePage = "ramen" }: { activePage?: MenuPageType }
           <section className="snacks-section" aria-label="K-Snacks and Sides">
             <h2>K-Snacks &amp; Sides</h2>
             <div className="snacks-list">
-              {snacks.map((item) => (
-                <article className={item.status} key={item.id}>
-                  {item.image_url ? <img src={item.image_url} alt={item.name} /> : <span aria-hidden="true" />}
-                  <div>
-                    <h3>{item.name}</h3>
-                    <strong>{compactPriceLabel(item, visibleVariantsForItem(menuData, item))}</strong>
-                    {item.status === "out_of_stock" ? <em>Out of Stock</em> : null}
-                    <VariantList variants={visibleVariantsForItem(menuData, item)} />
-                  </div>
-                </article>
-              ))}
+              {snacks.map((item) => {
+                const level = spiceLevel(item);
+
+                return (
+                  <article className={item.status} key={item.id}>
+                    {item.image_url ? <img src={item.image_url} alt={item.name} /> : <span aria-hidden="true" />}
+                    <div>
+                      <h3>{item.name}</h3>
+                      <div className="snack-meta-row">
+                        <strong>{compactPriceLabel(item, visibleVariantsForItem(menuData, item))}</strong>
+                        <SpiceRow level={level} />
+                      </div>
+                      {item.status === "out_of_stock" ? <em>Out of Stock</em> : null}
+                      <VariantList variants={visibleVariantsForItem(menuData, item)} />
+                    </div>
+                  </article>
+                );
+              })}
             </div>
           </section>
         ) : null}

@@ -2855,6 +2855,31 @@ select:disabled {
   font-weight: 700;
 }
 
+.snack-meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.snack-meta-row strong {
+  margin-top: 0;
+}
+
+.snacks-list .spice-row {
+  justify-content: flex-start;
+  min-height: 20px;
+}
+
+.snacks-list .spice-row img {
+  width: 18px;
+  height: 18px;
+  border: 0;
+  border-radius: 0;
+  object-fit: contain;
+}
+
 .snacks-list em {
   display: block;
   margin-top: 3px;
