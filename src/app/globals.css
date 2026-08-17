@@ -2746,6 +2746,15 @@ select:disabled {
   object-fit: contain;
 }
 
+.variant-list span {
+  display: inline;
+  width: auto;
+  height: auto;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
 .variant-list strong {
   margin: 0;
   font-size: 0.9rem;
@@ -2794,8 +2803,8 @@ select:disabled {
 
 .snacks-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-  gap: 0;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px 0;
 }
 
 .snacks-list article {
@@ -2810,6 +2819,15 @@ select:disabled {
 
 .snacks-list article:first-child {
   padding-left: 0;
+}
+
+.snacks-list article:nth-child(3n + 1) {
+  padding-left: 0;
+}
+
+.snacks-list article:nth-child(3n) {
+  padding-right: 0;
+  border-right: 0;
 }
 
 .snacks-list article:last-child {
@@ -2835,6 +2853,25 @@ select:disabled {
   background:
     radial-gradient(circle at 50% 36%, rgba(255, 255, 255, 0.75) 0 8px, transparent 9px),
     linear-gradient(180deg, #efc65b, #b87d27);
+}
+
+.drinks-list .variant-list span,
+.snacks-list .variant-list span {
+  display: inline;
+  width: auto;
+  height: auto;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.drinks-list .variant-list img,
+.snacks-list .variant-list img {
+  width: 18px;
+  height: 18px;
+  border: 0;
+  border-radius: 0;
+  object-fit: contain;
 }
 
 .snacks-list h3 {
