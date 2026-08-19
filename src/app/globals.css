@@ -3193,8 +3193,7 @@ select:disabled {
 .ramen-product {
   grid-template-columns: minmax(0, 1fr);
   min-height: auto;
-  position: relative;
-  padding: 0 0 18px;
+  padding: 0;
 }
 
 .ramen-product:nth-child(2n) {
@@ -3207,10 +3206,10 @@ select:disabled {
 
 .ramen-product:not(:last-child)::after {
   content: "";
-  position: absolute;
-  left: clamp(78px, 22%, 150px);
-  right: clamp(58px, 18%, 130px);
-  bottom: 0;
+  grid-column: 1 / -1;
+  justify-self: center;
+  width: min(48%, 300px);
+  margin-top: 16px;
   border-bottom: 2px dotted rgba(9, 38, 42, 0.28);
 }
 
@@ -3222,7 +3221,7 @@ select:disabled {
   .ramen-product {
     grid-template-columns: minmax(0, 1fr);
     min-height: auto;
-    padding: 0 0 18px;
+    padding: 0;
   }
 
   .ramen-product:nth-child(2n) {
@@ -3230,8 +3229,8 @@ select:disabled {
   }
 
   .ramen-product:not(:last-child)::after {
-    left: 34%;
-    right: 12%;
+    width: min(48%, 220px);
+    margin-top: 14px;
   }
 }
 
