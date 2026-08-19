@@ -3276,18 +3276,21 @@ select:disabled {
 
 @media (max-width: 760px) {
   .drinks-list,
-  .snacks-list {
+  .snacks-list,
+  .refined-addons-list {
     gap: 20px;
   }
 
   .drinks-list article,
-  .snacks-list article {
+  .snacks-list article,
+  .refined-addons-list article {
     position: relative;
     padding: 0;
   }
 
   .drinks-list article:not(:last-child)::after,
-  .snacks-list article:not(:last-child)::after {
+  .snacks-list article:not(:last-child)::after,
+  .refined-addons-list article:not(:last-child)::after {
     content: "";
     grid-column: 1 / -1;
     justify-self: center;
@@ -3298,12 +3301,14 @@ select:disabled {
 
   .drinks-list h3,
   .drinks-list h4,
-  .snacks-list h3 {
+  .snacks-list h3,
+  .refined-addons-list h3 {
     font-weight: 900;
   }
 
   .drinks-list article > div > strong,
-  .snack-text-stack > strong {
+  .snack-text-stack > strong,
+  .refined-addons-list strong {
     color: #405250;
     font-weight: 500;
   }
