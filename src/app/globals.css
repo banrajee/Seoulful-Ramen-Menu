@@ -3103,6 +3103,12 @@ select:disabled {
     border-bottom: 0;
   }
 
+  .drink-group h3 {
+    justify-self: center;
+    margin: 0 auto;
+    text-align: center;
+  }
+
   .drink-group:last-child {
     padding-bottom: 0;
     border-bottom: 0;
