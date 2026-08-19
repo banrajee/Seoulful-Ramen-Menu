@@ -2334,7 +2334,7 @@ select:disabled {
   color: var(--ink);
   font-family: Arial, Helvetica, sans-serif;
   font-size: clamp(1rem, 1.14vw, 1.22rem);
-  font-weight: 900;
+  font-weight: 500;
   letter-spacing: 0.01em;
   line-height: 1.25;
 }
@@ -2366,7 +2366,7 @@ select:disabled {
 .dual-price-stack span {
   color: #405250;
   font-size: 0.9rem;
-  font-weight: 500;
+  font-weight: 800;
 }
 
 .dual-price-stack strong,
@@ -2374,16 +2374,16 @@ select:disabled {
   color: var(--ink);
   font-family: Arial, Helvetica, sans-serif;
   font-size: clamp(1rem, 1.12vw, 1.2rem);
-  font-weight: 500;
+  font-weight: 700;
 }
 
 .dual-price-stack strong {
   width: fit-content;
-  padding: 0;
-  border-radius: 0;
-  background: transparent;
-  color: #405250;
-  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 7px;
+  background: rgba(33, 79, 43, 0.12);
+  color: var(--green-deep);
+  font-weight: 950;
 }
 
 .ramen-product-copy .status-pill {
@@ -3193,24 +3193,14 @@ select:disabled {
 .ramen-product {
   grid-template-columns: minmax(0, 1fr);
   min-height: auto;
-  padding: 0;
 }
 
 .ramen-product:nth-child(2n) {
-  padding-left: 0;
+  padding-left: 24px;
 }
 
 .ramen-product-media {
   display: none;
-}
-
-.ramen-product:not(:last-child)::after {
-  content: "";
-  grid-column: 1 / -1;
-  justify-self: center;
-  width: min(48%, 300px);
-  margin-top: 16px;
-  border-bottom: 2px dotted rgba(9, 38, 42, 0.28);
 }
 
 @media (max-width: 760px) {
@@ -3228,9 +3218,30 @@ select:disabled {
     padding-left: 0;
   }
 
+  .ramen-product-copy h3 {
+    font-weight: 900;
+  }
+
+  .dual-price-stack span,
+  .dual-price-stack strong,
+  .ramen-product-copy > strong {
+    color: #405250;
+    font-weight: 500;
+  }
+
+  .dual-price-stack strong {
+    padding: 0;
+    border-radius: 0;
+    background: transparent;
+  }
+
   .ramen-product:not(:last-child)::after {
+    content: "";
+    grid-column: 1 / -1;
+    justify-self: center;
     width: min(48%, 220px);
     margin-top: 14px;
+    border-bottom: 2px dotted rgba(9, 38, 42, 0.28);
   }
 }
 
