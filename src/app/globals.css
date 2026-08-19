@@ -3267,3 +3267,38 @@ select:disabled {
     min-height: auto;
   }
 }
+
+@media (max-width: 760px) {
+  .drinks-list,
+  .snacks-list {
+    gap: 20px;
+  }
+
+  .drinks-list article,
+  .snacks-list article {
+    position: relative;
+    padding: 0;
+  }
+
+  .drinks-list article:not(:last-child)::after,
+  .snacks-list article:not(:last-child)::after {
+    content: "";
+    grid-column: 1 / -1;
+    justify-self: center;
+    width: min(48%, 220px);
+    margin-top: 14px;
+    border-bottom: 2px dotted rgba(9, 38, 42, 0.28);
+  }
+
+  .drinks-list h3,
+  .drinks-list h4,
+  .snacks-list h3 {
+    font-weight: 900;
+  }
+
+  .drinks-list article > div > strong,
+  .snack-text-stack > strong {
+    color: #405250;
+    font-weight: 500;
+  }
+}
