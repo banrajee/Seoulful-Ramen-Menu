@@ -3201,12 +3201,25 @@ select:disabled {
   min-height: auto;
 }
 
+.ramen-product.has-image {
+  grid-template-columns: 118px minmax(0, 1fr);
+  min-height: 118px;
+}
+
 .ramen-product:nth-child(2n) {
   padding-left: 24px;
 }
 
 .ramen-product-media {
   display: none;
+}
+
+.ramen-product-media.has-image {
+  display: grid;
+}
+
+.ramen-product.has-image .ramen-product-image {
+  filter: drop-shadow(0 7px 8px rgba(9, 38, 42, 0.14));
 }
 
 @media (max-width: 760px) {
@@ -3218,6 +3231,11 @@ select:disabled {
     grid-template-columns: minmax(0, 1fr);
     min-height: auto;
     padding: 0;
+  }
+
+  .ramen-product.has-image {
+    grid-template-columns: 96px minmax(0, 1fr);
+    min-height: 104px;
   }
 
   .ramen-product:nth-child(2n) {

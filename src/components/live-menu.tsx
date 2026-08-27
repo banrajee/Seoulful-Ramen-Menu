@@ -325,8 +325,11 @@ export function LiveMenu({ activePage = "ramen" }: { activePage?: MenuPageType }
                   const level = spiceLevel(item);
 
                   return (
-                    <article className={`ramen-product ${item.status}`} key={item.id}>
-                      <div className="ramen-product-media">
+                    <article
+                      className={`ramen-product ${item.status} ${item.image_url ? "has-image" : "no-image"}`}
+                      key={item.id}
+                    >
+                      <div className={`ramen-product-media ${item.image_url ? "has-image" : "is-placeholder"}`}>
                         {item.image_url ? (
                           <img className="ramen-product-image" src={item.image_url} alt={item.name} />
                         ) : (

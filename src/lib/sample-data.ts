@@ -87,7 +87,7 @@ export const sampleMenu: MenuData = {
       description: "Original spicy Korean ramen.",
       price: 189,
       category_id: "ramen",
-      image_url: "/ramen-shin-ramyeon.png",
+      image_url: "/ramen-products/nongshim-shin-ramyun.png",
       status: "available",
       sort_order: 1
     },
@@ -107,7 +107,7 @@ export const sampleMenu: MenuData = {
       description: "Vegetable ramen with mild spice.",
       price: 189,
       category_id: "ramen",
-      image_url: null,
+      image_url: "/ramen-products/nongshim-soon-veggie.png",
       status: "available",
       sort_order: 3
     },
@@ -137,7 +137,7 @@ export const sampleMenu: MenuData = {
       description: "Clean chicken-style spicy ramen.",
       price: 189,
       category_id: "ramen",
-      image_url: null,
+      image_url: "/ramen-products/paldo-kokomen.png",
       status: "available",
       sort_order: 6
     },
@@ -147,7 +147,7 @@ export const sampleMenu: MenuData = {
       description: "Seafood-style spicy ramen.",
       price: 189,
       category_id: "ramen",
-      image_url: null,
+      image_url: "/ramen-products/paldo-seafood-jumbo.png",
       status: "available",
       sort_order: 7
     },
@@ -157,7 +157,7 @@ export const sampleMenu: MenuData = {
       description: "Bold Korean ramyun broth.",
       price: 189,
       category_id: "ramen",
-      image_url: null,
+      image_url: "/ramen-products/paldo-namja-ramen.png",
       status: "available",
       sort_order: 8
     },
@@ -167,7 +167,7 @@ export const sampleMenu: MenuData = {
       description: "Creamy spicy ramen.",
       price: 219,
       category_id: "ramen",
-      image_url: null,
+      image_url: "/ramen-products/samyang-buldak-carbonara.png",
       status: "available",
       sort_order: 1
     },
@@ -177,7 +177,7 @@ export const sampleMenu: MenuData = {
       description: "Spicy ramen with cheese.",
       price: 219,
       category_id: "ramen",
-      image_url: null,
+      image_url: "/ramen-products/samyang-buldak-cheese.png",
       status: "available",
       sort_order: 2
     },
@@ -197,7 +197,7 @@ export const sampleMenu: MenuData = {
       description: "Original spicy Samyang ramen.",
       price: 219,
       category_id: "ramen",
-      image_url: null,
+      image_url: "/ramen-products/samyang-original.png",
       status: "available",
       sort_order: 4
     },
@@ -207,7 +207,7 @@ export const sampleMenu: MenuData = {
       description: "Rich spicy Samyang ramen.",
       price: 219,
       category_id: "ramen",
-      image_url: null,
+      image_url: "/ramen-products/samyang-buldak-black.png",
       status: "available",
       sort_order: 5
     },
@@ -217,7 +217,7 @@ export const sampleMenu: MenuData = {
       description: "Black bean spicy ramen.",
       price: 219,
       category_id: "ramen",
-      image_url: null,
+      image_url: "/ramen-products/samyang-jjajang.png",
       status: "available",
       sort_order: 6
     },
@@ -227,7 +227,7 @@ export const sampleMenu: MenuData = {
       description: "Hot ramen with lime flavour.",
       price: 219,
       category_id: "ramen",
-      image_url: null,
+      image_url: "/ramen-products/samyang-buldak-habanero-lime.png",
       status: "available",
       sort_order: 7
     },
@@ -247,7 +247,7 @@ export const sampleMenu: MenuData = {
       description: "Extra hot Samyang ramen.",
       price: 219,
       category_id: "ramen",
-      image_url: null,
+      image_url: "/ramen-products/samyang-buldak-3x.png",
       status: "available",
       sort_order: 9
     },
@@ -257,7 +257,7 @@ export const sampleMenu: MenuData = {
       description: "Creamy volcano-style ramen.",
       price: 219,
       category_id: "ramen",
-      image_url: null,
+      image_url: "/ramen-products/40338886-1-paldo-volcano-carbonara-instant-korean-chicken-noodle.png",
       status: "available",
       sort_order: 10
     },
@@ -317,7 +317,7 @@ export const sampleMenu: MenuData = {
       description: "Ramen and rice cake flavour.",
       price: 249,
       category_id: "ramen",
-      image_url: null,
+      image_url: "/ramen-products/paldo-rabokki.png",
       status: "available",
       sort_order: 5
     },
@@ -327,7 +327,7 @@ export const sampleMenu: MenuData = {
       description: "Black bean sauce ramen.",
       price: 249,
       category_id: "ramen",
-      image_url: null,
+      image_url: "/ramen-products/paldo-jjajangmen.png",
       status: "available",
       sort_order: 6
     },
@@ -337,7 +337,7 @@ export const sampleMenu: MenuData = {
       description: "Signature Paldo ramen.",
       price: 249,
       category_id: "ramen",
-      image_url: null,
+      image_url: "/ramen-products/paldo-zanmang-loopy.png",
       status: "available",
       sort_order: 7
     },
