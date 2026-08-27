@@ -9,6 +9,12 @@ const defaultSettings: ShopSettings = {
   show_out_of_stock: true
 };
 
+function normalizeProductImageUrl(imageUrl: string | null | undefined) {
+  if (!imageUrl) return null;
+
+  return imageUrl.replace(/^\/(?:ramen-products|snack-products)\//, "/menu-products/");
+}
+
 export async function fetchMenuData(): Promise<MenuData> {
   const supabase = createBrowserSupabaseClient();
 
@@ -37,8 +43,16 @@ export async function fetchMenuData(): Promise<MenuData> {
 
   return {
     categories: (categoriesResult.data ?? []) as Category[],
-    items: (itemsResult.data ?? []) as MenuItem[],
-    variants: variantsResult.error ? [] : ((variantsResult.data ?? []) as ItemVariant[]),
+    items: ((itemsResult.data ?? []) as MenuItem[]).map((item) => ({
+      ...item,
+      image_url: normalizeProductImageUrl(item.image_url)
+    })),
+    variants: variantsResult.error
+      ? []
+      : ((variantsResult.data ?? []) as ItemVariant[]).map((variant) => ({
+          ...variant,
+          image_url: normalizeProductImageUrl(variant.image_url)
+        })),
     settings: ((settingsResult.data as ShopSettings | null) ?? defaultSettings)
   };
 }
@@ -63,7 +77,7 @@ export async function saveItem(item: MenuItem | MenuItemDraft) {
     cup_ice_price: item.cup_ice_price == null ? null : Number(item.cup_ice_price),
     cup_ice_available: item.cup_ice_available ?? true,
     category_id: item.category_id,
-    image_url: item.image_url || null,
+    image_url: normalizeProductImageUrl(item.image_url),
     spice_level: Math.min(5, Math.max(0, Number(item.spice_level ?? 1))),
     food_type: item.food_type ?? null,
     status: item.status,
@@ -100,7 +114,7 @@ export async function saveVariant(variant: ItemVariant | ItemVariantDraft) {
     variant_name: variant.variant_name,
     price: Number(variant.price),
     status: variant.status,
-    image_url: variant.image_url || null,
+    image_url: normalizeProductImageUrl(variant.image_url),
     sort_order: Number(variant.sort_order)
   };
 

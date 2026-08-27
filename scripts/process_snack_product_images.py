@@ -11,9 +11,9 @@ from process_ramen_product_images import fit_to_square, remove_edge_background, 
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE_DIR = Path(r"C:\Users\B\Downloads\Ramen Images For Menu\downloaded\K snacks")
-OUT_DIR = ROOT / "public" / "snack-products"
-MANIFEST_PATH = OUT_DIR / "manifest.json"
-CONTACT_SHEET_PATH = OUT_DIR / "_contact-sheet.png"
+OUT_DIR = ROOT / "public" / "menu-products"
+MANIFEST_PATH = OUT_DIR / "snack-manifest.json"
+CONTACT_SHEET_PATH = OUT_DIR / "_snack-contact-sheet.png"
 
 SLUG_OVERRIDES = {
     "Big Sheet.jpg": "big-sheet",
@@ -61,7 +61,7 @@ def process(path: Path) -> dict[str, str | int]:
         "source": str(path),
         "source_name": path.name,
         "slug": slug,
-        "url": f"/snack-products/{out_path.name}",
+        "url": f"/menu-products/{out_path.name}",
         "width": final.width,
         "height": final.height,
     }

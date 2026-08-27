@@ -170,6 +170,10 @@ function RamenProductCard({ item }: { item: MenuItem }) {
   const level = spiceLevel(item);
   const hasProductImage = Boolean(item.image_url && !imageFailed);
 
+  useEffect(() => {
+    setImageFailed(false);
+  }, [item.image_url]);
+
   return (
     <article className={`ramen-product ${item.status} ${hasProductImage ? "has-image" : "no-image"}`}>
       <div className={`ramen-product-media ${hasProductImage ? "has-image" : "is-placeholder"}`}>
@@ -207,6 +211,43 @@ function RamenProductCard({ item }: { item: MenuItem }) {
           </div>
         </div>
         {item.status === "out_of_stock" ? <span className="status-pill">Out of Stock</span> : null}
+      </div>
+    </article>
+  );
+}
+
+function SnackProductCard({ item, variants }: { item: MenuItem; variants: ItemVariant[] }) {
+  const [imageFailed, setImageFailed] = useState(false);
+  const level = spiceLevel(item);
+  const hasProductImage = Boolean(item.image_url && !imageFailed);
+
+  useEffect(() => {
+    setImageFailed(false);
+  }, [item.image_url]);
+
+  return (
+    <article className={`${item.status} ${hasProductImage ? "has-image" : "no-image"}`}>
+      {hasProductImage ? (
+        <img src={item.image_url ?? ""} alt={item.name} onError={() => setImageFailed(true)} />
+      ) : null}
+      <div>
+        <div className="snack-title-row">
+          <div className="snack-text-stack">
+            <h3>{item.name}</h3>
+            <strong>{compactPriceLabel(item, variants)}</strong>
+          </div>
+          <div className="snack-meta-stack">
+            {item.food_type ? (
+              <span
+                className={`food-marker ${item.food_type}`}
+                aria-label={item.food_type === "veg" ? "Vegetarian" : "Non-vegetarian"}
+              />
+            ) : null}
+            <SpiceRow level={level} />
+          </div>
+        </div>
+        {item.status === "out_of_stock" ? <em>Out of Stock</em> : null}
+        <VariantList variants={variants} />
       </div>
     </article>
   );
@@ -445,35 +486,9 @@ export function LiveMenu({ activePage = "ramen" }: { activePage?: MenuPageType }
           <section className="snacks-section" aria-label="K-Snacks and Sides">
             <h2>K-Snacks &amp; Sides</h2>
             <div className="snacks-list">
-              {snacks.map((item) => {
-                const level = spiceLevel(item);
-                const hasProductImage = Boolean(item.image_url);
-
-                return (
-                  <article className={`${item.status} ${hasProductImage ? "has-image" : "no-image"}`} key={item.id}>
-                    {hasProductImage ? <img src={item.image_url ?? ""} alt={item.name} /> : null}
-                    <div>
-                      <div className="snack-title-row">
-                        <div className="snack-text-stack">
-                          <h3>{item.name}</h3>
-                          <strong>{compactPriceLabel(item, visibleVariantsForItem(menuData, item))}</strong>
-                        </div>
-                        <div className="snack-meta-stack">
-                          {item.food_type ? (
-                            <span
-                              className={`food-marker ${item.food_type}`}
-                              aria-label={item.food_type === "veg" ? "Vegetarian" : "Non-vegetarian"}
-                            />
-                          ) : null}
-                          <SpiceRow level={level} />
-                        </div>
-                      </div>
-                      {item.status === "out_of_stock" ? <em>Out of Stock</em> : null}
-                      <VariantList variants={visibleVariantsForItem(menuData, item)} />
-                    </div>
-                  </article>
-                );
-              })}
+              {snacks.map((item) => (
+                <SnackProductCard item={item} key={item.id} variants={visibleVariantsForItem(menuData, item)} />
+              ))}
             </div>
           </section>
         ) : null}

@@ -13,9 +13,9 @@ from PIL import Image, ImageDraw, ImageFilter, ImageOps
 ROOT = Path(__file__).resolve().parents[1]
 DOWNLOADS = Path(r"C:\Users\B\Downloads\Ramen Images For Menu\downloaded")
 TEMP = Path(r"C:\Users\B\AppData\Local\Temp")
-OUT_DIR = ROOT / "public" / "ramen-products"
-MANIFEST_PATH = OUT_DIR / "manifest.json"
-CONTACT_SHEET_PATH = OUT_DIR / "_contact-sheet.png"
+OUT_DIR = ROOT / "public" / "menu-products"
+MANIFEST_PATH = OUT_DIR / "ramen-manifest.json"
+CONTACT_SHEET_PATH = OUT_DIR / "_ramen-contact-sheet.png"
 
 SOURCE_DIRS = [
     DOWNLOADS,
@@ -216,7 +216,7 @@ def process(path: Path) -> dict[str, str | int]:
         "source": str(path),
         "source_name": path.name,
         "slug": slug,
-        "url": f"/ramen-products/{out_path.name}",
+        "url": f"/menu-products/{out_path.name}",
         "width": final.width,
         "height": final.height,
     }

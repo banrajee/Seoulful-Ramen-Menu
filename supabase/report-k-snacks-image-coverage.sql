@@ -2,15 +2,15 @@
 
 with snack_images(display_name, image_url) as (
   values
-    ('Noriko Tofu Curd Skewer Snack', '/snack-products/noriko-tofu-curd-skewer-snack.png'),
-    ('Noriko Braised Tofu Stick Snack', '/snack-products/noriko-braised-tofu-stick-snack.png'),
-    ('Noriko Braised Lotus Root Snack', '/snack-products/noriko-braised-lotus-root-snack.png'),
-    ('Noriko Fried Squid Spicy Flavoured Snack', '/snack-products/noriko-fried-squid-spicy-flavoured-snack.png'),
-    ('Roasted Fried Fish Mala Flavoured Snack', '/snack-products/roasted-fried-fish-mala-flavoured-snack.png'),
-    ('Roasted Fried Fish Spicy Flavoured Snack', '/snack-products/roasted-fried-fish-spicy-flavoured-snack.png'),
-    ('Noriko Fermented Tofu', '/snack-products/noriko-fermented-tofu.png'),
-    ('Big Sheet', '/snack-products/big-sheet.png'),
-    ('Stir-Fried Kimchi', '/snack-products/stir-fried-kimchi.png')
+    ('Noriko Tofu Curd Skewer Snack', '/menu-products/noriko-tofu-curd-skewer-snack.png'),
+    ('Noriko Braised Tofu Stick Snack', '/menu-products/noriko-braised-tofu-stick-snack.png'),
+    ('Noriko Braised Lotus Root Snack', '/menu-products/noriko-braised-lotus-root-snack.png'),
+    ('Noriko Fried Squid Spicy Flavoured Snack', '/menu-products/noriko-fried-squid-spicy-flavoured-snack.png'),
+    ('Roasted Fried Fish Mala Flavoured Snack', '/menu-products/roasted-fried-fish-mala-flavoured-snack.png'),
+    ('Roasted Fried Fish Spicy Flavoured Snack', '/menu-products/roasted-fried-fish-spicy-flavoured-snack.png'),
+    ('Noriko Fermented Tofu', '/menu-products/noriko-fermented-tofu.png'),
+    ('Big Sheet', '/menu-products/big-sheet.png'),
+    ('Stir-Fried Kimchi', '/menu-products/stir-fried-kimchi.png')
 )
 select
   'visible_k_snacks_with_images' as report,

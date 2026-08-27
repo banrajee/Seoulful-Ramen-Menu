@@ -1,4 +1,4 @@
--- Run this in Supabase SQL Editor after deploying the latest public/snack-products files.
+-- Run this in Supabase SQL Editor after deploying the latest public/menu-products files.
 -- It matches these photos to existing K-Snacks rows where possible, and inserts
 -- missing K-Snacks rows only when no matching menu item exists yet.
 --
@@ -15,15 +15,15 @@ with snack_rows(
   aliases
 ) as (
   values
-    ('Noriko Tofu Curd Skewer Snack', 'Ready-to-eat spicy tofu curd skewer snack.', '/snack-products/noriko-tofu-curd-skewer-snack.png', 49, 1, 'veg', 701, array['noriko tofu curd skewer snack', 'tofu curd skewer snack', 'noriko tofu skewer']::text[]),
-    ('Noriko Braised Tofu Stick Snack', 'Ready-to-eat spicy braised tofu stick snack.', '/snack-products/noriko-braised-tofu-stick-snack.png', 49, 1, 'veg', 702, array['noriko braised tofu stick snack', 'noriko seafood tofu stick snack', 'seafood tofu stick snack', 'braised tofu stick snack']::text[]),
-    ('Noriko Braised Lotus Root Snack', 'Ready-to-eat spicy braised lotus root snack.', '/snack-products/noriko-braised-lotus-root-snack.png', 49, 1, 'veg', 703, array['noriko braised lotus root snack', 'braised lotus root snack', 'lotus root snack']::text[]),
-    ('Noriko Fried Squid Spicy Flavoured Snack', 'Ready-to-eat spicy fried squid snack.', '/snack-products/noriko-fried-squid-spicy-flavoured-snack.png', 49, 2, 'non_veg', 704, array['noriko fried squid spicy flavoured snack', 'fried squid spicy flavoured snack', 'fried squid spicy flavored snack', 'noriko fried squid']::text[]),
-    ('Roasted Fried Fish Mala Flavoured Snack', 'Ready-to-eat mala flavoured fried fish snack.', '/snack-products/roasted-fried-fish-mala-flavoured-snack.png', 49, 2, 'non_veg', 705, array['roasted fried fish mala flavoured snack', 'rosted fried fish mala flavoured snack', 'fried fish mala flavoured snack', 'fried fish mala flavored snack']::text[]),
-    ('Roasted Fried Fish Spicy Flavoured Snack', 'Ready-to-eat super spicy fried fish snack.', '/snack-products/roasted-fried-fish-spicy-flavoured-snack.png', 49, 3, 'non_veg', 706, array['roasted fried fish spicy flavoured snack', 'rosted fried fish spicy flavoured snack', 'fried fish spicy flavoured snack', 'fried fish spicy flavored snack']::text[]),
-    ('Noriko Fermented Tofu', 'Ready-to-eat spicy fermented tofu snack.', '/snack-products/noriko-fermented-tofu.png', 49, 2, 'veg', 707, array['noriko fermented tofu', 'fermented tofu spicy flavoured snack', 'fermented tofu spicy flavored snack']::text[]),
-    ('Big Sheet', 'Assorted seaweed big sheet snack.', '/snack-products/big-sheet.png', 49, 0, 'veg', 708, array['big sheet', 'big sheet seaweed', 'seaweed big sheet']::text[]),
-    ('Stir-Fried Kimchi', 'Korean-style stir-fried kimchi.', '/snack-products/stir-fried-kimchi.png', 99, 1, 'veg', 709, array['stir-fried kimchi', 'stir fried kimchi', 'kimchi stir fry', 'stir-fried kimchi snack']::text[])
+    ('Noriko Tofu Curd Skewer Snack', 'Ready-to-eat spicy tofu curd skewer snack.', '/menu-products/noriko-tofu-curd-skewer-snack.png', 49, 1, 'veg', 701, array['noriko tofu curd skewer snack', 'tofu curd skewer snack', 'noriko tofu skewer']::text[]),
+    ('Noriko Braised Tofu Stick Snack', 'Ready-to-eat spicy braised tofu stick snack.', '/menu-products/noriko-braised-tofu-stick-snack.png', 49, 1, 'veg', 702, array['noriko braised tofu stick snack', 'noriko seafood tofu stick snack', 'seafood tofu stick snack', 'braised tofu stick snack']::text[]),
+    ('Noriko Braised Lotus Root Snack', 'Ready-to-eat spicy braised lotus root snack.', '/menu-products/noriko-braised-lotus-root-snack.png', 49, 1, 'veg', 703, array['noriko braised lotus root snack', 'braised lotus root snack', 'lotus root snack']::text[]),
+    ('Noriko Fried Squid Spicy Flavoured Snack', 'Ready-to-eat spicy fried squid snack.', '/menu-products/noriko-fried-squid-spicy-flavoured-snack.png', 49, 2, 'non_veg', 704, array['noriko fried squid spicy flavoured snack', 'fried squid spicy flavoured snack', 'fried squid spicy flavored snack', 'noriko fried squid']::text[]),
+    ('Roasted Fried Fish Mala Flavoured Snack', 'Ready-to-eat mala flavoured fried fish snack.', '/menu-products/roasted-fried-fish-mala-flavoured-snack.png', 49, 2, 'non_veg', 705, array['roasted fried fish mala flavoured snack', 'rosted fried fish mala flavoured snack', 'fried fish mala flavoured snack', 'fried fish mala flavored snack']::text[]),
+    ('Roasted Fried Fish Spicy Flavoured Snack', 'Ready-to-eat super spicy fried fish snack.', '/menu-products/roasted-fried-fish-spicy-flavoured-snack.png', 49, 3, 'non_veg', 706, array['roasted fried fish spicy flavoured snack', 'rosted fried fish spicy flavoured snack', 'fried fish spicy flavoured snack', 'fried fish spicy flavored snack']::text[]),
+    ('Noriko Fermented Tofu', 'Ready-to-eat spicy fermented tofu snack.', '/menu-products/noriko-fermented-tofu.png', 49, 2, 'veg', 707, array['noriko fermented tofu', 'fermented tofu spicy flavoured snack', 'fermented tofu spicy flavored snack']::text[]),
+    ('Big Sheet', 'Assorted seaweed big sheet snack.', '/menu-products/big-sheet.png', 49, 0, 'veg', 708, array['big sheet', 'big sheet seaweed', 'seaweed big sheet']::text[]),
+    ('Stir-Fried Kimchi', 'Korean-style stir-fried kimchi.', '/menu-products/stir-fried-kimchi.png', 99, 1, 'veg', 709, array['stir-fried kimchi', 'stir fried kimchi', 'kimchi stir fry', 'stir-fried kimchi snack']::text[])
 ),
 updated_items as (
   update public.menu_items item
