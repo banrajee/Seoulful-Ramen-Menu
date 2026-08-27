@@ -7,7 +7,7 @@ from collections import Counter, deque
 from pathlib import Path
 
 import numpy as np
-from PIL import Image, ImageDraw, ImageFilter
+from PIL import Image, ImageDraw, ImageFilter, ImageOps
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -17,10 +17,39 @@ OUT_DIR = ROOT / "public" / "ramen-products"
 MANIFEST_PATH = OUT_DIR / "manifest.json"
 CONTACT_SHEET_PATH = OUT_DIR / "_contact-sheet.png"
 
+SOURCE_DIRS = [
+    DOWNLOADS,
+    DOWNLOADS / "New folder",
+]
+
 EXCLUDE_PATTERNS = ("qrcode",)
 EXTRA_FILES = [
     TEMP / "codex-clipboard-aedee8cc-a903-4d02-855c-b828294deafb.webp",
 ]
+
+SLUG_OVERRIDES = {
+    "Broad Noodles Spicy Chicken (Halal).jpeg": "broad-noodles-spicy-hot-halal",
+    "KeeKoo Spicy Cheese.jpeg": "keekoo-spicy-cheese",
+    "Nongshim Shin Cheese Stir Fry.webp": "nongshim-shin-cheese-stir-fry",
+    "Ottogi Cheese Ramen.jpg": "ottogi-cheese-ramen",
+    "Ottogi Spicy Stir Fry.png": "ottogi-spicy-stir-fry",
+    "Paldo Lobster.jpg": "paldo-lobster",
+    "Paldo Rabokki (Halal).jpeg": "paldo-rabokki-halal",
+    "Paldo Samgyetang.jpg": "paldo-samgyetang",
+    "Paldo Volcano Carbonara (Halal).webp": "paldo-volcano-carbonara-halal",
+    "Paldo Volcano Chicken (Halal).webp": "paldo-volcano-chicken-halal",
+    "Samyang Buldak 2x (Halal).jpg": "samyang-buldak-2x-halal",
+    "Samyang Buldak 3x (Halal).jpg": "samyang-buldak-3x-halal",
+    "Samyang Buldak Habanero Lime (Halal).webp": "samyang-buldak-habanero-lime-halal",
+    "Samyang Hot Chicken Stew.webp": "samyang-hot-chicken-stew",
+    "Samyang Jjajang (Halal).webp": "samyang-jjajang-halal",
+    "Samyang Rose.webp": "samyang-rose",
+    "Samyang tangle creamy mushroom (Halal).jpg": "samyang-tangle-creamy-mushroom-halal",
+}
+
+ROTATIONS = {
+    "KeeKoo Spicy Cheese.jpeg": 90,
+}
 
 
 def slugify(value: str) -> str:
@@ -32,16 +61,19 @@ def slugify(value: str) -> str:
 
 def load_sources() -> list[Path]:
     files = []
-    for path in DOWNLOADS.iterdir():
-        if not path.is_file():
+    for source_dir in SOURCE_DIRS:
+        if not source_dir.exists():
             continue
-        if any(pattern in path.name.lower() for pattern in EXCLUDE_PATTERNS):
-            continue
-        if path.suffix.lower() not in {".png", ".jpg", ".jpeg", ".webp", ".avif"}:
-            continue
-        if path.name == "Paldo seafood jumbo.avif":
-            continue
-        files.append(path)
+        for path in source_dir.iterdir():
+            if not path.is_file():
+                continue
+            if any(pattern in path.name.lower() for pattern in EXCLUDE_PATTERNS):
+                continue
+            if path.suffix.lower() not in {".png", ".jpg", ".jpeg", ".webp", ".avif"}:
+                continue
+            if path.name == "Paldo seafood jumbo.avif":
+                continue
+            files.append(path)
 
     for path in EXTRA_FILES:
         if path.exists():
@@ -166,11 +198,15 @@ def fit_to_square(image: Image.Image, size: int = 900, product_fill: float = 0.8
 
 def process(path: Path) -> dict[str, str | int]:
     source_stem = path.stem.strip()
-    slug = slugify(source_stem)
+    slug = SLUG_OVERRIDES.get(path.name, slugify(source_stem))
     if path.parent == TEMP:
         slug = "samyang-jjajang-clipboard"
 
     with Image.open(path) as image:
+        image = ImageOps.exif_transpose(image)
+        rotation = ROTATIONS.get(path.name)
+        if rotation:
+            image = image.rotate(rotation, expand=True)
         cutout = remove_edge_background(image)
         final = fit_to_square(cutout)
 

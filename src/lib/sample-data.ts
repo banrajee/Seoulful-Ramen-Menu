@@ -187,7 +187,7 @@ export const sampleMenu: MenuData = {
       description: "Rose-style creamy ramen.",
       price: 219,
       category_id: "ramen",
-      image_url: null,
+      image_url: "/ramen-products/samyang-rose.png",
       status: "available",
       sort_order: 3
     },
@@ -217,7 +217,7 @@ export const sampleMenu: MenuData = {
       description: "Black bean spicy ramen.",
       price: 219,
       category_id: "ramen",
-      image_url: "/ramen-products/samyang-jjajang.png",
+      image_url: "/ramen-products/samyang-jjajang-halal.png",
       status: "available",
       sort_order: 6
     },
@@ -227,7 +227,7 @@ export const sampleMenu: MenuData = {
       description: "Hot ramen with lime flavour.",
       price: 219,
       category_id: "ramen",
-      image_url: "/ramen-products/samyang-buldak-habanero-lime.png",
+      image_url: "/ramen-products/samyang-buldak-habanero-lime-halal.png",
       status: "available",
       sort_order: 7
     },
@@ -237,7 +237,7 @@ export const sampleMenu: MenuData = {
       description: "Stew-style spicy ramen.",
       price: 219,
       category_id: "ramen",
-      image_url: null,
+      image_url: "/ramen-products/samyang-hot-chicken-stew.png",
       status: "available",
       sort_order: 8
     },
@@ -247,7 +247,7 @@ export const sampleMenu: MenuData = {
       description: "Extra hot Samyang ramen.",
       price: 219,
       category_id: "ramen",
-      image_url: "/ramen-products/samyang-buldak-3x.png",
+      image_url: "/ramen-products/samyang-buldak-3x-halal.png",
       status: "available",
       sort_order: 9
     },
@@ -257,7 +257,7 @@ export const sampleMenu: MenuData = {
       description: "Creamy volcano-style ramen.",
       price: 219,
       category_id: "ramen",
-      image_url: "/ramen-products/40338886-1-paldo-volcano-carbonara-instant-korean-chicken-noodle.png",
+      image_url: "/ramen-products/paldo-volcano-carbonara-halal.png",
       status: "available",
       sort_order: 10
     },
@@ -267,7 +267,7 @@ export const sampleMenu: MenuData = {
       description: "Chicken soup-style ramen.",
       price: 219,
       category_id: "ramen",
-      image_url: null,
+      image_url: "/ramen-products/paldo-samgyetang.png",
       status: "available",
       sort_order: 11
     },
@@ -287,7 +287,7 @@ export const sampleMenu: MenuData = {
       description: "Cheese stir-fry noodles.",
       price: 249,
       category_id: "ramen",
-      image_url: null,
+      image_url: "/ramen-products/nongshim-shin-cheese-stir-fry.png",
       status: "available",
       sort_order: 2
     },
@@ -297,7 +297,7 @@ export const sampleMenu: MenuData = {
       description: "Cheesy Korean ramen.",
       price: 249,
       category_id: "ramen",
-      image_url: null,
+      image_url: "/ramen-products/ottogi-cheese-ramen.png",
       status: "available",
       sort_order: 3
     },
@@ -307,7 +307,7 @@ export const sampleMenu: MenuData = {
       description: "Spicy dry-style ramen.",
       price: 249,
       category_id: "ramen",
-      image_url: null,
+      image_url: "/ramen-products/ottogi-spicy-stir-fry.png",
       status: "available",
       sort_order: 4
     },
@@ -317,7 +317,7 @@ export const sampleMenu: MenuData = {
       description: "Ramen and rice cake flavour.",
       price: 249,
       category_id: "ramen",
-      image_url: "/ramen-products/paldo-rabokki.png",
+      image_url: "/ramen-products/paldo-rabokki-halal.png",
       status: "available",
       sort_order: 5
     },
@@ -347,9 +347,19 @@ export const sampleMenu: MenuData = {
       description: "Lobster-style seafood ramen.",
       price: 249,
       category_id: "ramen",
-      image_url: null,
+      image_url: "/ramen-products/paldo-lobster.png",
       status: "available",
       sort_order: 8
+    },
+    {
+      id: "keekoo-spicy-cheese",
+      name: "KeeKoo Spicy Cheese",
+      description: "Spicy cheese Korean ramen.",
+      price: 219,
+      category_id: "ramen",
+      image_url: "/ramen-products/keekoo-spicy-cheese.png",
+      status: "available",
+      sort_order: 9
     },
     {
       id: "raw-egg",
