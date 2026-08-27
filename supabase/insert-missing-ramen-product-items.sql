@@ -21,8 +21,8 @@ with product_rows(
   values
     ('Daebak Ghost Pepper', 'Dry black instant noodles with spicy chicken flavour.', 'ramen', '/ramen-products/40292351-1-daebak-ghost-pepper-dry-black-instant-noodles-with-spicy-chicken-flavour.png', 219, 179, 219, 'dual', 5, 'non_veg', 501),
     ('Paldo Volcano Carbonara', 'Creamy volcano-style spicy ramen.', 'ramen', '/ramen-products/40338886-1-paldo-volcano-carbonara-instant-korean-chicken-noodle.png', 219, 179, 219, 'dual', 4, 'non_veg', 502),
-    ('Good Seoul Rapokki Cheesy', 'Cheesy rice cake with ramen.', 'k_snacks_sides', '/ramen-products/40351583-2-good-seoul-rapokki-cheesy-flavour-korean-ricecake-with-ramen.png', 199, null, null, 'single', 1, 'veg', 503),
-    ('Good Seoul Rapokki Spicy', 'Spicy rice cake with ramen.', 'k_snacks_sides', '/ramen-products/40351584-2-good-seoul-rapokki-spicy-flavour-korean-ricecake-with-ramen.png', 199, null, null, 'single', 3, 'veg', 504),
+    ('Rapokki Cheese', 'Cheesy rice cake with ramen.', 'ramen', '/ramen-products/40351583-2-good-seoul-rapokki-cheesy-flavour-korean-ricecake-with-ramen.png', 249, 209, 249, 'dual', 1, 'veg', 503),
+    ('Rapokki Spicy', 'Spicy rice cake with ramen.', 'ramen', '/ramen-products/40351584-2-good-seoul-rapokki-spicy-flavour-korean-ricecake-with-ramen.png', 249, 209, 249, 'dual', 3, 'veg', 504),
     ('Keekoo 2x Spicy', 'Korean ramen with extra spicy seasoning.', 'ramen', '/ramen-products/500-korean-raman-keekoo2x-spicy-5-instant-noodles-original-imahgfndz9uv6k7a.png', 219, 179, 219, 'dual', 4, 'veg', 505),
     ('Broad Noodles Spicy Chicken', 'Broad noodles with spicy chicken flavour.', 'ramen', '/ramen-products/broad-noodles-spicy-chicken.png', 249, 209, 249, 'dual', 4, 'non_veg', 506),
     ('Bulcha Carbonara', 'Carbonara Korean ramen.', 'ramen', '/ramen-products/bulcha-carbonara.png', 219, 179, 219, 'dual', 3, 'veg', 507),

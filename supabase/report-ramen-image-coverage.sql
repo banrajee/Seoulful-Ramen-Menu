@@ -5,8 +5,8 @@ with album_images(display_name, image_url) as (
   values
     ('Daebak Ghost Pepper', '/ramen-products/40292351-1-daebak-ghost-pepper-dry-black-instant-noodles-with-spicy-chicken-flavour.png'),
     ('Paldo Volcano Carbonara', '/ramen-products/40338886-1-paldo-volcano-carbonara-instant-korean-chicken-noodle.png'),
-    ('Good Seoul Rapokki Cheesy', '/ramen-products/40351583-2-good-seoul-rapokki-cheesy-flavour-korean-ricecake-with-ramen.png'),
-    ('Good Seoul Rapokki Spicy', '/ramen-products/40351584-2-good-seoul-rapokki-spicy-flavour-korean-ricecake-with-ramen.png'),
+    ('Rapokki Cheese', '/ramen-products/40351583-2-good-seoul-rapokki-cheesy-flavour-korean-ricecake-with-ramen.png'),
+    ('Rapokki Spicy', '/ramen-products/40351584-2-good-seoul-rapokki-spicy-flavour-korean-ricecake-with-ramen.png'),
     ('Keekoo 2x Spicy', '/ramen-products/500-korean-raman-keekoo2x-spicy-5-instant-noodles-original-imahgfndz9uv6k7a.png'),
     ('Broad Noodles Spicy Chicken', '/ramen-products/broad-noodles-spicy-chicken.png'),
     ('Bulcha Carbonara', '/ramen-products/bulcha-carbonara.png'),
