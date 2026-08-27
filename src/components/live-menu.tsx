@@ -165,6 +165,53 @@ function VariantList({ variants }: { variants: ItemVariant[] }) {
   );
 }
 
+function RamenProductCard({ item }: { item: MenuItem }) {
+  const [imageFailed, setImageFailed] = useState(false);
+  const level = spiceLevel(item);
+  const hasProductImage = Boolean(item.image_url && !imageFailed);
+
+  return (
+    <article className={`ramen-product ${item.status} ${hasProductImage ? "has-image" : "no-image"}`}>
+      <div className={`ramen-product-media ${hasProductImage ? "has-image" : "is-placeholder"}`}>
+        {hasProductImage ? (
+          <img
+            className="ramen-product-image"
+            src={item.image_url ?? ""}
+            alt={item.name}
+            onError={() => setImageFailed(true)}
+          />
+        ) : null}
+      </div>
+
+      <div className="ramen-product-copy">
+        <div className="ramen-title-row">
+          <div className="ramen-text-stack">
+            <h3>{item.name}</h3>
+            {isDualPrice(item) ? (
+              <div className="dual-price-stack">
+                <span>Packet Only: {money(packetOnlyPrice(item))}</span>
+                <strong>Self-Cook Bowl: {money(selfCookPrice(item))}</strong>
+              </div>
+            ) : (
+              <strong>{money(item.price)}</strong>
+            )}
+          </div>
+          <div className="ramen-meta-stack">
+            {item.food_type ? (
+              <span
+                className={`food-marker ${item.food_type}`}
+                aria-label={item.food_type === "veg" ? "Vegetarian" : "Non-vegetarian"}
+              />
+            ) : null}
+            <SpiceRow level={level} />
+          </div>
+        </div>
+        {item.status === "out_of_stock" ? <span className="status-pill">Out of Stock</span> : null}
+      </div>
+    </article>
+  );
+}
+
 function MenuNavigation({ activePage, sessionRequired }: { activePage: MenuPageType; sessionRequired: boolean }) {
   return (
     <nav className="menu-page-switcher" aria-label="Menu pages">
@@ -321,53 +368,9 @@ export function LiveMenu({ activePage = "ramen" }: { activePage?: MenuPageType }
               </p>
 
               <div className="ramen-product-grid">
-                {ramenItems.map((item) => {
-                  const level = spiceLevel(item);
-
-                  return (
-                    <article
-                      className={`ramen-product ${item.status} ${item.image_url ? "has-image" : "no-image"}`}
-                      key={item.id}
-                    >
-                      <div className={`ramen-product-media ${item.image_url ? "has-image" : "is-placeholder"}`}>
-                        {item.image_url ? (
-                          <img className="ramen-product-image" src={item.image_url} alt={item.name} />
-                        ) : (
-                          <div className={`ramen-pack ${packClass(item)}`} aria-label={`${item.name} image placeholder`}>
-                            <span>{item.name.split(" ")[0]}</span>
-                            <strong>{item.name.split(" ").slice(-2).join(" ")}</strong>
-                          </div>
-                        )}
-                      </div>
-
-                      <div className="ramen-product-copy">
-                        <div className="ramen-title-row">
-                          <div className="ramen-text-stack">
-                            <h3>{item.name}</h3>
-                            {isDualPrice(item) ? (
-                              <div className="dual-price-stack">
-                                <span>Packet Only: {money(packetOnlyPrice(item))}</span>
-                                <strong>Self-Cook Bowl: {money(selfCookPrice(item))}</strong>
-                              </div>
-                            ) : (
-                              <strong>{money(item.price)}</strong>
-                            )}
-                          </div>
-                          <div className="ramen-meta-stack">
-                            {item.food_type ? (
-                              <span
-                                className={`food-marker ${item.food_type}`}
-                                aria-label={item.food_type === "veg" ? "Vegetarian" : "Non-vegetarian"}
-                              />
-                            ) : null}
-                            <SpiceRow level={level} />
-                          </div>
-                        </div>
-                        {item.status === "out_of_stock" ? <span className="status-pill">Out of Stock</span> : null}
-                      </div>
-                    </article>
-                  );
-                })}
+                {ramenItems.map((item) => (
+                  <RamenProductCard item={item} key={item.id} />
+                ))}
               </div>
             </section>
 
