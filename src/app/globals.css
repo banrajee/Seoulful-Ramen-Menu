@@ -2656,9 +2656,15 @@ select:disabled {
 
 .drinks-list article {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+  align-items: center;
+  min-height: auto;
+}
+
+.drinks-list article.has-image {
   grid-template-columns: 54px minmax(0, 1fr);
   gap: 12px;
-  align-items: center;
   min-height: 66px;
 }
 
@@ -2666,20 +2672,13 @@ select:disabled {
   opacity: 0.56;
 }
 
-.drinks-list img,
-.drinks-list span {
+.drinks-list img {
   display: block;
   width: 48px;
   height: 48px;
   border: 1px solid rgba(9, 38, 42, 0.14);
   border-radius: 8px;
   object-fit: contain;
-}
-
-.drinks-list span {
-  background:
-    radial-gradient(circle at 50% 28%, rgba(255, 255, 255, 0.8) 0 7px, transparent 8px),
-    linear-gradient(180deg, #7cc6d5, #2f7c8d);
 }
 
 .drinks-list h3,
@@ -2809,12 +2808,18 @@ select:disabled {
 
 .snacks-list article {
   display: grid;
-  grid-template-columns: 64px minmax(0, 1fr);
-  gap: 12px;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
   align-items: center;
-  min-height: 72px;
+  min-height: auto;
   padding: 0 22px;
   border-right: 2px dotted rgba(9, 38, 42, 0.36);
+}
+
+.snacks-list article.has-image {
+  grid-template-columns: 64px minmax(0, 1fr);
+  gap: 12px;
+  min-height: 72px;
 }
 
 .snacks-list article:first-child {
@@ -2839,20 +2844,13 @@ select:disabled {
   opacity: 0.56;
 }
 
-.snacks-list img,
-.snacks-list span {
+.snacks-list img {
   display: block;
   width: 58px;
   height: 58px;
   border: 1px solid rgba(9, 38, 42, 0.14);
   border-radius: 8px;
   object-fit: contain;
-}
-
-.snacks-list span {
-  background:
-    radial-gradient(circle at 50% 36%, rgba(255, 255, 255, 0.75) 0 8px, transparent 9px),
-    linear-gradient(180deg, #efc65b, #b87d27);
 }
 
 .drinks-list .variant-list span,
@@ -3125,10 +3123,15 @@ select:disabled {
   }
 
   .drinks-list article {
-    grid-template-columns: 64px minmax(0, 1fr);
-    min-height: 82px;
+    grid-template-columns: minmax(0, 1fr);
+    min-height: auto;
     padding: 0 0 14px;
     border-bottom: 0;
+  }
+
+  .drinks-list article.has-image {
+    grid-template-columns: 64px minmax(0, 1fr);
+    min-height: 82px;
   }
 
   .drinks-list article:last-child {
@@ -3136,18 +3139,22 @@ select:disabled {
     border-bottom: 0;
   }
 
-  .drinks-list img,
-  .drinks-list span {
+  .drinks-list img {
     width: 54px;
     height: 54px;
   }
 
   .snacks-list article {
-    grid-template-columns: 84px minmax(0, 1fr);
-    min-height: 94px;
+    grid-template-columns: minmax(0, 1fr);
+    min-height: auto;
     padding: 0 0 14px;
     border-right: 0;
     border-bottom: 0;
+  }
+
+  .snacks-list article.has-image {
+    grid-template-columns: 84px minmax(0, 1fr);
+    min-height: 94px;
   }
 
   .snacks-list article:last-child {
@@ -3155,8 +3162,7 @@ select:disabled {
     border-bottom: 0;
   }
 
-  .snacks-list img,
-  .snacks-list span {
+  .snacks-list img {
     width: 72px;
     height: 72px;
   }
@@ -3270,25 +3276,23 @@ select:disabled {
 }
 
 /* Temporary launch mode: hide drinks and K-Snacks image placeholders without leaving empty spacing. */
-.drinks-list article,
-.snacks-list article {
-  grid-template-columns: minmax(0, 1fr);
-  gap: 0;
-  min-height: auto;
-}
-
-.drinks-list article > img,
-.drinks-list article > span,
-.snacks-list article > img,
-.snacks-list article > span {
-  display: none;
-}
-
 @media (max-width: 760px) {
   .drinks-list article,
   .snacks-list article {
     grid-template-columns: minmax(0, 1fr);
     min-height: auto;
+  }
+
+  .drinks-list article.has-image,
+  .snacks-list article.has-image {
+    grid-template-columns: 54px minmax(0, 1fr);
+    gap: 12px;
+    min-height: 66px;
+  }
+
+  .snacks-list article.has-image {
+    grid-template-columns: 58px minmax(0, 1fr);
+    min-height: 72px;
   }
 }
 

@@ -442,6 +442,114 @@ export const sampleMenu: MenuData = {
       sort_order: 8
     },
     {
+      id: "noriko-tofu-curd-skewer-snack",
+      name: "Noriko Tofu Curd Skewer Snack",
+      description: "Ready-to-eat spicy tofu curd skewer snack.",
+      price: 49,
+      category_id: "k_snacks_sides",
+      image_url: "/snack-products/noriko-tofu-curd-skewer-snack.png",
+      spice_level: 1,
+      food_type: "veg",
+      status: "available",
+      sort_order: 1
+    },
+    {
+      id: "noriko-braised-tofu-stick-snack",
+      name: "Noriko Braised Tofu Stick Snack",
+      description: "Ready-to-eat spicy braised tofu stick snack.",
+      price: 49,
+      category_id: "k_snacks_sides",
+      image_url: "/snack-products/noriko-braised-tofu-stick-snack.png",
+      spice_level: 1,
+      food_type: "veg",
+      status: "available",
+      sort_order: 2
+    },
+    {
+      id: "noriko-braised-lotus-root-snack",
+      name: "Noriko Braised Lotus Root Snack",
+      description: "Ready-to-eat spicy braised lotus root snack.",
+      price: 49,
+      category_id: "k_snacks_sides",
+      image_url: "/snack-products/noriko-braised-lotus-root-snack.png",
+      spice_level: 1,
+      food_type: "veg",
+      status: "available",
+      sort_order: 3
+    },
+    {
+      id: "noriko-fried-squid-spicy-flavoured-snack",
+      name: "Noriko Fried Squid Spicy Flavoured Snack",
+      description: "Ready-to-eat spicy fried squid snack.",
+      price: 49,
+      category_id: "k_snacks_sides",
+      image_url: "/snack-products/noriko-fried-squid-spicy-flavoured-snack.png",
+      spice_level: 2,
+      food_type: "non_veg",
+      status: "available",
+      sort_order: 4
+    },
+    {
+      id: "roasted-fried-fish-mala-flavoured-snack",
+      name: "Roasted Fried Fish Mala Flavoured Snack",
+      description: "Ready-to-eat mala flavoured fried fish snack.",
+      price: 49,
+      category_id: "k_snacks_sides",
+      image_url: "/snack-products/roasted-fried-fish-mala-flavoured-snack.png",
+      spice_level: 2,
+      food_type: "non_veg",
+      status: "available",
+      sort_order: 5
+    },
+    {
+      id: "roasted-fried-fish-spicy-flavoured-snack",
+      name: "Roasted Fried Fish Spicy Flavoured Snack",
+      description: "Ready-to-eat super spicy fried fish snack.",
+      price: 49,
+      category_id: "k_snacks_sides",
+      image_url: "/snack-products/roasted-fried-fish-spicy-flavoured-snack.png",
+      spice_level: 3,
+      food_type: "non_veg",
+      status: "available",
+      sort_order: 6
+    },
+    {
+      id: "noriko-fermented-tofu",
+      name: "Noriko Fermented Tofu",
+      description: "Ready-to-eat spicy fermented tofu snack.",
+      price: 49,
+      category_id: "k_snacks_sides",
+      image_url: "/snack-products/noriko-fermented-tofu.png",
+      spice_level: 2,
+      food_type: "veg",
+      status: "available",
+      sort_order: 7
+    },
+    {
+      id: "big-sheet",
+      name: "Big Sheet",
+      description: "Assorted seaweed big sheet snack.",
+      price: 49,
+      category_id: "k_snacks_sides",
+      image_url: "/snack-products/big-sheet.png",
+      spice_level: 0,
+      food_type: "veg",
+      status: "available",
+      sort_order: 8
+    },
+    {
+      id: "stir-fried-kimchi",
+      name: "Stir-Fried Kimchi",
+      description: "Korean-style stir-fried kimchi.",
+      price: 99,
+      category_id: "k_snacks_sides",
+      image_url: "/snack-products/stir-fried-kimchi.png",
+      spice_level: 1,
+      food_type: "veg",
+      status: "available",
+      sort_order: 9
+    },
+    {
       id: "fanta",
       name: "Fanta",
       description: "Fruit soda flavours.",
@@ -457,6 +565,21 @@ export const sampleMenu: MenuData = {
 const sampleRamenCategoryIds = new Set(["ramen"]);
 
 sampleMenu.items = sampleMenu.items.map((item) => {
+  if (item.category_id === "k_snacks_sides") {
+    return {
+      ...item,
+      price_type: "single",
+      drink_price_type: "single",
+      packet_only_price: null,
+      self_cook_price: null,
+      with_cup_ice_price: null,
+      has_cup_ice_option: false,
+      cup_ice_price: null,
+      cup_ice_available: true,
+      food_type: item.food_type ?? "veg"
+    };
+  }
+
   if (!sampleRamenCategoryIds.has(item.category_id)) {
     return {
       ...item,

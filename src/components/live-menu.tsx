@@ -418,10 +418,11 @@ export function LiveMenu({ activePage = "ramen" }: { activePage?: MenuPageType }
                       {groupItems.map((item) => (
                         (() => {
                           const variants = visibleVariantsForItem(menuData, item);
+                          const hasProductImage = Boolean(item.image_url);
 
                           return (
-                            <article className={item.status} key={item.id}>
-                              {item.image_url ? <img src={item.image_url} alt={item.name} /> : <span aria-hidden="true" />}
+                            <article className={`${item.status} ${hasProductImage ? "has-image" : "no-image"}`} key={item.id}>
+                              {hasProductImage ? <img src={item.image_url ?? ""} alt={item.name} /> : null}
                               <div>
                                 <h4>{item.name}</h4>
                                 <strong>{compactPriceLabel(item, variants)}</strong>
@@ -446,10 +447,11 @@ export function LiveMenu({ activePage = "ramen" }: { activePage?: MenuPageType }
             <div className="snacks-list">
               {snacks.map((item) => {
                 const level = spiceLevel(item);
+                const hasProductImage = Boolean(item.image_url);
 
                 return (
-                  <article className={item.status} key={item.id}>
-                    {item.image_url ? <img src={item.image_url} alt={item.name} /> : <span aria-hidden="true" />}
+                  <article className={`${item.status} ${hasProductImage ? "has-image" : "no-image"}`} key={item.id}>
+                    {hasProductImage ? <img src={item.image_url ?? ""} alt={item.name} /> : null}
                     <div>
                       <div className="snack-title-row">
                         <div className="snack-text-stack">
