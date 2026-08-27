@@ -72,11 +72,18 @@ with image_updates(name, image_url) as (
     ('A-Kuan Broad Noodle Spicy Hot Flavor', '/ramen-products/whatsapp-image-2026-08-01-at-5-37-47-pm.png'),
     ('Broad Noodles Spicy Chicken', '/ramen-products/broad-noodles-spicy-chicken.png'),
     ('A-Kuan Broad Noodle Spicy Chicken Flavor', '/ramen-products/broad-noodles-spicy-chicken.png')
+),
+updated_items as (
+  update public.menu_items item
+  set
+    image_url = image_updates.image_url,
+    status = 'available',
+    updated_at = now()
+  from image_updates
+  where lower(trim(item.name)) = lower(trim(image_updates.name))
+  returning item.name, item.image_url
 )
-update public.menu_items item
-set
-  image_url = image_updates.image_url,
-  status = 'available',
-  updated_at = now()
-from image_updates
-where lower(trim(item.name)) = lower(trim(image_updates.name));
+select
+  count(*) as updated_row_count,
+  string_agg(name, ', ' order by name) as updated_items
+from updated_items;
