@@ -1,6 +1,6 @@
 "use client";
 
-import { EyeOff } from "lucide-react";
+import { EyeOff, Search } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { fetchMenuData, subscribeToMenuChanges } from "@/lib/menu-service";
@@ -165,14 +165,55 @@ function VariantList({ variants }: { variants: ItemVariant[] }) {
   );
 }
 
-function RamenProductCard({ item }: { item: MenuItem }) {
-  const [imageFailed, setImageFailed] = useState(false);
-  const level = spiceLevel(item);
-  const hasProductImage = Boolean(item.image_url && !imageFailed);
+function productImageKey(name: string) {
+  return name
+    .toLowerCase()
+    .replace(/\(halal\)/g, "")
+    .replace(/\brosted\b/g, "roasted")
+    .replace(/&/g, " and ")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+const localProductImageAliases: Record<string, string> = {
+  "broad-noodles-spicy-hot-flavour": "/menu-products/broad-noodles-spicy-hot-halal.png"
+};
+
+function productImageCandidates(item: MenuItem) {
+  const imageKey = productImageKey(item.name);
+  const localImage = localProductImageAliases[imageKey] ?? `/menu-products/${imageKey}.png`;
+  const candidates = [item.image_url, localImage];
+  const filename = item.image_url?.split("/").pop();
+
+  if (filename) {
+    const legacyFolder = item.category_id === "ramen" ? "ramen-products" : "snack-products";
+    candidates.splice(1, 0, `/menu-products/${filename}`, `/${legacyFolder}/${filename}`);
+  }
+
+  return Array.from(new Set(candidates.filter((candidate): candidate is string => Boolean(candidate))));
+}
+
+function useProductImage(item: MenuItem) {
+  const candidates = useMemo(
+    () => productImageCandidates(item),
+    [item.category_id, item.image_url, item.name]
+  );
+  const [candidateIndex, setCandidateIndex] = useState(0);
 
   useEffect(() => {
-    setImageFailed(false);
-  }, [item.image_url]);
+    setCandidateIndex(0);
+  }, [candidates]);
+
+  return {
+    imageSrc: candidates[candidateIndex] ?? null,
+    tryNextImage: () => setCandidateIndex((index) => index + 1)
+  };
+}
+
+function RamenProductCard({ item }: { item: MenuItem }) {
+  const { imageSrc, tryNextImage } = useProductImage(item);
+  const level = spiceLevel(item);
+  const hasProductImage = Boolean(imageSrc);
 
   return (
     <article className={`ramen-product ${item.status} ${hasProductImage ? "has-image" : "no-image"}`}>
@@ -180,9 +221,9 @@ function RamenProductCard({ item }: { item: MenuItem }) {
         {hasProductImage ? (
           <img
             className="ramen-product-image"
-            src={item.image_url ?? ""}
+            src={imageSrc ?? ""}
             alt={item.name}
-            onError={() => setImageFailed(true)}
+            onError={tryNextImage}
           />
         ) : null}
       </div>
@@ -217,18 +258,14 @@ function RamenProductCard({ item }: { item: MenuItem }) {
 }
 
 function SnackProductCard({ item, variants }: { item: MenuItem; variants: ItemVariant[] }) {
-  const [imageFailed, setImageFailed] = useState(false);
+  const { imageSrc, tryNextImage } = useProductImage(item);
   const level = spiceLevel(item);
-  const hasProductImage = Boolean(item.image_url && !imageFailed);
-
-  useEffect(() => {
-    setImageFailed(false);
-  }, [item.image_url]);
+  const hasProductImage = Boolean(imageSrc);
 
   return (
     <article className={`${item.status} ${hasProductImage ? "has-image" : "no-image"}`}>
       {hasProductImage ? (
-        <img src={item.image_url ?? ""} alt={item.name} onError={() => setImageFailed(true)} />
+        <img src={imageSrc ?? ""} alt={item.name} onError={tryNextImage} />
       ) : null}
       <div>
         <div className="snack-title-row">
@@ -298,6 +335,9 @@ function MenuSessionChecking() {
 
 export function LiveMenu({ activePage = "ramen" }: { activePage?: MenuPageType }) {
   const [menuData, setMenuData] = useState<MenuData>(sampleMenu);
+  const [searchQueries, setSearchQueries] = useState({ ramen: "", drinks: "", snacks: "" });
+  const searchQuery = searchQueries[activePage];
+  const searchTerms = searchQuery.trim().toLowerCase().split(/\s+/).filter(Boolean);
   const [sessionRequired, setSessionRequired] = useState(false);
   const [sessionState, setSessionState] = useState<MenuSessionState>("valid");
 
@@ -381,6 +421,17 @@ export function LiveMenu({ activePage = "ramen" }: { activePage?: MenuPageType }
   if (sessionState === "checking") return <MenuSessionChecking />;
   if (sessionState === "expired") return <MenuSessionExpired />;
 
+  function matchesSearch(item: MenuItem) {
+    const text = [item.name, item.description,
+      ...visibleVariantsForItem(menuData, item).map((variant) => variant.variant_name)
+    ].join(" ").toLowerCase();
+    return searchTerms.every((term) => text.includes(term));
+  }
+
+  const filteredRamen = ramenItems.filter(matchesSearch);
+  const filteredDrinks = drinks.filter(matchesSearch);
+  const resultCount = activePage === "drinks" ? filteredDrinks.length : filteredRamen.length;
+
   return (
     <main className="menu-page refined-menu-page">
       <section className="menu-shell refined-menu-shell" aria-label="Seoulful Ramen digital menu">
@@ -399,6 +450,33 @@ export function LiveMenu({ activePage = "ramen" }: { activePage?: MenuPageType }
 
         <MenuNavigation activePage={activePage} sessionRequired={sessionRequired} />
 
+        {activePage !== "snacks" ? (
+          <div className="menu-search" role="search" aria-label={`Search ${activePage}`}>
+            <div className="menu-search-field">
+              <Search size={20} aria-hidden="true" />
+              <input
+                type="search"
+                aria-label={`Search ${activePage}`}
+                placeholder={`Search ${activePage}…`}
+                value={searchQuery}
+                onChange={(event) => setSearchQueries((queries) => ({ ...queries, [activePage]: event.target.value }))}
+              />
+              {searchQuery ? (
+                <button type="button" onClick={() => setSearchQueries((queries) => ({ ...queries, [activePage]: "" }))}>
+                  Clear
+                </button>
+              ) : null}
+            </div>
+            <p className="menu-search-status" role="status">
+              {searchTerms.length > 0
+                ? resultCount > 0
+                  ? `${resultCount} ${activePage === "ramen" ? "ramen" : "drink"} result${resultCount === 1 ? "" : "s"}`
+                  : `No ${activePage} found. Try another name or clear your search.`
+                : ""}
+            </p>
+          </div>
+        ) : null}
+
         {activePage === "ramen" ? (
           <>
             <section className="ramen-section" aria-label="Ramen and Ramyeon">
@@ -409,7 +487,7 @@ export function LiveMenu({ activePage = "ramen" }: { activePage?: MenuPageType }
               </p>
 
               <div className="ramen-product-grid">
-                {ramenItems.map((item) => (
+                {filteredRamen.map((item) => (
                   <RamenProductCard item={item} key={item.id} />
                 ))}
               </div>
@@ -448,9 +526,11 @@ export function LiveMenu({ activePage = "ramen" }: { activePage?: MenuPageType }
             <p className="drinks-price-note">Cup + Ice: {money(20)} extra.</p>
             <div className="drink-groups">
               {drinkGroups.map((group) => {
-                const groupItems = drinks.filter(
+                const groupItems = filteredDrinks.filter(
                   (item) => item.category_id === group.id || (group.id === "drink_soda" && item.category_id === "drinks")
                 );
+
+                if (groupItems.length === 0) return null;
 
                 return (
                   <section className="drink-group" key={group.id}>
