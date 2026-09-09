@@ -1440,6 +1440,27 @@ select:disabled {
   }
 }
 
+/* Keep the full top row available for long ramen names and right-aligned prices. */
+.refined-menu-shell .ramen-title-row {
+  display: block;
+}
+
+.refined-menu-shell .ramen-meta-stack {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  justify-self: stretch;
+  gap: 8px;
+  width: 100%;
+  margin-top: 8px;
+}
+
+@media (max-width: 760px) {
+  .refined-menu-shell .ramen-meta-stack {
+    margin-top: 10px;
+  }
+}
+
 @media (max-width: 420px) {
   .owner-add-toolbar {
     grid-template-columns: 1fr;

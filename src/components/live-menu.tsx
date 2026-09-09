@@ -250,15 +250,15 @@ function RamenProductCard({ item }: { item: MenuItem }) {
               </div>
             ) : null}
           </div>
-          <div className="ramen-meta-stack">
-            {item.food_type ? (
-              <span
-                className={`food-marker ${item.food_type}`}
-                aria-label={item.food_type === "veg" ? "Vegetarian" : "Non-vegetarian"}
-              />
-            ) : null}
-            <SpiceRow level={level} />
-          </div>
+        </div>
+        <div className="ramen-meta-stack">
+          {item.food_type ? (
+            <span
+              className={`food-marker ${item.food_type}`}
+              aria-label={item.food_type === "veg" ? "Vegetarian" : "Non-vegetarian"}
+            />
+          ) : null}
+          <SpiceRow level={level} />
         </div>
         {item.status === "out_of_stock" ? <span className="status-pill">Out of Stock</span> : null}
       </div>
