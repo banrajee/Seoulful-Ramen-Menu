@@ -229,6 +229,7 @@ function RamenProductCard({ item }: { item: MenuItem }) {
         {hasProductImage ? (
           <img
             className="ramen-product-image"
+            data-image-key={productImageKey(item.name)}
             src={imageSrc ?? ""}
             alt={item.name}
             onError={tryNextImage}
