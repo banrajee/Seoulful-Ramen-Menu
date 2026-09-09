@@ -1446,18 +1446,19 @@ select:disabled {
 }
 
 .refined-menu-shell .ramen-meta-stack {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  justify-self: stretch;
-  gap: 8px;
-  width: 100%;
-  margin-top: 8px;
+  display: grid;
+  justify-items: center;
+  justify-content: center;
+  justify-self: end;
+  gap: 1px;
+  width: max-content;
+  max-width: 100%;
+  margin-top: 2px;
 }
 
 @media (max-width: 760px) {
   .refined-menu-shell .ramen-meta-stack {
-    margin-top: 10px;
+    margin-top: 1px;
   }
 }
 
@@ -3507,5 +3508,29 @@ select:disabled {
   .ramen-name-price,
   .menu-name-price-row {
     gap: 10px;
+  }
+}
+
+/* Keep each ramen image anchored to its text and stack dietary details above heat. */
+.refined-menu-shell .ramen-product.has-image {
+  align-items: start;
+}
+
+.refined-menu-shell .ramen-product-media.has-image {
+  align-self: start;
+  padding-top: 3px;
+}
+
+.refined-menu-shell .ramen-product-copy {
+  gap: 4px;
+}
+
+@media (max-width: 760px) {
+  .refined-menu-shell .ramen-product.has-image {
+    gap: 10px;
+  }
+
+  .refined-menu-shell .ramen-product-media.has-image {
+    padding-top: 2px;
   }
 }
