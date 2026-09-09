@@ -66,7 +66,7 @@ export async function saveItem(item: MenuItem | MenuItemDraft) {
 
   const payload = {
     name: item.name,
-    description: item.description,
+    description: item.description?.trim() ?? "",
     price: Number(item.price),
     packet_only_price: item.packet_only_price == null ? null : Number(item.packet_only_price),
     self_cook_price: item.self_cook_price == null ? null : Number(item.self_cook_price),
@@ -112,6 +112,7 @@ export async function saveVariant(variant: ItemVariant | ItemVariantDraft) {
   const payload = {
     menu_item_id: variant.menu_item_id,
     variant_name: variant.variant_name,
+    description: variant.description?.trim() || null,
     price: Number(variant.price),
     status: variant.status,
     image_url: normalizeProductImageUrl(variant.image_url),

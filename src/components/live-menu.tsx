@@ -148,6 +148,11 @@ function compactPriceLabel(item: MenuItem, variants: ItemVariant[]) {
   return minPrice === maxPrice ? money(minPrice) : `From ${money(minPrice)}`;
 }
 
+function ItemDescription({ description }: { description?: string | null }) {
+  if (!description?.trim()) return null;
+  return <p className="menu-item-description">{description.trim()}</p>;
+}
+
 function VariantList({ variants }: { variants: ItemVariant[] }) {
   if (variants.length === 0) return null;
 
@@ -156,7 +161,10 @@ function VariantList({ variants }: { variants: ItemVariant[] }) {
       {variants.map((variant) => (
         <li className={variant.status} key={variant.id}>
           {variant.image_url ? <img src={variant.image_url} alt="" aria-hidden="true" /> : null}
-          <span>{variant.variant_name}</span>
+          <div>
+            <span>{variant.variant_name}</span>
+            <ItemDescription description={variant.description} />
+          </div>
           <strong>{money(variant.price)}</strong>
           {variant.status === "out_of_stock" ? <em>Out of Stock</em> : null}
         </li>
@@ -232,6 +240,7 @@ function RamenProductCard({ item }: { item: MenuItem }) {
         <div className="ramen-title-row">
           <div className="ramen-text-stack">
             <h3>{item.name}</h3>
+            <ItemDescription description={item.description} />
             {isDualPrice(item) ? (
               <div className="dual-price-stack">
                 <span>Packet Only: {money(packetOnlyPrice(item))}</span>
@@ -271,6 +280,7 @@ function SnackProductCard({ item, variants }: { item: MenuItem; variants: ItemVa
         <div className="snack-title-row">
           <div className="snack-text-stack">
             <h3>{item.name}</h3>
+            <ItemDescription description={item.description} />
             <strong>{compactPriceLabel(item, variants)}</strong>
           </div>
           <div className="snack-meta-stack">
@@ -509,6 +519,7 @@ export function LiveMenu({ activePage = "ramen" }: { activePage?: MenuPageType }
                         )}
                         <div>
                           <h3>{item.name}</h3>
+                          <ItemDescription description={item.description} />
                           <strong>{money(item.price)}</strong>
                         </div>
                       </article>
@@ -546,6 +557,7 @@ export function LiveMenu({ activePage = "ramen" }: { activePage?: MenuPageType }
                               {hasProductImage ? <img src={item.image_url ?? ""} alt={item.name} /> : null}
                               <div>
                                 <h4>{item.name}</h4>
+                                <ItemDescription description={item.description} />
                                 <strong>{compactPriceLabel(item, variants)}</strong>
                                 {item.status === "out_of_stock" ? <em>Out of Stock</em> : null}
                                 <VariantList variants={variants} />

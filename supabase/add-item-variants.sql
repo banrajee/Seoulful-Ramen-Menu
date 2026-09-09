@@ -4,6 +4,7 @@ create table if not exists public.item_variants (
   id uuid primary key default gen_random_uuid(),
   menu_item_id uuid not null references public.menu_items(id) on delete cascade,
   variant_name text not null,
+  description text,
   price numeric(10, 2) not null check (price >= 0),
   status text not null default 'available' check (status in ('available', 'out_of_stock', 'hidden')),
   image_url text,

@@ -38,6 +38,7 @@ export type ItemVariant = {
   id: string;
   menu_item_id: string;
   variant_name: string;
+  description?: string | null;
   price: number;
   status: ItemStatus;
   image_url: string | null;

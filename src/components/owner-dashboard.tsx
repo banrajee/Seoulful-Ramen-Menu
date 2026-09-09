@@ -590,12 +590,14 @@ function DashboardBody({
         </label>
 
         <label>
-          Description
+          Short description (optional)
           <textarea
-            value={draft.description}
+            value={draft.description ?? ""}
             onChange={(event) => setDraft({ ...draft, description: event.target.value })}
-            required
+            rows={2}
+            aria-describedby="description-guidance"
           />
+          <small id="description-guidance">Keep it short. Check product packaging, official brand or supplier information, or have the shop owner verify it before publishing. Leave empty if unsure.</small>
         </label>
 
         {isRamenEditor ? (
@@ -934,6 +936,15 @@ function VariantEditor({
             onChange={(event) => setVariantDraft({ ...draft, variant_name: event.target.value })}
             placeholder="Orange, Grape, Seaweed..."
           />
+        </label>
+        <label>
+          Variant description (optional)
+          <input
+            value={draft.description ?? ""}
+            onChange={(event) => setVariantDraft({ ...draft, description: event.target.value })}
+            aria-describedby="variant-description-guidance"
+          />
+          <small id="variant-description-guidance">Use only for verified flavour-specific details. Keep shared information on the main item.</small>
         </label>
         <label>
           Price

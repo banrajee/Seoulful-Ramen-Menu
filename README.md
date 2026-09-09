@@ -18,6 +18,16 @@ This project intentionally does not include carts, ordering, payments, receipts,
 - `.env.example` shows the required environment variables.
 - `public/ramen-hero.png` is the illustrated menu artwork used on the public menu.
 
+## Product descriptions
+
+Descriptions should be researched from product packaging, official/supplier information, or manually checked by the shop owner before publishing. Trusted product listings may also be used when they clearly match the exact product and flavour. Do not infer descriptions from a product name or image alone.
+
+Keep descriptions short, helpful, and customer-friendly, ideally one short sentence. Do not use claims such as “best-selling,” “healthy,” “authentic,” or “traditional” unless verified. Record the source and exact product/flavour when researching copy. Existing sample and seed descriptions are not a verified product reference; review them before publishing. This feature update does not research or replace existing copy.
+
+The owner can add, edit, or clear the optional **Short description** when adding or editing any menu item. Descriptions appear below item names in smaller, lighter text; empty or whitespace-only descriptions render nothing. Keep shared drink information on the main item and use **Variant description** only for verified flavour-specific details.
+
+For an existing database, run `supabase/add-menu-descriptions.sql` in the Supabase SQL Editor before using variant descriptions. It adds `menu_items.description` if missing and optional `item_variants.description`, preserving existing values. New databases include both fields in `supabase/schema.sql`.
+
 ## Run Locally
 
 ```powershell
