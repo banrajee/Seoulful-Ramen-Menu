@@ -3421,3 +3421,38 @@ select:disabled {
   text-transform: none;
   overflow-wrap: anywhere;
 }
+
+/* Customer menu readability, including mobile layouts. */
+.refined-menu-shell .ramen-product-copy h3,
+.refined-menu-shell .drinks-list h3,
+.refined-menu-shell .drinks-list h4,
+.refined-menu-shell .snacks-list h3,
+.refined-menu-shell .refined-addons-list h3 {
+  font-size: clamp(1.125rem, 1.3vw, 1.3rem);
+  line-height: 1.35;
+  font-weight: 700;
+  color: #09262a;
+  overflow-wrap: anywhere;
+}
+
+.refined-menu-shell .menu-item-description {
+  font-size: clamp(1rem, 1.15vw, 1.1rem);
+  line-height: 1.45;
+  color: #30403e;
+}
+
+.refined-menu-shell .dual-price-stack span {
+  font-size: 0.95rem;
+  line-height: 1.4;
+  font-weight: 600;
+  color: #30403e;
+}
+
+.ramen-name-price .ramen-inline-price {
+  display: inline-block;
+  margin-left: 0.3em;
+  white-space: nowrap;
+  font-size: inherit;
+  font-weight: 800;
+  color: #09262a;
+}

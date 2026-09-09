@@ -239,16 +239,16 @@ function RamenProductCard({ item }: { item: MenuItem }) {
       <div className="ramen-product-copy">
         <div className="ramen-title-row">
           <div className="ramen-text-stack">
-            <h3>{item.name}</h3>
+            <h3 className="ramen-name-price">
+              {item.name}{" "}
+              <span className="ramen-inline-price">{money(isDualPrice(item) ? selfCookPrice(item) : item.price)}</span>
+            </h3>
             <ItemDescription description={item.description} />
             {isDualPrice(item) ? (
               <div className="dual-price-stack">
                 <span>Packet Only: {money(packetOnlyPrice(item))}</span>
-                <strong>Self-Cook Bowl: {money(selfCookPrice(item))}</strong>
               </div>
-            ) : (
-              <strong>{money(item.price)}</strong>
-            )}
+            ) : null}
           </div>
           <div className="ramen-meta-stack">
             {item.food_type ? (
@@ -492,8 +492,8 @@ export function LiveMenu({ activePage = "ramen" }: { activePage?: MenuPageType }
             <section className="ramen-section" aria-label="Ramen and Ramyeon">
               <h2>Ramen / Ramyeon</h2>
               <p className="ramen-price-note">
-                Packet Only is for takeaway packet purchase. Self-Cook Bowl includes bowl, cutlery, and self-cook station
-                access.
+                The price beside each ramen includes a bowl, cutlery, and self-cook station access.
+                Packet Only is for takeaway packet purchase.
               </p>
 
               <div className="ramen-product-grid">
@@ -594,8 +594,8 @@ export function LiveMenu({ activePage = "ramen" }: { activePage?: MenuPageType }
 
         <footer>
           <span>
-            For ramen, choose Packet Only or Self-Cook Bowl. Self-Cook Bowl includes disposable bowl, cutlery, and
-            access to the self-cook station. Cup and ice are optional for drinks and may be charged separately.
+            Ramen prices include a disposable bowl, cutlery, and access to the self-cook station.
+            Packet Only prices are for takeaway packets. Cup and ice are optional for drinks and may be charged separately.
           </span>
         </footer>
       </section>
