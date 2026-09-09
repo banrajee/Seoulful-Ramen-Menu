@@ -2912,6 +2912,21 @@ select:disabled {
   object-fit: contain;
 }
 
+/* Mask the baked-in backdrops without altering product artwork or label text. */
+.snacks-list img[src*="/stir-fried-kimchi.png"] {
+  height: auto;
+  aspect-ratio: 3 / 2;
+  mask: url('/menu-products/kimchi-mask.svg') center / 100% 100% no-repeat;
+}
+
+.snacks-list img[src*="/noriko-braised-tofu-stick-snack.png"] {
+  width: 38.67px;
+  height: auto;
+  aspect-ratio: 2 / 3;
+  justify-self: center;
+  mask: url('/menu-products/tofu-stick-mask.svg') center / 100% 100% no-repeat;
+}
+
 .drinks-list .variant-list span,
 .snacks-list .variant-list span {
   display: inline;

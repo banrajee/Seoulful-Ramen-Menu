@@ -80,6 +80,18 @@ Restart the dev server after adding or changing environment variables.
 
 ## Deploy to Vercel
 
+### Keep GitHub and Vercel consistent
+
+Use the connected GitHub repository as the source for routine deployments. A direct Vercel deployment does not update GitHub; a later GitHub deployment replaces it with the repository's files.
+
+Product images belong in `public/menu-products/`. Upload the extracted PNG/SVG files, not a ZIP; GitHub does not unpack archives into website assets. GitHub browser uploads allow up to 25 MiB per file and 100 files per upload. Our image ZIP exceeds that per-file limit, but individual images do not. Prefer GitHub Desktop: clone the repository, copy changes into that checkout, review changes, commit, and push. On a new PC, clone that same repository instead of assembling a fresh set of folders.
+
+`npm run build` now runs `scripts/prepare-menu-assets.mjs` before Next.js. It checks `scripts/required-menu-assets.json`, recovers missing canonical files from the old top-level `menu-products/` or legacy public folders, and stops the build if an expected image or mask is missing or invalid. Existing canonical images take precedence. Keep this build command in Vercel; bypassing it with `next build` bypasses the check. Add new bundled images to the manifest. This validates bundled assets, not arbitrary image URLs entered later in Supabase.
+
+Keep the two snack masks in `public/menu-products/` and the associated styles in `src/app/globals.css` together. Prices, descriptions, stock, and saved image URLs live in Supabase; the local image files live in the website deployment. Changing a database path cannot upload an image file.
+
+Before considering a deployment finished, check both `/` and `/k-snacks`. The known missing product photos (Shin Kimchi, Shin Toomba, Ottogi Jin Mild and Spicy) still need real source images and are not included in the required-assets manifest.
+
 1. Push the project to GitHub.
 2. In [Vercel](https://vercel.com), click `Add New` > `Project`.
 3. Import the repository.
