@@ -1449,16 +1449,16 @@ select:disabled {
   display: grid;
   justify-items: center;
   justify-content: center;
-  justify-self: end;
-  gap: 1px;
+  justify-self: center;
+  gap: 2px;
   width: max-content;
   max-width: 100%;
-  margin-top: 2px;
+  margin-top: 0;
 }
 
 @media (max-width: 760px) {
   .refined-menu-shell .ramen-meta-stack {
-    margin-top: 1px;
+    margin-top: 0;
   }
 }
 
@@ -3522,7 +3522,32 @@ select:disabled {
 }
 
 .refined-menu-shell .ramen-product-copy {
-  gap: 4px;
+  grid-template-columns: minmax(0, 1fr) max-content;
+  align-items: start;
+  gap: 8px 12px;
+}
+
+.refined-menu-shell .ramen-side-stack {
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  justify-self: end;
+  gap: 8px;
+  min-width: 112px;
+}
+
+.refined-menu-shell .ramen-side-stack .ramen-inline-price {
+  justify-self: end;
+  color: #09262a;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: clamp(1.125rem, 1.3vw, 1.3rem);
+  line-height: 1.35;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.refined-menu-shell .ramen-product-copy .status-pill {
+  grid-column: 1 / -1;
 }
 
 @media (max-width: 760px) {
@@ -3532,5 +3557,14 @@ select:disabled {
 
   .refined-menu-shell .ramen-product-media.has-image {
     padding-top: 2px;
+  }
+
+  .refined-menu-shell .ramen-product-copy {
+    gap: 7px 8px;
+  }
+
+  .refined-menu-shell .ramen-side-stack {
+    gap: 6px;
+    min-width: 96px;
   }
 }

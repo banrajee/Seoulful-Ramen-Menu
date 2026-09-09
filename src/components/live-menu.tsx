@@ -237,28 +237,27 @@ function RamenProductCard({ item }: { item: MenuItem }) {
       </div>
 
       <div className="ramen-product-copy">
-        <div className="ramen-title-row">
-          <div className="ramen-text-stack">
-            <h3 className="ramen-name-price">
-              <span>{item.name}</span>
-              <span className="ramen-inline-price">{money(isDualPrice(item) ? selfCookPrice(item) : item.price)}</span>
-            </h3>
-            <ItemDescription description={item.description} />
-            {isDualPrice(item) ? (
-              <div className="dual-price-stack">
-                <span>Packet Only: {money(packetOnlyPrice(item))}</span>
-              </div>
-            ) : null}
-          </div>
-        </div>
-        <div className="ramen-meta-stack">
-          {item.food_type ? (
-            <span
-              className={`food-marker ${item.food_type}`}
-              aria-label={item.food_type === "veg" ? "Vegetarian" : "Non-vegetarian"}
-            />
+        <div className="ramen-text-stack">
+          <h3>{item.name}</h3>
+          <ItemDescription description={item.description} />
+          {isDualPrice(item) ? (
+            <div className="dual-price-stack">
+              <span>Packet Only: {money(packetOnlyPrice(item))}</span>
+            </div>
           ) : null}
-          <SpiceRow level={level} />
+        </div>
+
+        <div className="ramen-side-stack">
+          <strong className="ramen-inline-price">{money(isDualPrice(item) ? selfCookPrice(item) : item.price)}</strong>
+          <div className="ramen-meta-stack">
+            {item.food_type ? (
+              <span
+                className={`food-marker ${item.food_type}`}
+                aria-label={item.food_type === "veg" ? "Vegetarian" : "Non-vegetarian"}
+              />
+            ) : null}
+            <SpiceRow level={level} />
+          </div>
         </div>
         {item.status === "out_of_stock" ? <span className="status-pill">Out of Stock</span> : null}
       </div>
