@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowDown, ArrowUp, Eye, EyeOff, LogOut, Plus, Save, Trash2 } from "lucide-react";
+import { ArrowDown, ArrowUp, Eye, EyeOff, LogOut, Plus, Save, Search, Trash2 } from "lucide-react";
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import {
   deleteItem,
@@ -544,6 +544,17 @@ function DashboardBody({
   toggleOutOfStockVisibility,
   startNewItem
 }: DashboardBodyProps) {
+  const [itemSearch, setItemSearch] = useState("");
+  const searchTerms = itemSearch.trim().toLowerCase().split(/\s+/).filter(Boolean);
+  const matchingItems = menuData.items.filter((item) => {
+    const text = [item.name, item.description,
+      menuData.categories.find((category) => category.id === item.category_id)?.name,
+      sectionLabels[sectionForCategory(item.category_id)],
+      ...menuData.variants.filter((variant) => variant.menu_item_id === item.id)
+        .map((variant) => `${variant.variant_name} ${variant.description ?? ""}`)
+    ].join(" ").toLowerCase();
+    return searchTerms.every((term) => text.includes(term));
+  });
   const categoryFilter = categoryIdsForForm(editorSection);
   const categoryOptions = categoryFilter
     ? menuData.categories.filter((category) => categoryFilter.includes(category.id))
@@ -774,9 +785,31 @@ function DashboardBody({
             </button>
           </div>
 
+          <div className="menu-search" role="search" aria-label="Search dashboard menu items">
+            <div className="menu-search-field">
+              <Search size={20} aria-hidden="true" />
+              <input
+                type="search"
+                aria-label="Search menu items"
+                placeholder="Search items, categories or flavours…"
+                value={itemSearch}
+                onChange={(event) => setItemSearch(event.target.value)}
+              />
+              {itemSearch ? <button type="button" onClick={() => setItemSearch("")}>Clear</button> : null}
+            </div>
+            <p className="menu-search-status" role="status">
+              {searchTerms.length > 0
+                ? matchingItems.length > 0
+                  ? `${matchingItems.length} item${matchingItems.length === 1 ? "" : "s"} found`
+                  : "No items found. Try another name or clear your search."
+                : "Search across ramen, drinks, K-Snacks and add-ons, including hidden and out-of-stock items."}
+            </p>
+          </div>
+
           <div className="owner-sections">
             {(["ramen", "addons", "drinks", "snacks"] as DashboardSection[]).map((section) => {
-              const sectionItems = itemsForSection(menuData.items, section);
+              const sectionItems = itemsForSection(matchingItems, section);
+              if (searchTerms.length > 0 && sectionItems.length === 0) return null;
 
               return (
                 <section className="owner-menu-section" key={section}>
