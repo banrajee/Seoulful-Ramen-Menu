@@ -184,13 +184,17 @@ function productImageKey(name: string) {
 }
 
 const localProductImageAliases: Record<string, string> = {
-  "broad-noodles-spicy-hot-flavour": "/menu-products/broad-noodles-spicy-hot-halal.png"
+  "broad-noodles-spicy-hot-flavour": "/menu-products/broad-noodles-spicy-hot-halal.png",
+  "samyang-quattro-cheese": "/menu-products/samyang-quattro-cheese-halal.png",
+  "samyang-quattro-cheese-halal": "/menu-products/samyang-quattro-cheese-halal.png",
+  "samyang-buldak-quattro-cheese-halal": "/menu-products/samyang-quattro-cheese-halal.png"
 };
 
 function productImageCandidates(item: MenuItem) {
   const imageKey = productImageKey(item.name);
-  const localImage = localProductImageAliases[imageKey] ?? `/menu-products/${imageKey}.png`;
-  const candidates = [item.image_url, localImage];
+  const localAlias = localProductImageAliases[imageKey];
+  const localImage = localAlias ?? `/menu-products/${imageKey}.png`;
+  const candidates = localAlias ? [localAlias, item.image_url] : [item.image_url, localImage];
   const filename = item.image_url?.split("/").pop();
 
   if (filename) {
