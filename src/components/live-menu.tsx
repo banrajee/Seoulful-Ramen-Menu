@@ -240,7 +240,7 @@ function RamenProductCard({ item }: { item: MenuItem }) {
         <div className="ramen-title-row">
           <div className="ramen-text-stack">
             <h3 className="ramen-name-price">
-              {item.name}{" "}
+              <span>{item.name}</span>
               <span className="ramen-inline-price">{money(isDualPrice(item) ? selfCookPrice(item) : item.price)}</span>
             </h3>
             <ItemDescription description={item.description} />
@@ -279,9 +279,11 @@ function SnackProductCard({ item, variants }: { item: MenuItem; variants: ItemVa
       <div>
         <div className="snack-title-row">
           <div className="snack-text-stack">
-            <h3>{item.name}</h3>
+            <div className="menu-name-price-row">
+              <h3>{item.name}</h3>
+              <strong>{compactPriceLabel(item, variants)}</strong>
+            </div>
             <ItemDescription description={item.description} />
-            <strong>{compactPriceLabel(item, variants)}</strong>
           </div>
           <div className="snack-meta-stack">
             {item.food_type ? (
@@ -556,9 +558,11 @@ export function LiveMenu({ activePage = "ramen" }: { activePage?: MenuPageType }
                             <article className={`${item.status} ${hasProductImage ? "has-image" : "no-image"}`} key={item.id}>
                               {hasProductImage ? <img src={item.image_url ?? ""} alt={item.name} /> : null}
                               <div>
-                                <h4>{item.name}</h4>
+                                <div className="menu-name-price-row">
+                                  <h4>{item.name}</h4>
+                                  <strong>{compactPriceLabel(item, variants)}</strong>
+                                </div>
                                 <ItemDescription description={item.description} />
-                                <strong>{compactPriceLabel(item, variants)}</strong>
                                 {item.status === "out_of_stock" ? <em>Out of Stock</em> : null}
                                 <VariantList variants={variants} />
                               </div>

@@ -3448,11 +3448,43 @@ select:disabled {
   color: #30403e;
 }
 
+.ramen-name-price,
+.menu-name-price-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) max-content;
+  align-items: start;
+  gap: 12px;
+  width: 100%;
+}
+
+.ramen-name-price > span:first-child,
+.menu-name-price-row h3,
+.menu-name-price-row h4 {
+  min-width: 0;
+}
+
 .ramen-name-price .ramen-inline-price {
-  display: inline-block;
-  margin-left: 0.3em;
+  justify-self: end;
   white-space: nowrap;
   font-size: inherit;
   font-weight: 800;
   color: #09262a;
+}
+
+.refined-menu-shell .menu-name-price-row > strong {
+  display: block;
+  justify-self: end;
+  margin: 0;
+  white-space: nowrap;
+  font-size: clamp(1.125rem, 1.3vw, 1.3rem);
+  line-height: 1.35;
+  font-weight: 800;
+  color: #09262a;
+}
+
+@media (max-width: 760px) {
+  .ramen-name-price,
+  .menu-name-price-row {
+    gap: 10px;
+  }
 }
