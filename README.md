@@ -6,6 +6,7 @@ This project intentionally does not include carts, ordering, payments, receipts,
 
 ## Important Files
 
+- [Owner's Manual](docs/MENU-OWNER-MANUAL.md) is the step-by-step, non-technical guide for images, dashboard updates, Supabase, deployment, verification, and troubleshooting.
 - `src/app/page.tsx` loads the public QR menu page.
 - `src/components/live-menu.tsx` renders the customer-facing mobile menu and listens for Supabase realtime changes.
 - `src/app/owner/page.tsx` loads the owner dashboard route at `/owner`.
@@ -90,7 +91,7 @@ Product images belong in `public/menu-products/`. Upload the extracted PNG/SVG f
 
 Keep the two snack masks in `public/menu-products/` and the associated styles in `src/app/globals.css` together. Prices, descriptions, stock, and saved image URLs live in Supabase; the local image files live in the website deployment. Changing a database path cannot upload an image file.
 
-Before considering a deployment finished, check both `/` and `/k-snacks`. The known missing product photos (Shin Kimchi, Shin Toomba, Ottogi Jin Mild and Spicy) still need real source images and are not included in the required-assets manifest.
+Before considering a deployment finished, check `/`, `/drinks`, and `/k-snacks`.
 
 1. Push the project to GitHub.
 2. In [Vercel](https://vercel.com), click `Add New` > `Project`.
