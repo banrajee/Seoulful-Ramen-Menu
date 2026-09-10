@@ -3582,15 +3582,16 @@ select:disabled {
 }
 
 .refined-menu-shell .snacks-list > article > img {
-  width: 4.75rem;
-  height: 4.75rem;
+  width: 5rem;
+  height: 5rem;
   justify-self: center;
   mask: none;
   aspect-ratio: auto;
   transform-origin: center;
 }
 
-.refined-menu-shell .snacks-list img[src*="/stir-fried-kimchi.png"] {
+.refined-menu-shell .snacks-list img[src*="/stir-fried-kimchi.png"],
+.refined-menu-shell .snacks-list img[src*="/big-sheet.png"] {
   width: 6rem;
   height: 6rem;
 }
@@ -3610,11 +3611,12 @@ select:disabled {
   }
 
   .refined-menu-shell .snacks-list > article > img {
-    width: 5.25rem;
-    height: 5.25rem;
+    width: 5.5rem;
+    height: 5.5rem;
   }
 
-  .refined-menu-shell .snacks-list img[src*="/stir-fried-kimchi.png"] {
+  .refined-menu-shell .snacks-list img[src*="/stir-fried-kimchi.png"],
+  .refined-menu-shell .snacks-list img[src*="/big-sheet.png"] {
     width: 6.25rem;
     height: 6.25rem;
   }
