@@ -1160,6 +1160,10 @@ select:disabled {
   align-items: center;
 }
 
+.owner-item-actions.automatic-order-actions {
+  grid-template-columns: minmax(150px, 190px) 76px 42px;
+}
+
 .variant-panel {
   display: grid;
   gap: 12px;

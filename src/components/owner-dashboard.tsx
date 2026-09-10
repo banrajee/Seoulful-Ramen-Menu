@@ -854,7 +854,7 @@ function DashboardBody({
                           ) : null}
                         </div>
 
-                        <div className="owner-item-actions">
+                        <div className={`owner-item-actions ${section === "ramen" ? "automatic-order-actions" : ""}`}>
                           {section !== "ramen" ? (
                             <>
                               <button disabled={!liveEditing} onClick={() => moveItem(item, -1)} title="Move up" type="button">
