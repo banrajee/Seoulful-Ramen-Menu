@@ -101,11 +101,11 @@ function addonClass(item: MenuItem) {
 
 function addonImage(item: MenuItem) {
   const name = item.name.toLowerCase();
-  if (name.includes("chicken dumpling")) return "/menu-products/addon-chicken-dumplings.png";
-  if (name.includes("sausage corn dog")) return "/menu-products/addon-sausage-corn-dog.png";
+  if (name.includes("chicken dumpling")) return "/addon-chicken-dumplings.png";
+  if (name.includes("sausage corn dog")) return "/addon-sausage-corn-dog.png";
   if (name.includes("raw")) return "/addon-raw-egg.png";
   if (name.includes("boiled")) return "/addon-boiled-egg.png";
-  if (name.includes("corn dog")) return "/menu-products/addon-sausage-corn-dog.png";
+  if (name.includes("corn dog")) return "/addon-corn-dog.png";
   if (name.includes("corn")) return "/addon-corn.png";
   if (name.includes("cheese")) return "/addon-cheese.png";
   if (name.includes("spring onion")) return "/addon-spring-onions.png";

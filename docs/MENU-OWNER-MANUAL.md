@@ -8,13 +8,13 @@ The menu uses three services. Each one has a different job.
 
 | Service | What it stores | What you change there |
 | --- | --- | --- |
-| **GitHub** | Website code and actual product image files | Add or replace images in `public/menu-products/` |
+| **GitHub** | Website code and actual image files | Keep ramen and snack product photos in `public/menu-products/`; keep the established `addon-*.png` illustrations directly in `public/` |
 | **Supabase** | Menu item names, descriptions, prices, image paths, stock, spice level, food type, and order | Change these through the owner dashboard; use SQL only for a database upgrade |
 | **Vercel** | The published website built from GitHub | Check whether the latest GitHub commit deployed successfully |
 
 The most important rule is:
 
-> An image path in the dashboard does not upload an image. The actual image file must first exist in GitHub under `public/menu-products/`.
+> An image path in the dashboard does not upload an image. The actual image file must first exist in GitHub under `public/`. Ramen and snack photos use `public/menu-products/`; the established add-on illustrations use `public/addon-*.png`.
 
 For example:
 
@@ -30,7 +30,7 @@ Use this order whenever you add a new product:
 
 1. Prepare the image.
 2. Give it a safe filename.
-3. Upload it to GitHub in `public/menu-products/`.
+3. Upload it to the correct GitHub location: `public/menu-products/` for ramen and snack photos, or directly to `public/` for an established `addon-*.png` illustration.
 4. Wait for the GitHub deployment in Vercel to show **Ready**.
 5. Open the image's public address to confirm it works.
 6. Open `/owner`, add or edit the menu item, and enter its image path.
@@ -94,6 +94,8 @@ Windows often hides file extensions. Make sure the file is really `product-name.
 
 ## 4. Upload an image through the GitHub website
 
+For a ramen or K-Snack product photo, use `public/menu-products/`. For an add-on illustration whose filename begins with `addon-`, use `public/`, beside the existing add-on files.
+
 1. Open [the GitHub repository](https://github.com/banrajee/Seoulful-Ramen-Menu).
 2. Confirm the branch selector near the top says **main**.
 3. Open **public**.
@@ -123,13 +125,15 @@ Do not put new menu images in any of these locations:
 repository root
 ```
 
-The one permanent location is:
+The permanent location for ramen and K-Snack product photos is:
 
 ```text
 /public/menu-products/
 ```
 
 The build script can recover some older files from legacy folders, but that is an emergency safeguard, not the normal workflow.
+
+The add-on illustrations are intentionally different. Files such as `addon-corn-dog.png`, `addon-sausage-corn-dog.png`, and `addon-chicken-dumplings.png` belong directly inside `public/`, and their dashboard paths begin with `/addon-`.
 
 ## 5. Wait for and check the deployment
 
@@ -351,18 +355,21 @@ Open its direct public image address.
 - **Image opens correctly:** Recheck the menu item's Image URL and refresh the menu.
 - **Vercel deployment failed:** Open the deployment log and correct the filename named by the asset validator.
 
-For add-ons, upload the file to `public/menu-products/`, wait for deployment, then enter `/menu-products/your-filename.png` in that add-on's **Image URL** field. Uploading the picture alone does not create an add-on item; use **Add Add-Ons** if the named item does not already exist.
+The illustrated add-on files are an exception to the product-image folder rule. Existing files named `addon-*.png` live directly inside `public/`, so a new matching add-on illustration may be placed beside them. Its public path starts at the root, such as `/addon-example.png`. Ramen and K-Snack product photographs still belong in `public/menu-products/`.
+
+Uploading the picture alone does not create an add-on item. Use **Add Add-Ons** if the named item does not already exist, then enter the root path in its **Image URL** field. The menu also recognizes the established `addon-*.png` filenames automatically when the item name matches.
 
 Current examples:
 
 ```text
-Sausage Corn Dog: /menu-products/addon-sausage-corn-dog.png
-Chicken Dumplings: /menu-products/addon-chicken-dumplings.png
+Corn Dog: /addon-corn-dog.png
+Sausage Corn Dog: /addon-sausage-corn-dog.png
+Chicken Dumplings: /addon-chicken-dumplings.png
 ```
 
 ### Images disappear after a deployment
 
-Check that the deployment came from `banrajee/Seoulful-Ramen-Menu`, branch `main`, and contains the expected GitHub commit. Confirm every image exists under `public/menu-products/` in GitHub. Stop using a second local folder or direct Vercel upload as a different source.
+Check that the deployment came from `banrajee/Seoulful-Ramen-Menu`, branch `main`, and contains the expected GitHub commit. Confirm ramen and snack photos exist under `public/menu-products/`, and `addon-*.png` illustrations exist directly under `public/`. Stop using a second local folder or direct Vercel upload as a different source.
 
 ### The image is faded, cut out, or partly transparent
 
@@ -417,7 +424,7 @@ GitHub Desktop is safer for regular batches because you can see every changed fi
 3. Select `banrajee/Seoulful-Ramen-Menu`.
 4. Choose one permanent local folder.
 5. Before every editing session, click **Fetch origin**, then **Pull origin** if offered.
-6. Copy finished images into that clone's `public/menu-products/` folder.
+6. Copy ramen and snack photos into `public/menu-products/`. Copy an established `addon-*.png` illustration directly into `public/`.
 7. In GitHub Desktop, inspect the changed-files list. Make sure it contains only the intended files.
 8. Enter a clear summary and click **Commit to main**.
 9. Click **Push origin**.
@@ -464,7 +471,8 @@ Do not create a second hand-assembled copy of the project on a new PC. Clone the
 - Public menu: `https://seoulful-ramen-menu.vercel.app/`
 - Owner dashboard: `https://seoulful-ramen-menu.vercel.app/owner`
 - GitHub repository: `https://github.com/banrajee/Seoulful-Ramen-Menu`
-- Correct image folder: `public/menu-products/`
+- Ramen and K-Snack product-photo folder: `public/menu-products/`
+- Add-on illustration folder: `public/`
 
 If you remember only one sequence, remember this:
 

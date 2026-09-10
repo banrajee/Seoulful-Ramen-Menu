@@ -2278,6 +2278,21 @@ select:disabled {
   transform-origin: center;
 }
 
+/* KeeKoo source photos need individual presentation corrections at menu size. */
+.ramen-product-image[data-image-key="keekoo-2x-spicy"],
+.ramen-product-image[data-image-key="keekoo-korean-ramen-2x-spicy"],
+.ramen-product-image[data-image-key="kiko-2x-spicy"] {
+  mask: url('/menu-products/keekoo-2x-mask.svg') center / 100% 100% no-repeat;
+  transform: scale(0.94);
+  transform-origin: center;
+}
+
+.ramen-product-image[data-image-key="keekoo-spicy-cheese"],
+.ramen-product-image[data-image-key="kiko-spicy-cheese"] {
+  transform: scale(0.86);
+  transform-origin: center;
+}
+
 .ramen-product .ramen-pack {
   width: 94px;
   height: 82px;
