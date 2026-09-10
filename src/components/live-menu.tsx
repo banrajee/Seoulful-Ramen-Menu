@@ -101,9 +101,11 @@ function addonClass(item: MenuItem) {
 
 function addonImage(item: MenuItem) {
   const name = item.name.toLowerCase();
+  if (name.includes("chicken dumpling")) return "/menu-products/addon-chicken-dumplings.png";
+  if (name.includes("sausage corn dog")) return "/menu-products/addon-sausage-corn-dog.png";
   if (name.includes("raw")) return "/addon-raw-egg.png";
   if (name.includes("boiled")) return "/addon-boiled-egg.png";
-  if (name.includes("corn dog")) return "/addon-corn-dog.png";
+  if (name.includes("corn dog")) return "/menu-products/addon-sausage-corn-dog.png";
   if (name.includes("corn")) return "/addon-corn.png";
   if (name.includes("cheese")) return "/addon-cheese.png";
   if (name.includes("spring onion")) return "/addon-spring-onions.png";
@@ -113,16 +115,14 @@ function addonImage(item: MenuItem) {
 }
 
 function visibleRamenItems(menuData: MenuData) {
-  const categoryOrder = new Map(menuData.categories.map((category) => [category.id, category.sort_order]));
-
   return menuData.items
     .filter((item) => item.category_id === "ramen")
     .filter((item) => item.status !== "hidden")
     .filter((item) => menuData.settings.show_out_of_stock || item.status !== "out_of_stock")
     .sort((a, b) => {
-      const categoryDelta = (categoryOrder.get(a.category_id) ?? 99) - (categoryOrder.get(b.category_id) ?? 99);
-      if (categoryDelta !== 0) return categoryDelta;
-      return a.sort_order - b.sort_order;
+      const priceDelta = selfCookPrice(a) - selfCookPrice(b);
+      if (priceDelta !== 0) return priceDelta;
+      return a.name.localeCompare(b.name);
     });
 }
 
@@ -283,13 +283,11 @@ function SnackProductCard({ item, variants }: { item: MenuItem; variants: ItemVa
       <div>
         <div className="snack-title-row">
           <div className="snack-text-stack">
-            <div className="menu-name-price-row">
-              <h3>{item.name}</h3>
-              <strong>{compactPriceLabel(item, variants)}</strong>
-            </div>
+            <h3>{item.name}</h3>
             <ItemDescription description={item.description} />
           </div>
           <div className="snack-meta-stack">
+            <strong className="snack-inline-price">{compactPriceLabel(item, variants)}</strong>
             {item.food_type ? (
               <span
                 className={`food-marker ${item.food_type}`}
@@ -433,6 +431,8 @@ export function LiveMenu({ activePage = "ramen" }: { activePage?: MenuPageType }
       .filter((item) => menuData.settings.show_out_of_stock || item.status !== "out_of_stock")
       .sort((a, b) => a.sort_order - b.sort_order);
   }, [menuData]);
+  const regularSnacks = snacks.filter((item) => !item.name.toLowerCase().includes("yopokki"));
+  const yopokkiBowls = snacks.filter((item) => item.name.toLowerCase().includes("yopokki"));
 
   if (sessionState === "checking") return <MenuSessionChecking />;
   if (sessionState === "expired") return <MenuSessionExpired />;
@@ -514,12 +514,25 @@ export function LiveMenu({ activePage = "ramen" }: { activePage?: MenuPageType }
                 <h2>Add-Ons</h2>
                 <div className="addons-list refined-addons-list">
                   {addOns.map((item) => {
-                    const image = addonImage(item);
+                    const image = item.image_url || addonImage(item);
 
                     return (
                       <article key={item.id}>
                         {image ? (
-                          <img className={`addon-image ${addonClass(item)}`} src={image} alt="" aria-hidden="true" />
+                          <img
+                            className={`addon-image ${addonClass(item)}`}
+                            src={image}
+                            alt=""
+                            aria-hidden="true"
+                            onError={(event) => {
+                              const fallback = addonImage(item);
+                              if (fallback && !event.currentTarget.src.endsWith(fallback)) {
+                                event.currentTarget.src = fallback;
+                              } else {
+                                event.currentTarget.style.display = "none";
+                              }
+                            }}
+                          />
                         ) : (
                           <span className={`addon-icon ${addonClass(item)}`} aria-hidden="true" />
                         )}
@@ -582,11 +595,22 @@ export function LiveMenu({ activePage = "ramen" }: { activePage?: MenuPageType }
           </section>
         ) : null}
 
-        {activePage === "snacks" && snacks.length > 0 ? (
+        {activePage === "snacks" && regularSnacks.length > 0 ? (
           <section className="snacks-section" aria-label="K-Snacks and Sides">
             <h2>K-Snacks &amp; Sides</h2>
             <div className="snacks-list">
-              {snacks.map((item) => (
+              {regularSnacks.map((item) => (
+                <SnackProductCard item={item} key={item.id} variants={visibleVariantsForItem(menuData, item)} />
+              ))}
+            </div>
+          </section>
+        ) : null}
+
+        {activePage === "snacks" && yopokkiBowls.length > 0 ? (
+          <section className="snacks-section yopokki-section" aria-label="Yopokki Bowls">
+            <h2>Yopokki Bowls</h2>
+            <div className="snacks-list">
+              {yopokkiBowls.map((item) => (
                 <SnackProductCard item={item} key={item.id} variants={visibleVariantsForItem(menuData, item)} />
               ))}
             </div>

@@ -139,12 +139,17 @@ function orderedVariants(variants: ItemVariant[]) {
 
 function itemsForSection(items: MenuItem[], section: DashboardSection) {
   if (section === "ramen") {
-    return orderedItems(items).filter(
-      (item) =>
-        !sectionCategoryIds.addons.includes(item.category_id) &&
-        !sectionCategoryIds.drinks.includes(item.category_id) &&
-        !sectionCategoryIds.snacks.includes(item.category_id)
-    );
+    return items
+      .filter(
+        (item) =>
+          !sectionCategoryIds.addons.includes(item.category_id) &&
+          !sectionCategoryIds.drinks.includes(item.category_id) &&
+          !sectionCategoryIds.snacks.includes(item.category_id)
+      )
+      .sort((a, b) => {
+        const priceDelta = Number(a.self_cook_price ?? a.price) - Number(b.self_cook_price ?? b.price);
+        return priceDelta || a.name.localeCompare(b.name);
+      });
   }
 
   return orderedItems(items).filter((item) => sectionCategoryIds[section].includes(item.category_id));
@@ -675,16 +680,18 @@ function DashboardBody({
         )}
 
         <div className="two-columns">
-          <label>
-            Order
-            <input
-              min="1"
-              type="number"
-              value={draft.sort_order}
-              onChange={(event) => setDraft({ ...draft, sort_order: Number(event.target.value) })}
-              required
-            />
-          </label>
+          {!isRamenEditor ? (
+            <label>
+              Order
+              <input
+                min="1"
+                type="number"
+                value={draft.sort_order}
+                onChange={(event) => setDraft({ ...draft, sort_order: Number(event.target.value) })}
+                required
+              />
+            </label>
+          ) : null}
 
           {canSetFoodType ? (
             <label>
@@ -699,6 +706,8 @@ function DashboardBody({
             </label>
           ) : null}
         </div>
+
+        {isRamenEditor ? <small>Ramen order is automatic: lowest bowl price first, then alphabetical within the same price.</small> : null}
 
         {showCategoryField ? (
           <label>
@@ -846,12 +855,16 @@ function DashboardBody({
                         </div>
 
                         <div className="owner-item-actions">
-                          <button disabled={!liveEditing} onClick={() => moveItem(item, -1)} title="Move up" type="button">
-                            <ArrowUp size={16} />
-                          </button>
-                          <button disabled={!liveEditing} onClick={() => moveItem(item, 1)} title="Move down" type="button">
-                            <ArrowDown size={16} />
-                          </button>
+                          {section !== "ramen" ? (
+                            <>
+                              <button disabled={!liveEditing} onClick={() => moveItem(item, -1)} title="Move up" type="button">
+                                <ArrowUp size={16} />
+                              </button>
+                              <button disabled={!liveEditing} onClick={() => moveItem(item, 1)} title="Move down" type="button">
+                                <ArrowDown size={16} />
+                              </button>
+                            </>
+                          ) : null}
                           <select
                             disabled={!liveEditing}
                             value={item.status}

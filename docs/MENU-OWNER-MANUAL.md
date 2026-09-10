@@ -172,7 +172,7 @@ The public menu updates immediately after most dashboard changes because the men
    - **Short description:** one short, verified explanation.
    - **Packet Only Price / Self-Cook Bowl Price:** shown for ramen in the dashboard.
    - **Price:** used for add-ons, drinks, and K-Snacks.
-   - **Order:** a smaller number places an item earlier within its category.
+   - **Order:** a smaller number places a non-ramen item earlier within its category. Ramen are ordered automatically by bowl price and then by name.
    - **Veg / Non-Veg:** available for ramen and K-Snacks.
    - **Category:** shown where the section has category choices, including drink groups.
    - **Image URL:** normally `/menu-products/filename.png`.
@@ -214,7 +214,7 @@ Prepare, upload, deploy, and directly test the image as described above.
 
 8. Set food type and spice level where applicable.
 9. Choose **Available**, **Out of Stock**, or **Hidden**. Use Hidden if you want to finish checking the item before customers see it.
-10. Enter its order number.
+10. Enter its order number when the field is shown. Ramen do not need one because their order is automatic.
 11. Click **Save Item**.
 12. If it needs flavours or variants, edit the newly saved main item and add them under **Flavours / Variants**.
 13. Check the public menu on both desktop and mobile.
@@ -350,6 +350,15 @@ Open its direct public image address.
 - **404:** The file is missing, in the wrong folder, or the name/case/extension does not match the dashboard path.
 - **Image opens correctly:** Recheck the menu item's Image URL and refresh the menu.
 - **Vercel deployment failed:** Open the deployment log and correct the filename named by the asset validator.
+
+For add-ons, upload the file to `public/menu-products/`, wait for deployment, then enter `/menu-products/your-filename.png` in that add-on's **Image URL** field. Uploading the picture alone does not create an add-on item; use **Add Add-Ons** if the named item does not already exist.
+
+Current examples:
+
+```text
+Sausage Corn Dog: /menu-products/addon-sausage-corn-dog.png
+Chicken Dumplings: /menu-products/addon-chicken-dumplings.png
+```
 
 ### Images disappear after a deployment
 

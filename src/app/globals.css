@@ -3019,6 +3019,15 @@ select:disabled {
   justify-self: end;
 }
 
+.snacks-list .snack-meta-stack .snack-inline-price {
+  margin: 0;
+  color: #09262a;
+  font-size: clamp(1.125rem, 1.3vw, 1.3rem);
+  line-height: 1.35;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
 .snacks-list .food-marker {
   display: block;
   width: 34px;
@@ -3459,7 +3468,17 @@ select:disabled {
   line-height: 1.35;
   font-weight: 700;
   color: #09262a;
-  overflow-wrap: anywhere;
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
+}
+
+/* Keep customer-facing product names on whole words in narrow iPhone and Android columns. */
+.refined-menu-shell .menu-name-price-row h3,
+.refined-menu-shell .menu-name-price-row h4 {
+  overflow-wrap: normal;
+  word-break: keep-all;
+  hyphens: none;
 }
 
 .refined-menu-shell .menu-item-description {
