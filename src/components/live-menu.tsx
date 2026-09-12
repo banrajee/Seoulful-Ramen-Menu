@@ -284,7 +284,6 @@ function SnackProductCard({ item, variants }: { item: MenuItem; variants: ItemVa
         <div className="snack-title-row">
           <div className="snack-text-stack">
             <h3>{item.name}</h3>
-            <ItemDescription description={item.description} />
           </div>
           <div className="snack-meta-stack">
             <strong className="snack-inline-price">{compactPriceLabel(item, variants)}</strong>
@@ -296,6 +295,7 @@ function SnackProductCard({ item, variants }: { item: MenuItem; variants: ItemVa
             ) : null}
             <SpiceRow level={level} />
           </div>
+          <ItemDescription description={item.description} />
         </div>
         {item.status === "out_of_stock" ? <em>Out of Stock</em> : null}
         <VariantList variants={variants} />

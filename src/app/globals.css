@@ -3031,6 +3031,10 @@ select:disabled {
   min-width: 0;
 }
 
+.snack-title-row > .menu-item-description {
+  grid-column: 1 / -1;
+}
+
 .snack-meta-stack {
   display: grid;
   justify-items: center;
@@ -3663,5 +3667,189 @@ select:disabled {
   .refined-menu-shell .snacks-list img[src*="/noriko-tofu-curd-skewer-snack.png"] {
     width: 6.25rem;
     height: 6.25rem;
+  }
+}
+
+/* Responsive safeguards for the customer menu and owner dashboard. */
+.owner-item > div,
+.owner-menu-section,
+.items-panel,
+.item-form,
+.variant-item > div {
+  min-width: 0;
+}
+
+/* Two cards per row only when the dashboard has enough usable width for them. */
+@media (min-width: 900px) and (max-width: 1599px) {
+  .owner-menu-section .owner-items,
+  .owner-menu-section:first-child .owner-items {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Stack card actions on tablets and compact laptops instead of squeezing item names. */
+@media (min-width: 761px) and (max-width: 1279px) {
+  .owner-item {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: stretch;
+  }
+
+  .owner-item-actions {
+    justify-self: start;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 760px) {
+  .owner-header > div {
+    min-width: 0;
+  }
+
+  .owner-panel h1 {
+    overflow-wrap: anywhere;
+  }
+
+  .owner-item-actions,
+  .owner-item-actions.automatic-order-actions,
+  .variant-actions {
+    width: 100%;
+  }
+
+  .form-actions button {
+    flex: 1 1 12rem;
+    min-height: 46px;
+  }
+}
+
+@media (max-width: 480px) {
+  .refined-menu-shell {
+    padding-inline: 10px;
+  }
+
+  .ramen-section,
+  .drinks-section,
+  .snacks-section,
+  .refined-addons-bar {
+    padding-inline: 10px;
+  }
+
+  .ramen-section > h2,
+  .drinks-section > h2,
+  .snacks-section > h2,
+  .refined-addons-bar > h2 {
+    min-width: 0;
+    width: min(92%, 310px);
+    padding-inline: 14px;
+  }
+
+  .refined-menu-shell .ramen-product.has-image {
+    grid-template-columns: 76px minmax(0, 1fr);
+    gap: 8px;
+  }
+
+  .refined-menu-shell .ramen-product-image,
+  .refined-menu-shell .ramen-product .ramen-pack {
+    width: 72px;
+    height: 68px;
+  }
+
+  .refined-menu-shell .ramen-product-copy {
+    gap: 6px;
+  }
+
+  .refined-menu-shell .ramen-side-stack {
+    min-width: 78px;
+    gap: 5px;
+  }
+
+  .refined-menu-shell .ramen-side-stack .spice-row,
+  .refined-menu-shell .snack-meta-stack .spice-row {
+    gap: 1px;
+    min-height: 18px;
+  }
+
+  .refined-menu-shell .ramen-side-stack .spice-row img,
+  .refined-menu-shell .snack-meta-stack .spice-row img {
+    width: 14px;
+    height: 14px;
+  }
+
+  .refined-menu-shell .ramen-side-stack .food-marker,
+  .refined-menu-shell .snack-meta-stack .food-marker {
+    width: 32px;
+    height: 32px;
+    background-size: 64px 32px;
+  }
+
+  .refined-menu-shell .snacks-list article.has-image {
+    grid-template-columns: 4.75rem minmax(0, 1fr);
+    gap: 0.5rem;
+    min-height: 5rem;
+  }
+
+  .refined-menu-shell .snacks-list > article > img {
+    width: 4.5rem;
+    height: 4.5rem;
+    align-self: start;
+    margin-top: 0.25rem;
+  }
+
+  .refined-menu-shell .snacks-list img[src*="/stir-fried-kimchi.png"],
+  .refined-menu-shell .snacks-list img[src*="/big-sheet.png"],
+  .refined-menu-shell .snacks-list img[src*="/noriko-braised-tofu-stick-snack.png"],
+  .refined-menu-shell .snacks-list img[src*="/noriko-tofu-curd-skewer-snack.png"] {
+    width: 5rem;
+    height: 5rem;
+  }
+
+  .menu-search-field {
+    gap: 7px;
+    padding-inline: 12px;
+  }
+
+  .menu-search-field button {
+    padding-inline: 4px;
+  }
+
+  .owner-panel,
+  .login-panel {
+    padding: 12px;
+  }
+
+  .item-form,
+  .items-panel,
+  .owner-menu-section,
+  .owner-item {
+    padding: 10px;
+  }
+
+  .owner-item-actions,
+  .owner-item-actions.automatic-order-actions,
+  .variant-actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .owner-item-actions select,
+  .variant-actions select {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 360px) {
+  .owner-add-toolbar {
+    grid-template-columns: 1fr;
+  }
+
+  .refined-addons-list article {
+    grid-template-columns: 92px minmax(0, 1fr);
+    gap: 8px;
+  }
+
+  .refined-addons-list .addon-image,
+  .refined-addons-list .addon-image.raw-egg,
+  .refined-addons-list .addon-image.corn,
+  .refined-addons-list .addon-image.corn-dog {
+    width: 88px;
+    height: 76px;
   }
 }
