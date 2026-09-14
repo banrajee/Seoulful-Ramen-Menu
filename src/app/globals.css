@@ -1150,13 +1150,21 @@ select:disabled {
   display: grid;
   grid-template-columns: minmax(190px, 250px) minmax(280px, 1fr);
   gap: 14px;
-  align-items: start;
+  align-items: end;
   margin-top: 16px;
 }
 
 .owner-list-tools .menu-search {
   width: 100%;
   margin: 0;
+}
+
+.owner-list-tools .menu-search-status {
+  min-height: 1.2em;
+  margin: 0 4px 7px;
+  color: #294145;
+  font-size: 0.85rem;
+  font-weight: 900;
 }
 
 .owner-status-filter {
@@ -1444,6 +1452,7 @@ select:disabled {
   .owner-list-tools {
     grid-template-columns: 1fr;
     gap: 10px;
+    align-items: stretch;
     margin-top: 14px;
   }
 

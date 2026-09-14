@@ -756,6 +756,15 @@ function DashboardBody({
             </label>
 
             <div className="menu-search" role="search" aria-label="Search dashboard menu items">
+              <p className="menu-search-status" role="status">
+                {searchTerms.length > 0
+                  ? matchingItems.length > 0
+                    ? `${matchingItems.length} ${activeStatusLabel} item${matchingItems.length === 1 ? "" : "s"} found`
+                    : `No ${activeStatusLabel} items found. Try another name or clear your search.`
+                  : itemStatusFilter === "all"
+                    ? "Search across ramen, drinks, K-Snacks and add-ons, including hidden and out-of-stock items."
+                    : `Showing ${matchingItems.length} ${activeStatusLabel} item${matchingItems.length === 1 ? "" : "s"}.`}
+              </p>
               <div className="menu-search-field">
                 <Search size={20} aria-hidden="true" />
                 <input
@@ -767,15 +776,6 @@ function DashboardBody({
                 />
                 {itemSearch ? <button type="button" onClick={() => setItemSearch("")}>Clear</button> : null}
               </div>
-              <p className="menu-search-status" role="status">
-                {searchTerms.length > 0
-                  ? matchingItems.length > 0
-                    ? `${matchingItems.length} ${activeStatusLabel} item${matchingItems.length === 1 ? "" : "s"} found`
-                    : `No ${activeStatusLabel} items found. Try another name or clear your search.`
-                  : itemStatusFilter === "all"
-                    ? "Search across ramen, drinks, K-Snacks and add-ons, including hidden and out-of-stock items."
-                    : `Showing ${matchingItems.length} ${activeStatusLabel} item${matchingItems.length === 1 ? "" : "s"}.`}
-              </p>
             </div>
           </div>
 
