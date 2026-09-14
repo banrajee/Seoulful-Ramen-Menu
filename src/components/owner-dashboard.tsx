@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowDown, ArrowUp, Eye, EyeOff, LogOut, Plus, Save, Search, Trash2 } from "lucide-react";
+import { Eye, EyeOff, LogOut, Plus, Save, Search, Trash2 } from "lucide-react";
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import {
   deleteItem,
@@ -8,9 +8,7 @@ import {
   fetchMenuData,
   saveItem,
   saveVariant,
-  updateItemOrder,
   updateItemStatus,
-  updateVariantOrder,
   updateVariantStatus,
   updateOutOfStockVisibility
 } from "@/lib/menu-service";
@@ -126,33 +124,33 @@ function createEmptyVariantDraft(menuItemId: string, sortOrder = 99): ItemVarian
   };
 }
 
-function orderedItems(items: MenuItem[]) {
-  return items.slice().sort((a, b) => {
-    if (a.category_id === b.category_id) return a.sort_order - b.sort_order;
-    return a.category_id.localeCompare(b.category_id);
+function orderedVariants(variants: ItemVariant[]) {
+  return variants.slice().sort((a, b) => {
+    const hiddenDelta = Number(a.status === "hidden") - Number(b.status === "hidden");
+    return hiddenDelta || Number(a.price) - Number(b.price) || a.variant_name.localeCompare(b.variant_name);
   });
 }
 
-function orderedVariants(variants: ItemVariant[]) {
-  return variants.slice().sort((a, b) => a.sort_order - b.sort_order);
+function automaticItemPrice(item: MenuItem, variants: ItemVariant[]) {
+  if (item.price_type === "dual") return Number(item.self_cook_price ?? item.price);
+  const variantPrices = variants.filter((variant) => variant.menu_item_id === item.id).map((variant) => Number(variant.price));
+  return variantPrices.length > 0 ? Math.min(...variantPrices) : Number(item.price);
 }
 
-function itemsForSection(items: MenuItem[], section: DashboardSection) {
-  if (section === "ramen") {
-    return items
-      .filter(
+function itemsForSection(items: MenuItem[], section: DashboardSection, variants: ItemVariant[] = []) {
+  const sectionItems = section === "ramen"
+    ? items.filter(
         (item) =>
           !sectionCategoryIds.addons.includes(item.category_id) &&
           !sectionCategoryIds.drinks.includes(item.category_id) &&
           !sectionCategoryIds.snacks.includes(item.category_id)
       )
-      .sort((a, b) => {
-        const priceDelta = Number(a.self_cook_price ?? a.price) - Number(b.self_cook_price ?? b.price);
-        return priceDelta || a.name.localeCompare(b.name);
-      });
-  }
+    : items.filter((item) => sectionCategoryIds[section].includes(item.category_id));
 
-  return orderedItems(items).filter((item) => sectionCategoryIds[section].includes(item.category_id));
+  return sectionItems.sort((a, b) => {
+    const hiddenDelta = Number(a.status === "hidden") - Number(b.status === "hidden");
+    return hiddenDelta || automaticItemPrice(a, variants) - automaticItemPrice(b, variants) || a.name.localeCompare(b.name);
+  });
 }
 
 function categoryIdsForForm(section: DashboardSection) {
@@ -331,26 +329,6 @@ export function OwnerDashboard() {
     }
   }
 
-  async function moveItem(item: MenuItem, direction: -1 | 1) {
-    const siblings = menuData.items
-      .filter((candidate) => candidate.category_id === item.category_id)
-      .sort((a, b) => a.sort_order - b.sort_order);
-    const currentIndex = siblings.findIndex((candidate) => candidate.id === item.id);
-    const neighbor = siblings[currentIndex + direction];
-
-    if (!neighbor) return;
-
-    try {
-      await Promise.all([
-        updateItemOrder(item.id, neighbor.sort_order),
-        updateItemOrder(neighbor.id, item.sort_order)
-      ]);
-      await loadData();
-    } catch (error) {
-      setMessage(error instanceof Error ? error.message : "Could not move item.");
-    }
-  }
-
   async function handleSaveVariant(variant: ItemVariant | ItemVariantDraft) {
     setBusy(true);
     setMessage("");
@@ -387,26 +365,6 @@ export function OwnerDashboard() {
       await loadData();
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Could not update variant status.");
-    }
-  }
-
-  async function moveVariant(variant: ItemVariant, direction: -1 | 1) {
-    const siblings = orderedVariants(
-      menuData.variants.filter((candidate) => candidate.menu_item_id === variant.menu_item_id)
-    );
-    const currentIndex = siblings.findIndex((candidate) => candidate.id === variant.id);
-    const neighbor = siblings[currentIndex + direction];
-
-    if (!neighbor) return;
-
-    try {
-      await Promise.all([
-        updateVariantOrder(variant.id, neighbor.sort_order),
-        updateVariantOrder(neighbor.id, variant.sort_order)
-      ]);
-      await loadData();
-    } catch (error) {
-      setMessage(error instanceof Error ? error.message : "Could not move variant.");
     }
   }
 
@@ -493,14 +451,12 @@ export function OwnerDashboard() {
           handleDelete={handleDelete}
           handleDeleteVariant={handleDeleteVariant}
           handleSaveVariant={handleSaveVariant}
-          moveItem={moveItem}
-          moveVariant={moveVariant}
           setStatus={setStatus}
           setVariantStatus={setVariantStatus}
           toggleOutOfStockVisibility={toggleOutOfStockVisibility}
           startNewItem={(section) => {
             setEditorSection(section);
-            setDraft(createEmptyDraft(section, itemsForSection(menuData.items, section).length + 1));
+            setDraft(createEmptyDraft(section));
           }}
         />
       </section>
@@ -521,8 +477,6 @@ type DashboardBodyProps = {
   handleDelete: (item: MenuItem) => void;
   handleDeleteVariant: (variant: ItemVariant) => void;
   handleSaveVariant: (variant: ItemVariant | ItemVariantDraft) => Promise<void>;
-  moveItem: (item: MenuItem, direction: -1 | 1) => void;
-  moveVariant: (variant: ItemVariant, direction: -1 | 1) => void;
   setStatus: (item: MenuItem, status: ItemStatus) => void;
   setVariantStatus: (variant: ItemVariant, status: ItemStatus) => void;
   toggleOutOfStockVisibility: () => void;
@@ -542,8 +496,6 @@ function DashboardBody({
   handleDelete,
   handleDeleteVariant,
   handleSaveVariant,
-  moveItem,
-  moveVariant,
   setStatus,
   setVariantStatus,
   toggleOutOfStockVisibility,
@@ -680,19 +632,6 @@ function DashboardBody({
         )}
 
         <div className="two-columns">
-          {!isRamenEditor ? (
-            <label>
-              Order
-              <input
-                min="1"
-                type="number"
-                value={draft.sort_order}
-                onChange={(event) => setDraft({ ...draft, sort_order: Number(event.target.value) })}
-                required
-              />
-            </label>
-          ) : null}
-
           {canSetFoodType ? (
             <label>
               Veg / Non-Veg
@@ -707,7 +646,7 @@ function DashboardBody({
           ) : null}
         </div>
 
-        {isRamenEditor ? <small>Ramen order is automatic: lowest bowl price first, then alphabetical within the same price.</small> : null}
+        <small>Menu order is automatic: lowest displayed price first, then alphabetical. Hidden items stay at the bottom until made visible.</small>
 
         {showCategoryField ? (
           <label>
@@ -759,7 +698,6 @@ function DashboardBody({
             busy={busy}
             itemId={draftId}
             onDeleteVariant={handleDeleteVariant}
-            onMoveVariant={moveVariant}
             onSaveVariant={handleSaveVariant}
             onSetVariantStatus={setVariantStatus}
             sectionLabel={sectionLabels[editorSection]}
@@ -817,7 +755,7 @@ function DashboardBody({
 
           <div className="owner-sections">
             {(["ramen", "addons", "drinks", "snacks"] as DashboardSection[]).map((section) => {
-              const sectionItems = itemsForSection(matchingItems, section);
+              const sectionItems = itemsForSection(matchingItems, section, menuData.variants);
               if (searchTerms.length > 0 && sectionItems.length === 0) return null;
 
               return (
@@ -854,17 +792,7 @@ function DashboardBody({
                           ) : null}
                         </div>
 
-                        <div className={`owner-item-actions ${section === "ramen" ? "automatic-order-actions" : ""}`}>
-                          {section !== "ramen" ? (
-                            <>
-                              <button disabled={!liveEditing} onClick={() => moveItem(item, -1)} title="Move up" type="button">
-                                <ArrowUp size={16} />
-                              </button>
-                              <button disabled={!liveEditing} onClick={() => moveItem(item, 1)} title="Move down" type="button">
-                                <ArrowDown size={16} />
-                              </button>
-                            </>
-                          ) : null}
+                        <div className="owner-item-actions automatic-order-actions">
                           <select
                             disabled={!liveEditing}
                             value={item.status}
@@ -915,7 +843,6 @@ type VariantEditorProps = {
   busy: boolean;
   itemId: string | null;
   onDeleteVariant: (variant: ItemVariant) => void;
-  onMoveVariant: (variant: ItemVariant, direction: -1 | 1) => void;
   onSaveVariant: (variant: ItemVariant | ItemVariantDraft) => Promise<void>;
   onSetVariantStatus: (variant: ItemVariant, status: ItemStatus) => void;
   sectionLabel: string;
@@ -926,7 +853,6 @@ function VariantEditor({
   busy,
   itemId,
   onDeleteVariant,
-  onMoveVariant,
   onSaveVariant,
   onSetVariantStatus,
   sectionLabel,
@@ -1002,15 +928,6 @@ function VariantEditor({
           />
         </label>
         <label>
-          Order
-          <input
-            min="1"
-            type="number"
-            value={draft.sort_order}
-            onChange={(event) => setVariantDraft({ ...draft, sort_order: Number(event.target.value) })}
-          />
-        </label>
-        <label>
           Status
           <select
             value={draft.status}
@@ -1059,12 +976,6 @@ function VariantEditor({
                 </p>
               </div>
               <div className="variant-actions">
-                <button disabled={busy} onClick={() => onMoveVariant(variant, -1)} title="Move up" type="button">
-                  <ArrowUp size={15} />
-                </button>
-                <button disabled={busy} onClick={() => onMoveVariant(variant, 1)} title="Move down" type="button">
-                  <ArrowDown size={15} />
-                </button>
                 <select
                   disabled={busy}
                   value={variant.status}

@@ -1208,7 +1208,7 @@ select:disabled {
 
 .variant-actions {
   display: grid;
-  grid-template-columns: 38px 38px minmax(120px, 1fr) 66px 38px;
+  grid-template-columns: minmax(120px, 1fr) 66px 38px;
   gap: 7px;
   align-items: center;
 }
@@ -3029,6 +3029,7 @@ select:disabled {
 
 .snack-text-stack {
   min-width: 0;
+  align-self: center;
 }
 
 .snack-meta-stack {
@@ -3617,7 +3618,7 @@ select:disabled {
   grid-template-columns: 5.5rem minmax(0, 1fr);
   gap: 0.75rem;
   min-height: 5.5rem;
-  align-items: start;
+  align-items: center;
 }
 
 .refined-menu-shell .snacks-list > article > img {
@@ -3627,8 +3628,7 @@ select:disabled {
   mask: none;
   aspect-ratio: auto;
   transform-origin: center;
-  align-self: start;
-  margin-top: 3px;
+  align-self: center;
 }
 
 .refined-menu-shell .snacks-list img[src*="/stir-fried-kimchi.png"],
@@ -3850,5 +3850,41 @@ select:disabled {
   .refined-addons-list .addon-image.corn-dog {
     width: 88px;
     height: 76px;
+  }
+}
+
+/* Use the spacious mobile-style lists on portrait tablets as well. */
+@media (min-width: 761px) and (max-width: 980px) {
+  .drink-groups,
+  .snacks-list {
+    grid-template-columns: 1fr;
+  }
+
+  .drink-group {
+    padding: 0 0 18px;
+    border-right: 0;
+  }
+
+  .snacks-list {
+    gap: 20px;
+  }
+
+  .snacks-list article,
+  .snacks-list article:first-child,
+  .snacks-list article:nth-child(3n + 1),
+  .snacks-list article:nth-child(3n),
+  .snacks-list article:last-child {
+    position: relative;
+    padding: 0;
+    border-right: 0;
+  }
+
+  .snacks-list article:not(:last-child)::after {
+    content: "";
+    grid-column: 1 / -1;
+    justify-self: center;
+    width: min(48%, 220px);
+    margin-top: 14px;
+    border-bottom: 2px dotted rgba(9, 38, 42, 0.28);
   }
 }

@@ -131,7 +131,17 @@ function visibleVariantsForItem(menuData: MenuData, item: MenuItem) {
     .filter((variant) => variant.menu_item_id === item.id)
     .filter((variant) => variant.status !== "hidden")
     .filter((variant) => menuData.settings.show_out_of_stock || variant.status !== "out_of_stock")
-    .sort((a, b) => a.sort_order - b.sort_order);
+    .sort((a, b) => Number(a.price) - Number(b.price) || a.variant_name.localeCompare(b.variant_name));
+}
+
+function automaticMenuItemPrice(menuData: MenuData, item: MenuItem) {
+  const variantPrices = visibleVariantsForItem(menuData, item).map((variant) => Number(variant.price));
+  return variantPrices.length > 0 ? Math.min(...variantPrices) : Number(item.price);
+}
+
+function automaticMenuItemSort(menuData: MenuData) {
+  return (a: MenuItem, b: MenuItem) =>
+    automaticMenuItemPrice(menuData, a) - automaticMenuItemPrice(menuData, b) || a.name.localeCompare(b.name);
 }
 
 function compactPriceLabel(item: MenuItem, variants: ItemVariant[]) {
@@ -415,21 +425,21 @@ export function LiveMenu({ activePage = "ramen" }: { activePage?: MenuPageType }
       .filter((item) => item.category_id === "addons")
       .filter((item) => item.status !== "hidden")
       .filter((item) => menuData.settings.show_out_of_stock || item.status !== "out_of_stock")
-      .sort((a, b) => a.sort_order - b.sort_order);
+      .sort(automaticMenuItemSort(menuData));
   }, [menuData]);
   const drinks = useMemo(() => {
     return menuData.items
       .filter((item) => drinkCategoryIds.includes(item.category_id))
       .filter((item) => item.status !== "hidden")
       .filter((item) => menuData.settings.show_out_of_stock || item.status !== "out_of_stock")
-      .sort((a, b) => a.sort_order - b.sort_order);
+      .sort(automaticMenuItemSort(menuData));
   }, [menuData]);
   const snacks = useMemo(() => {
     return menuData.items
       .filter((item) => snackCategoryIds.includes(item.category_id))
       .filter((item) => item.status !== "hidden")
       .filter((item) => menuData.settings.show_out_of_stock || item.status !== "out_of_stock")
-      .sort((a, b) => a.sort_order - b.sort_order);
+      .sort(automaticMenuItemSort(menuData));
   }, [menuData]);
   const regularSnacks = snacks.filter((item) => !item.name.toLowerCase().includes("yopokki"));
   const yopokkiBowls = snacks.filter((item) => item.name.toLowerCase().includes("yopokki"));
