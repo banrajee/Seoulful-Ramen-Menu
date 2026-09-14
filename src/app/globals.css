@@ -3031,10 +3031,6 @@ select:disabled {
   min-width: 0;
 }
 
-.snack-title-row > .menu-item-description {
-  grid-column: 1 / -1;
-}
-
 .snack-meta-stack {
   display: grid;
   justify-items: center;
@@ -3621,6 +3617,7 @@ select:disabled {
   grid-template-columns: 5.5rem minmax(0, 1fr);
   gap: 0.75rem;
   min-height: 5.5rem;
+  align-items: start;
 }
 
 .refined-menu-shell .snacks-list > article > img {
@@ -3630,6 +3627,8 @@ select:disabled {
   mask: none;
   aspect-ratio: auto;
   transform-origin: center;
+  align-self: start;
+  margin-top: 3px;
 }
 
 .refined-menu-shell .snacks-list img[src*="/stir-fried-kimchi.png"],
