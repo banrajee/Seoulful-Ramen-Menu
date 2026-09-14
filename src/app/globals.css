@@ -1146,6 +1146,53 @@ select:disabled {
   font-size: 0.88rem;
 }
 
+.owner-list-tools {
+  display: grid;
+  grid-template-columns: minmax(190px, 250px) minmax(280px, 1fr);
+  gap: 14px;
+  align-items: start;
+  margin-top: 16px;
+}
+
+.owner-list-tools .menu-search {
+  width: 100%;
+  margin: 0;
+}
+
+.owner-status-filter {
+  display: grid;
+  gap: 7px;
+  color: #294145;
+  font-size: 0.85rem;
+  font-weight: 900;
+}
+
+.owner-status-filter select {
+  width: 100%;
+  min-height: 48px;
+  padding: 0 12px;
+  border: 2px solid rgba(9, 38, 42, 0.6);
+  border-radius: 24px;
+  background: #fffdf5;
+  color: var(--ink);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.owner-status-filter select:focus {
+  outline: 3px solid var(--green);
+  outline-offset: 3px;
+}
+
+.owner-filter-empty {
+  margin: 18px 0 0;
+  padding: 18px;
+  border: 1px dashed rgba(9, 38, 42, 0.28);
+  border-radius: 8px;
+  color: var(--muted);
+  text-align: center;
+}
+
 .owner-variant-summary {
   max-width: 100%;
   overflow: hidden;
@@ -1392,6 +1439,12 @@ select:disabled {
 
   .settings-row button {
     width: 100%;
+  }
+
+  .owner-list-tools {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-top: 14px;
   }
 
   .owner-sections {

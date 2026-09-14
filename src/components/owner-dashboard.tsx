@@ -17,6 +17,7 @@ import { createBrowserSupabaseClient, hasSupabaseConfig } from "@/lib/supabase";
 import type { ItemStatus, ItemVariant, ItemVariantDraft, MenuData, MenuItem, MenuItemDraft } from "@/lib/types";
 
 type DashboardSection = "ramen" | "addons" | "drinks" | "snacks";
+type ItemStatusFilter = "all" | ItemStatus;
 
 const sectionLabels: Record<DashboardSection, string> = {
   ramen: "Ramen",
@@ -502,8 +503,10 @@ function DashboardBody({
   startNewItem
 }: DashboardBodyProps) {
   const [itemSearch, setItemSearch] = useState("");
+  const [itemStatusFilter, setItemStatusFilter] = useState<ItemStatusFilter>("all");
   const searchTerms = itemSearch.trim().toLowerCase().split(/\s+/).filter(Boolean);
   const matchingItems = menuData.items.filter((item) => {
+    if (itemStatusFilter !== "all" && item.status !== itemStatusFilter) return false;
     const text = [item.name, item.description,
       menuData.categories.find((category) => category.id === item.category_id)?.name,
       sectionLabels[sectionForCategory(item.category_id)],
@@ -512,6 +515,11 @@ function DashboardBody({
     ].join(" ").toLowerCase();
     return searchTerms.every((term) => text.includes(term));
   });
+  const statusCounts = menuData.items.reduce(
+    (counts, item) => ({ ...counts, [item.status]: counts[item.status] + 1 }),
+    { available: 0, out_of_stock: 0, hidden: 0 }
+  );
+  const activeStatusLabel = itemStatusFilter === "all" ? "all" : statusLabel(itemStatusFilter).toLowerCase();
   const categoryFilter = categoryIdsForForm(editorSection);
   const categoryOptions = categoryFilter
     ? menuData.categories.filter((category) => categoryFilter.includes(category.id))
@@ -732,31 +740,51 @@ function DashboardBody({
             </button>
           </div>
 
-          <div className="menu-search" role="search" aria-label="Search dashboard menu items">
-            <div className="menu-search-field">
-              <Search size={20} aria-hidden="true" />
-              <input
-                type="search"
-                aria-label="Search menu items"
-                placeholder="Search items, categories or flavours…"
-                value={itemSearch}
-                onChange={(event) => setItemSearch(event.target.value)}
-              />
-              {itemSearch ? <button type="button" onClick={() => setItemSearch("")}>Clear</button> : null}
+          <div className="owner-list-tools">
+            <label className="owner-status-filter">
+              Show items
+              <select
+                aria-label="Filter menu items by status"
+                value={itemStatusFilter}
+                onChange={(event) => setItemStatusFilter(event.target.value as ItemStatusFilter)}
+              >
+                <option value="all">All Items ({menuData.items.length})</option>
+                <option value="available">Available ({statusCounts.available})</option>
+                <option value="out_of_stock">Out of Stock ({statusCounts.out_of_stock})</option>
+                <option value="hidden">Hidden ({statusCounts.hidden})</option>
+              </select>
+            </label>
+
+            <div className="menu-search" role="search" aria-label="Search dashboard menu items">
+              <div className="menu-search-field">
+                <Search size={20} aria-hidden="true" />
+                <input
+                  type="search"
+                  aria-label="Search menu items"
+                  placeholder="Search items, categories or flavours…"
+                  value={itemSearch}
+                  onChange={(event) => setItemSearch(event.target.value)}
+                />
+                {itemSearch ? <button type="button" onClick={() => setItemSearch("")}>Clear</button> : null}
+              </div>
+              <p className="menu-search-status" role="status">
+                {searchTerms.length > 0
+                  ? matchingItems.length > 0
+                    ? `${matchingItems.length} ${activeStatusLabel} item${matchingItems.length === 1 ? "" : "s"} found`
+                    : `No ${activeStatusLabel} items found. Try another name or clear your search.`
+                  : itemStatusFilter === "all"
+                    ? "Search across ramen, drinks, K-Snacks and add-ons, including hidden and out-of-stock items."
+                    : `Showing ${matchingItems.length} ${activeStatusLabel} item${matchingItems.length === 1 ? "" : "s"}.`}
+              </p>
             </div>
-            <p className="menu-search-status" role="status">
-              {searchTerms.length > 0
-                ? matchingItems.length > 0
-                  ? `${matchingItems.length} item${matchingItems.length === 1 ? "" : "s"} found`
-                  : "No items found. Try another name or clear your search."
-                : "Search across ramen, drinks, K-Snacks and add-ons, including hidden and out-of-stock items."}
-            </p>
           </div>
 
-          <div className="owner-sections">
+          {matchingItems.length === 0 ? (
+            <p className="owner-filter-empty">No menu items match the selected status and search.</p>
+          ) : <div className="owner-sections">
             {(["ramen", "addons", "drinks", "snacks"] as DashboardSection[]).map((section) => {
               const sectionItems = itemsForSection(matchingItems, section, menuData.variants);
-              if (searchTerms.length > 0 && sectionItems.length === 0) return null;
+              if ((searchTerms.length > 0 || itemStatusFilter !== "all") && sectionItems.length === 0) return null;
 
               return (
                 <section className="owner-menu-section" key={section}>
@@ -832,7 +860,7 @@ function DashboardBody({
                 </section>
               );
             })}
-          </div>
+          </div>}
         </section>
       </div>
     </div>
