@@ -1243,8 +1243,13 @@ select:disabled {
 
 .variant-form-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
   gap: 12px;
+  align-items: start;
+}
+
+.variant-form-grid label {
+  align-content: start;
 }
 
 .variant-items {
@@ -3948,5 +3953,83 @@ select:disabled {
     width: min(48%, 220px);
     margin-top: 14px;
     border-bottom: 2px dotted rgba(9, 38, 42, 0.28);
+  }
+}
+
+/* Keep add-on names and descriptions readable at every viewport width. */
+.refined-addons-list {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  gap: 20px 24px;
+}
+
+.refined-addons-list article,
+.refined-addons-list article:nth-child(4n),
+.refined-addons-list article:last-child {
+  grid-template-columns: minmax(96px, 38%) minmax(0, 1fr);
+  gap: 14px;
+  min-height: 138px;
+  padding: 10px 12px 18px;
+  border-right: 0;
+  border-bottom: 2px dotted rgba(9, 38, 42, 0.3);
+}
+
+.refined-addons-list article > div {
+  min-width: 0;
+}
+
+.refined-addons-list .addon-image,
+.refined-addons-list .addon-image.raw-egg,
+.refined-addons-list .addon-image.corn,
+.refined-addons-list .addon-image.corn-dog {
+  width: 100%;
+  max-width: 132px;
+  height: 104px;
+  justify-self: center;
+}
+
+.refined-addons-list h3,
+.refined-addons-list .menu-item-description {
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
+}
+
+@media (max-width: 760px) {
+  .refined-addons-list {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .refined-addons-list article,
+  .refined-addons-list article:nth-child(4n),
+  .refined-addons-list article:last-child {
+    grid-template-columns: 112px minmax(0, 1fr);
+    min-height: 106px;
+    padding: 0 0 18px;
+  }
+
+  .refined-addons-list .addon-image,
+  .refined-addons-list .addon-image.raw-egg,
+  .refined-addons-list .addon-image.corn,
+  .refined-addons-list .addon-image.corn-dog {
+    width: 104px;
+    height: 88px;
+  }
+}
+
+@media (max-width: 360px) {
+  .refined-addons-list article,
+  .refined-addons-list article:nth-child(4n),
+  .refined-addons-list article:last-child {
+    grid-template-columns: 88px minmax(0, 1fr);
+    gap: 8px;
+  }
+
+  .refined-addons-list .addon-image,
+  .refined-addons-list .addon-image.raw-egg,
+  .refined-addons-list .addon-image.corn,
+  .refined-addons-list .addon-image.corn-dog {
+    width: 84px;
+    height: 76px;
   }
 }

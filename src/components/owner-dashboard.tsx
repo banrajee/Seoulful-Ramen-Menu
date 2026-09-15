@@ -942,9 +942,7 @@ function VariantEditor({
           <input
             value={draft.description ?? ""}
             onChange={(event) => setVariantDraft({ ...draft, description: event.target.value })}
-            aria-describedby="variant-description-guidance"
           />
-          <small id="variant-description-guidance">Use only for verified flavour-specific details. Keep shared information on the main item.</small>
         </label>
         <label>
           Price
