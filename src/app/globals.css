@@ -1148,7 +1148,7 @@ select:disabled {
 
 .owner-list-tools {
   display: grid;
-  grid-template-columns: minmax(190px, 250px) minmax(280px, 1fr);
+  grid-template-columns: repeat(2, minmax(170px, 220px)) minmax(260px, 1fr);
   gap: 14px;
   align-items: end;
   margin-top: 16px;

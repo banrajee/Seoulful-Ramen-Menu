@@ -17,6 +17,7 @@ import { createBrowserSupabaseClient, hasSupabaseConfig } from "@/lib/supabase";
 import type { ItemStatus, ItemVariant, ItemVariantDraft, MenuData, MenuItem, MenuItemDraft } from "@/lib/types";
 
 type DashboardSection = "ramen" | "addons" | "drinks" | "snacks";
+type DashboardSectionFilter = "all" | DashboardSection;
 type ItemStatusFilter = "all" | ItemStatus;
 
 const sectionLabels: Record<DashboardSection, string> = {
@@ -504,9 +505,13 @@ function DashboardBody({
 }: DashboardBodyProps) {
   const [itemSearch, setItemSearch] = useState("");
   const [itemStatusFilter, setItemStatusFilter] = useState<ItemStatusFilter>("all");
+  const [itemSectionFilter, setItemSectionFilter] = useState<DashboardSectionFilter>("all");
   const searchTerms = itemSearch.trim().toLowerCase().split(/\s+/).filter(Boolean);
   const matchingItems = menuData.items.filter((item) => {
     if (itemStatusFilter !== "all" && item.status !== itemStatusFilter) return false;
+    if (searchTerms.length === 0 && itemSectionFilter !== "all" && sectionForCategory(item.category_id) !== itemSectionFilter) {
+      return false;
+    }
     const text = [item.name, item.description,
       menuData.categories.find((category) => category.id === item.category_id)?.name,
       sectionLabels[sectionForCategory(item.category_id)],
@@ -520,6 +525,15 @@ function DashboardBody({
     { available: 0, out_of_stock: 0, hidden: 0 }
   );
   const activeStatusLabel = itemStatusFilter === "all" ? "all" : statusLabel(itemStatusFilter).toLowerCase();
+  const activeStatusQualifier = itemStatusFilter === "all" ? "" : `${activeStatusLabel} `;
+  const sectionCounts = menuData.items.reduce(
+    (counts, item) => {
+      const section = sectionForCategory(item.category_id);
+      counts[section] += 1;
+      return counts;
+    },
+    { ramen: 0, addons: 0, drinks: 0, snacks: 0 } as Record<DashboardSection, number>
+  );
   const categoryFilter = categoryIdsForForm(editorSection);
   const categoryOptions = categoryFilter
     ? menuData.categories.filter((category) => categoryFilter.includes(category.id))
@@ -755,15 +769,30 @@ function DashboardBody({
               </select>
             </label>
 
+            <label className="owner-status-filter">
+              Menu section
+              <select
+                aria-label="Filter menu items by section"
+                value={itemSectionFilter}
+                onChange={(event) => setItemSectionFilter(event.target.value as DashboardSectionFilter)}
+              >
+                <option value="all">All Sections ({menuData.items.length})</option>
+                <option value="ramen">Ramen ({sectionCounts.ramen})</option>
+                <option value="addons">Add-Ons ({sectionCounts.addons})</option>
+                <option value="drinks">Drinks ({sectionCounts.drinks})</option>
+                <option value="snacks">K-Snacks &amp; Sides ({sectionCounts.snacks})</option>
+              </select>
+            </label>
+
             <div className="menu-search" role="search" aria-label="Search dashboard menu items">
               <p className="menu-search-status" role="status">
                 {searchTerms.length > 0
                   ? matchingItems.length > 0
-                    ? `${matchingItems.length} ${activeStatusLabel} item${matchingItems.length === 1 ? "" : "s"} found`
-                    : `No ${activeStatusLabel} items found. Try another name or clear your search.`
-                  : itemStatusFilter === "all"
+                    ? `${matchingItems.length} ${activeStatusQualifier}item${matchingItems.length === 1 ? "" : "s"} found across all sections`
+                    : `No ${activeStatusQualifier}items found. Try another name or clear your search.`
+                  : itemStatusFilter === "all" && itemSectionFilter === "all"
                     ? "Search across ramen, drinks, K-Snacks and add-ons, including hidden and out-of-stock items."
-                    : `Showing ${matchingItems.length} ${activeStatusLabel} item${matchingItems.length === 1 ? "" : "s"}.`}
+                    : `Showing ${matchingItems.length} ${activeStatusQualifier}${itemSectionFilter === "all" ? "menu" : sectionLabels[itemSectionFilter]} item${matchingItems.length === 1 ? "" : "s"}.`}
               </p>
               <div className="menu-search-field">
                 <Search size={20} aria-hidden="true" />
@@ -780,11 +809,11 @@ function DashboardBody({
           </div>
 
           {matchingItems.length === 0 ? (
-            <p className="owner-filter-empty">No menu items match the selected status and search.</p>
+            <p className="owner-filter-empty">No menu items match the selected filters and search.</p>
           ) : <div className="owner-sections">
             {(["ramen", "addons", "drinks", "snacks"] as DashboardSection[]).map((section) => {
               const sectionItems = itemsForSection(matchingItems, section, menuData.variants);
-              if ((searchTerms.length > 0 || itemStatusFilter !== "all") && sectionItems.length === 0) return null;
+              if ((searchTerms.length > 0 || itemStatusFilter !== "all" || itemSectionFilter !== "all") && sectionItems.length === 0) return null;
 
               return (
                 <section className="owner-menu-section" key={section}>
