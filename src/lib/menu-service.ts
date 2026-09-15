@@ -12,7 +12,12 @@ const defaultSettings: ShopSettings = {
 function normalizeProductImageUrl(imageUrl: string | null | undefined) {
   if (!imageUrl) return null;
 
-  return imageUrl.replace(/^\/(?:ramen-products|snack-products)\//, "/menu-products/");
+  return imageUrl
+    .replace(/^\/(?:ramen-products|snack-products)\//, "/menu-products/")
+    .replace(
+      /^\/menu-products\/(?:ottogi|otogi)-(jin-ramen-(?:mild|spicy)|jin-chicken|cheese-ramen|spicy-stir-fry)\.png$/i,
+      "/menu-products/otoki-$1.png"
+    );
 }
 
 export async function fetchMenuData(): Promise<MenuData> {

@@ -28,7 +28,7 @@ with product_rows(
     ('Bulcha Carbonara', 'Carbonara Korean ramen.', 'ramen', '/menu-products/bulcha-carbonara.png', 219, 179, 219, 'dual', 3, 'veg', 507),
     ('Nongshim Shin Ramyeon', 'Original spicy Korean ramen.', 'ramen', '/menu-products/nongshim-shin-ramyun.png', 189, 130, 189, 'dual', 0, 'veg', 508),
     ('Nongshim Soon Veggie', 'Vegetable ramen with mild spice.', 'ramen', '/menu-products/nongshim-soon-veggie.png', 189, 130, 189, 'dual', 1, 'veg', 509),
-    ('Ottogi Jin Chicken', 'Chicken-style Korean ramen.', 'ramen', '/menu-products/otogi-jin-chicken.png', 189, 130, 189, 'dual', 1, 'non_veg', 510),
+    ('Otoki Jin Chicken', 'Chicken-style Korean ramen.', 'ramen', '/menu-products/otoki-jin-chicken.png', 189, 130, 189, 'dual', 1, 'non_veg', 510),
     ('Paldo Jjajangmen', 'Black bean sauce ramen.', 'ramen', '/menu-products/paldo-jjajangmen.png', 249, 209, 249, 'dual', 0, 'veg', 511),
     ('Paldo Kimchi Jumbo', 'Jumbo kimchi noodle bowl.', 'ramen', '/menu-products/paldo-kimchi-jumbo.png', 249, 209, 249, 'dual', 2, 'veg', 512),
     ('Paldo Kokomen', 'Clean chicken-style spicy ramen.', 'ramen', '/menu-products/paldo-kokomen.png', 189, 130, 189, 'dual', 1, 'non_veg', 513),

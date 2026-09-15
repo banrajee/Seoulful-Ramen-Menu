@@ -195,6 +195,16 @@ function productImageKey(name: string) {
 
 const localProductImageAliases: Record<string, string> = {
   "broad-noodles-spicy-hot-flavour": "/menu-products/broad-noodles-spicy-hot-halal.png",
+  "otogi-cheese-ramen": "/menu-products/otoki-cheese-ramen.png",
+  "otogi-jin-chicken": "/menu-products/otoki-jin-chicken.png",
+  "otogi-jin-ramen-mild": "/menu-products/otoki-jin-ramen-mild.png",
+  "otogi-jin-ramen-spicy": "/menu-products/otoki-jin-ramen-spicy.png",
+  "otogi-spicy-stir-fry": "/menu-products/otoki-spicy-stir-fry.png",
+  "ottogi-cheese-ramen": "/menu-products/otoki-cheese-ramen.png",
+  "ottogi-jin-chicken": "/menu-products/otoki-jin-chicken.png",
+  "ottogi-jin-ramen-mild": "/menu-products/otoki-jin-ramen-mild.png",
+  "ottogi-jin-ramen-spicy": "/menu-products/otoki-jin-ramen-spicy.png",
+  "ottogi-spicy-stir-fry": "/menu-products/otoki-spicy-stir-fry.png",
   "samyang-quattro-cheese": "/menu-products/samyang-quattro-cheese-halal.png",
   "samyang-quattro-cheese-halal": "/menu-products/samyang-quattro-cheese-halal.png",
   "samyang-buldak-quattro-cheese-halal": "/menu-products/samyang-quattro-cheese-halal.png"

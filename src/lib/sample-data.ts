@@ -113,21 +113,21 @@ export const sampleMenu: MenuData = {
     },
     {
       id: "jin-mild",
-      name: "Ottogi Jin Ramen Mild",
+      name: "Otoki Jin Ramen Mild",
       description: "Mild Korean ramen broth.",
       price: 189,
       category_id: "ramen",
-      image_url: null,
+      image_url: "/menu-products/otoki-jin-ramen-mild.png",
       status: "available",
       sort_order: 4
     },
     {
       id: "jin-spicy",
-      name: "Ottogi Jin Ramen Spicy",
+      name: "Otoki Jin Ramen Spicy",
       description: "Spicy Korean ramen broth.",
       price: 189,
       category_id: "ramen",
-      image_url: null,
+      image_url: "/menu-products/otoki-jin-ramen-spicy.png",
       status: "available",
       sort_order: 5
     },
@@ -292,22 +292,22 @@ export const sampleMenu: MenuData = {
       sort_order: 2
     },
     {
-      id: "ottogi-cheese",
-      name: "Ottogi Cheese Ramen",
+      id: "otoki-cheese",
+      name: "Otoki Cheese Ramen",
       description: "Cheesy Korean ramen.",
       price: 249,
       category_id: "ramen",
-      image_url: "/menu-products/ottogi-cheese-ramen.png",
+      image_url: "/menu-products/otoki-cheese-ramen.png",
       status: "available",
       sort_order: 3
     },
     {
-      id: "ottogi-spicy-stir-fry",
-      name: "Ottogi Spicy Stir Fry",
+      id: "otoki-spicy-stir-fry",
+      name: "Otoki Spicy Stir Fry",
       description: "Spicy dry-style ramen.",
       price: 249,
       category_id: "ramen",
-      image_url: "/menu-products/ottogi-spicy-stir-fry.png",
+      image_url: "/menu-products/otoki-spicy-stir-fry.png",
       status: "available",
       sort_order: 4
     },
