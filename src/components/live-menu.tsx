@@ -195,6 +195,9 @@ function productImageKey(name: string) {
 
 const localProductImageAliases: Record<string, string> = {
   "broad-noodles-spicy-hot-flavour": "/menu-products/broad-noodles-spicy-hot-halal.png",
+  "chicken-dumpling": "/addon-chicken-dumplings.png",
+  "chicken-dumplings": "/addon-chicken-dumplings.png",
+  "chicken-dumplings-5-pieces": "/addon-chicken-dumplings.png",
   "otogi-cheese-ramen": "/menu-products/otoki-cheese-ramen.png",
   "otogi-jin-chicken": "/menu-products/otoki-jin-chicken.png",
   "otogi-jin-ramen-mild": "/menu-products/otoki-jin-ramen-mild.png",
