@@ -9,7 +9,7 @@ The menu uses three services. Each one has a different job.
 | Service | What it stores | What you change there |
 | --- | --- | --- |
 | **GitHub** | Website code and actual image files | Keep ramen and snack product photos in `public/menu-products/`; keep the established `addon-*.png` illustrations directly in `public/` |
-| **Supabase** | Menu item names, descriptions, prices, image paths, stock, spice level, food type, and order | Change these through the owner dashboard; use SQL only for a database upgrade |
+| **Supabase** | Menu item names, descriptions, prices, image paths, stock, spice level, food type, and variants | Change these through the owner dashboard; use SQL only for a database upgrade |
 | **Vercel** | The published website built from GitHub | Check whether the latest GitHub commit deployed successfully |
 
 The most important rule is:
@@ -176,7 +176,7 @@ The public menu updates immediately after most dashboard changes because the men
    - **Short description:** one short, verified explanation.
    - **Packet Only Price / Self-Cook Bowl Price:** shown for ramen in the dashboard.
    - **Price:** used for add-ons, drinks, and K-Snacks.
-   - **Order:** a smaller number places a non-ramen item earlier within its category. Ramen are ordered automatically by bowl price and then by name.
+   - **Ordering:** visible items are ordered automatically by displayed price and then alphabetically. Hidden items remain at the bottom until made visible.
    - **Veg / Non-Veg:** available for ramen and K-Snacks.
    - **Category:** shown where the section has category choices, including drink groups.
    - **Image URL:** normally `/menu-products/filename.png`.
@@ -218,10 +218,9 @@ Prepare, upload, deploy, and directly test the image as described above.
 
 8. Set food type and spice level where applicable.
 9. Choose **Available**, **Out of Stock**, or **Hidden**. Use Hidden if you want to finish checking the item before customers see it.
-10. Enter its order number when the field is shown. Ramen do not need one because their order is automatic.
-11. Click **Save Item**.
-12. If it needs flavours or variants, edit the newly saved main item and add them under **Flavours / Variants**.
-13. Check the public menu on both desktop and mobile.
+10. Click **Save Item**.
+11. If it needs flavours or variants, edit the newly saved main item and add them under **Flavours / Variants**.
+12. Check the public menu on both desktop and mobile.
 
 If the dashboard reports that the name already exists, search for the existing item. Edit or unhide that record instead of creating a duplicate.
 
@@ -236,7 +235,6 @@ Use a variant when several flavours belong under one main product card.
    - **Flavour name**
    - **Variant description**, only if that flavour needs verified information different from the main description
    - **Price**
-   - **Order**
    - **Status**
    - **Variant image URL**, if the flavour needs its own image
 
@@ -401,7 +399,7 @@ Read the dashboard error. If it mentions a missing column, run `supabase/add-men
 
 ### A newly added item appears in the wrong place
 
-Edit its Category and Order. Items with lower Order numbers appear earlier. Use the dashboard's up/down buttons for small adjustments.
+Edit its Category and price. Visible items are sorted automatically by displayed price and then by name. Hidden items stay at the bottom until made visible.
 
 ## 15. Safe habits and recovery
 
@@ -454,7 +452,7 @@ Do not create a second hand-assembled copy of the project on a new PC. Clone the
 - [ ] Wait for Vercel and test the direct image URL.
 - [ ] Open `/owner` and choose the correct Add button.
 - [ ] Enter the path `/menu-products/filename.png`.
-- [ ] Complete price, category, status, spice, food type, and order.
+- [ ] Complete price, category, status, spice, and food type.
 - [ ] Save and test desktop search, mobile view, and zoom.
 
 ### Change only menu information

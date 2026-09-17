@@ -1,6 +1,6 @@
 # Seoulful Ramen Live QR Menu
 
-A simple live digital menu for one QR code. Customers scan the public page and see the latest menu. The owner signs in at `/owner` to update stock, prices, descriptions, images, and item order.
+A simple live digital menu for one QR code. Customers scan the public page and see the latest menu. The owner signs in at `/owner` to update stock, prices, descriptions, images, and item status. Visible items are ordered automatically by price and then by name.
 
 This project intentionally does not include carts, ordering, payments, receipts, POS, Loyverse, customer login, or table numbers.
 
@@ -10,7 +10,7 @@ This project intentionally does not include carts, ordering, payments, receipts,
 - `src/app/page.tsx` loads the public QR menu page.
 - `src/components/live-menu.tsx` renders the customer-facing mobile menu and listens for Supabase realtime changes.
 - `src/app/owner/page.tsx` loads the owner dashboard route at `/owner`.
-- `src/components/owner-dashboard.tsx` handles owner login, add/edit/delete, status changes, item order, and the out-of-stock visibility toggle.
+- `src/components/owner-dashboard.tsx` handles owner login, add/edit/delete, status changes, search and filters, automatic price ordering, and the out-of-stock visibility toggle.
 - `src/lib/menu-service.ts` contains all Supabase reads/writes used by both screens.
 - `src/lib/sample-data.ts` gives the app sample items before Supabase is connected.
 - `src/lib/supabase.ts` creates the browser Supabase client from environment variables.
