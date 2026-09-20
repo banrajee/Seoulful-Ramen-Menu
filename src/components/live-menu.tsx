@@ -44,11 +44,11 @@ function fallbackSpiceLevel(item: MenuItem) {
   return 1;
 }
 
-function spiceLevel(item: MenuItem) {
+export function spiceLevel(item: MenuItem) {
   return Math.min(5, Math.max(0, Number(item.spice_level ?? fallbackSpiceLevel(item))));
 }
 
-function SpiceRow({ level }: { level: number }) {
+export function SpiceRow({ level }: { level: number }) {
   return (
     <div className="spice-row" aria-label={`${level} out of 5 spice level`}>
       {Array.from({ length: 5 }).map((_, index) => (
@@ -99,7 +99,7 @@ function addonClass(item: MenuItem) {
   return "chicken";
 }
 
-function addonImage(item: MenuItem) {
+export function addonImage(item: MenuItem) {
   const name = item.name.toLowerCase();
   if (name.includes("chicken dumpling")) return "/addon-chicken-dumplings.png";
   if (name.includes("sausage corn dog")) return "/addon-sausage-corn-dog.png";
@@ -228,7 +228,7 @@ function productImageCandidates(item: MenuItem) {
   return Array.from(new Set(candidates.filter((candidate): candidate is string => Boolean(candidate))));
 }
 
-function useProductImage(item: MenuItem) {
+export function useProductImage(item: MenuItem) {
   const candidates = useMemo(
     () => productImageCandidates(item),
     [item.category_id, item.image_url, item.name]

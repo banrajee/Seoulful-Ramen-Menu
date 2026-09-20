@@ -1,5 +1,6 @@
 "use client";
 
+import { FestivalEditor } from "./festival-editor";
 import { Eye, EyeOff, LogOut, Plus, Save, Search, Trash2 } from "lucide-react";
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import {
@@ -439,6 +440,8 @@ export function OwnerDashboard() {
             <LogOut size={18} />
           </button>
         </div>
+
+        <FestivalEditor />
 
         <DashboardBody
           busy={busy}
