@@ -92,6 +92,34 @@ export const sampleMenu: MenuData = {
       sort_order: 1
     },
     {
+      id: "nongshim-shin-spicy-chicken",
+      name: "Nongshim Shin Ramyun Spicy Chicken",
+      description: "Spicy chicken-flavoured Shin Ramyun.",
+      price: 189,
+      packet_only_price: 149,
+      self_cook_price: 189,
+      category_id: "ramen",
+      image_url: "/menu-products/nongshim-shin-spicy-chicken.png",
+      spice_level: 3,
+      food_type: "non_veg",
+      status: "available",
+      sort_order: 2
+    },
+    {
+      id: "good-seoul-rapokki-carbonara",
+      name: "Good Seoul Rapokki Carbonara",
+      description: "Carbonara rapokki with ramen and Korean rice cakes.",
+      price: 249,
+      packet_only_price: 209,
+      self_cook_price: 249,
+      category_id: "ramen",
+      image_url: "/menu-products/good-seoul-rapokki-carbonara.png",
+      spice_level: 1,
+      food_type: null,
+      status: "available",
+      sort_order: 3
+    },
+    {
       id: "shin-kimchi",
       name: "Nongshim Shin Kimchi",
       description: "Spicy ramen with kimchi flavour.",
@@ -548,6 +576,42 @@ export const sampleMenu: MenuData = {
       food_type: "veg",
       status: "available",
       sort_order: 9
+    },
+    {
+      id: "weilong-big-latiao-hot-spicy-106g",
+      name: "Wei Long Big Latiao Hot & Spicy (106g)",
+      description: "Hot and spicy big latiao snack.",
+      price: 99,
+      category_id: "k_snacks_sides",
+      image_url: "/menu-products/weilong-big-latiao-hot-spicy-white.png",
+      spice_level: 1,
+      food_type: null,
+      status: "available",
+      sort_order: 10
+    },
+    {
+      id: "tao-kae-noi-big-roll-spicy-grilled-squid",
+      name: "Tao Kae Noi Big Roll Spicy Grilled Squid",
+      description: "Grilled seaweed roll with spicy grilled squid flavour.",
+      price: 49,
+      category_id: "k_snacks_sides",
+      image_url: "/menu-products/tao-kae-noi-big-roll-spicy-grilled-squid.png",
+      spice_level: 1,
+      food_type: "non_veg",
+      status: "available",
+      sort_order: 11
+    },
+    {
+      id: "weilong-big-latiao-hot-spicy-102g",
+      name: "Wei Long Big Latiao Hot & Spicy (102g)",
+      description: "Hot and spicy big latiao snack.",
+      price: 99,
+      category_id: "k_snacks_sides",
+      image_url: "/menu-products/weilong-big-latiao-hot-spicy-102g.png",
+      spice_level: 3,
+      food_type: null,
+      status: "available",
+      sort_order: 12
     },
     {
       id: "fanta",
