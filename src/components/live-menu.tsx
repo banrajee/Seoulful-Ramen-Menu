@@ -103,6 +103,7 @@ export function addonImage(item: MenuItem) {
   const name = item.name.toLowerCase();
   if (name.includes("chicken dumpling")) return "/addon-chicken-dumplings.png";
   if (name.includes("sausage corn dog")) return "/addon-sausage-corn-dog.png";
+  if (name.includes("fried egg")) return "/addon-fried-egg.png";
   if (name.includes("raw")) return "/addon-raw-egg.png";
   if (name.includes("boiled")) return "/addon-boiled-egg.png";
   if (name.includes("corn dog")) return "/addon-corn-dog.png";

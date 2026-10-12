@@ -410,6 +410,16 @@ export const sampleMenu: MenuData = {
       sort_order: 2
     },
     {
+      id: "fried-egg",
+      name: "Fried Egg",
+      description: "Fried egg add-on.",
+      price: 19,
+      category_id: "addons",
+      image_url: "/addon-fried-egg.png",
+      status: "available",
+      sort_order: 3
+    },
+    {
       id: "corn",
       name: "Corn",
       description: "Sweet corn add-on.",
