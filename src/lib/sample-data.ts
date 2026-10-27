@@ -78,6 +78,26 @@ export const sampleMenu: MenuData = {
       status: "available",
       image_url: null,
       sort_order: 4
+    },
+    {
+      id: "steam-spoon-peach-iced-tea",
+      menu_item_id: "steam-spoon-zero-sugar-drinks",
+      variant_name: "Peach Iced Tea",
+      description: "Zero-sugar peach iced tea.",
+      price: 99,
+      status: "available",
+      image_url: null,
+      sort_order: 1
+    },
+    {
+      id: "steam-spoon-blue-lemonade",
+      menu_item_id: "steam-spoon-zero-sugar-drinks",
+      variant_name: "Blue Lemonade",
+      description: "Zero-sugar blue lemonade.",
+      price: 99,
+      status: "available",
+      image_url: null,
+      sort_order: 2
     }
   ],
   items: [
@@ -624,6 +644,160 @@ export const sampleMenu: MenuData = {
       sort_order: 12
     },
     {
+      id: "nissin-geki-truffcarbo",
+      name: "Nissin Geki Truffcarbo",
+      description: "Saucy flat noodles with creamy truffle carbonara flavour.",
+      price: 249,
+      category_id: "ramen",
+      image_url: "/menu-products/nissin-geki-truffcarbo.png",
+      spice_level: 4,
+      food_type: "veg",
+      status: "available",
+      sort_order: 80
+    },
+    {
+      id: "nissin-geki-kimcheese",
+      name: "Nissin Geki Kimcheese",
+      description: "Spicy flat noodles with kimchi and cheese flavour.",
+      price: 249,
+      category_id: "ramen",
+      image_url: "/menu-products/nissin-geki-kimcheese.png",
+      spice_level: 5,
+      food_type: "veg",
+      status: "available",
+      sort_order: 81
+    },
+    {
+      id: "baijia-pork-bone-soup",
+      name: "Baijia Pork Bone Soup",
+      description: "Rich pork-bone soup instant noodles.",
+      price: 249,
+      category_id: "ramen",
+      image_url: "/menu-products/baijia-pork-bone-soup.png",
+      spice_level: 0,
+      food_type: "non_veg",
+      status: "available",
+      sort_order: 82
+    },
+    {
+      id: "baijia-mutton-soup",
+      name: "Baijia Mutton Soup",
+      description: "Savoury mutton soup instant noodles.",
+      price: 249,
+      category_id: "ramen",
+      image_url: "/menu-products/baijia-mutton-soup.png",
+      spice_level: 2,
+      food_type: "non_veg",
+      status: "available",
+      sort_order: 83
+    },
+    {
+      id: "otoki-jin-veggie",
+      name: "Otoki Jin Veggie",
+      description: "Mild vegan vegetable noodle soup.",
+      price: 219,
+      category_id: "ramen",
+      image_url: "/menu-products/otoki-jin-veggie.png",
+      spice_level: 0,
+      food_type: "veg",
+      status: "available",
+      sort_order: 84
+    },
+    {
+      id: "baijia-mushroom-chicken",
+      name: "Baijia Mushroom Chicken",
+      description: "Comforting chicken noodles with mushroom flavour.",
+      price: 249,
+      category_id: "ramen",
+      image_url: "/menu-products/baijia-mushroom-chicken.png",
+      spice_level: 0,
+      food_type: "non_veg",
+      status: "available",
+      sort_order: 85
+    },
+    {
+      id: "arih-spicy-seaweed",
+      name: "Arih Modern Noodle Spicy Seaweed",
+      description: "Smoky stir-fried noodles with spicy seaweed flavour.",
+      price: 249,
+      category_id: "ramen",
+      image_url: "/menu-products/arih-spicy-seaweed.png",
+      spice_level: 3,
+      food_type: "veg",
+      status: "available",
+      sort_order: 86
+    },
+    {
+      id: "arih-gochujang-butter",
+      name: "Arih Modern Noodle Gochujang Butter",
+      description: "Stir-fried noodles with gochujang and buttery flavour.",
+      price: 249,
+      category_id: "ramen",
+      image_url: "/menu-products/arih-gochujang-butter.png",
+      spice_level: 2,
+      food_type: "veg",
+      status: "available",
+      sort_order: 87
+    },
+    {
+      id: "samyang-mep-garlic-clam",
+      name: "Samyang MEP Garlic & Clam (Halal)",
+      description: "Fiery garlic ramen with savoury clam flavour.",
+      price: 249,
+      category_id: "ramen",
+      image_url: "/menu-products/samyang-mep-garlic-clam.png",
+      spice_level: 3,
+      food_type: "non_veg",
+      status: "available",
+      sort_order: 88
+    },
+    {
+      id: "arih-k-super-spicy-seaweed",
+      name: "Arih Modern Noodle K-Super Spicy Seaweed",
+      description: "Extra-spicy stir-fried noodles with seaweed.",
+      price: 249,
+      category_id: "ramen",
+      image_url: "/menu-products/arih-k-super-spicy-seaweed.png",
+      spice_level: 5,
+      food_type: "veg",
+      status: "available",
+      sort_order: 89
+    },
+    {
+      id: "arih-soy-sauce-butter",
+      name: "Arih Modern Noodle Soy Sauce Butter",
+      description: "Savoury soy sauce noodles with buttery flavour.",
+      price: 249,
+      category_id: "ramen",
+      image_url: "/menu-products/arih-soy-sauce-butter.png",
+      spice_level: 1,
+      food_type: "veg",
+      status: "available",
+      sort_order: 90
+    },
+    {
+      id: "arih-black-pepper-tteokbokki",
+      name: "Arih Modern Noodle Black Pepper Tteokbokki",
+      description: "Sweet and spicy Korean noodles with black pepper.",
+      price: 249,
+      category_id: "ramen",
+      image_url: "/menu-products/arih-black-pepper-tteokbokki.png",
+      spice_level: 2,
+      food_type: "veg",
+      status: "available",
+      sort_order: 91
+    },
+    {
+      id: "steam-spoon-zero-sugar-drinks",
+      name: "Steam & Spoon Zero Sugar Drinks",
+      description: "Zero-sugar Korean drink pouches in Peach Iced Tea and Blue Lemonade flavours.",
+      price: 99,
+      category_id: "drink_diet",
+      image_url: "/menu-products/steam-spoon-zero-sugar-drinks.png",
+      status: "available",
+      sort_order: 20
+    },
+    {
       id: "fanta",
       name: "Fanta",
       description: "Fruit soda flavours.",
@@ -669,7 +843,7 @@ sampleMenu.items = sampleMenu.items.map((item) => {
     };
   }
 
-  const isNonVeg = /chicken|seafood|lobster|samgyetang/i.test(item.name);
+  const isNonVeg = /chicken|seafood|lobster|samgyetang|pork|mutton|clam/i.test(item.name);
 
   return {
     ...item,
